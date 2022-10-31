@@ -1,22 +1,29 @@
 ---
-title: Monitor your web application with multi-step web tests and Azure Application Insights | Microsoft Docs
-description: Set-up multi-step web tests to monitor your web applications with Azure Application Insights
-ms.service:  azure-monitor
-ms.subservice: application-insights
+title: Monitor with multi-step web tests - Azure Application Insights
+description: Set up multi-step web tests to monitor your web applications with Azure Application Insights
 ms.topic: conceptual
-author: mrbullwinkle
-ms.author: mbullwin
-ms.date: 07/25/2019
-
-ms.reviewer: sdash
+ms.date: 07/21/2021
+ms.reviewer: shyamala
 ---
 
 # Multi-step web tests
 
 You can monitor a recorded sequence of URLs and interactions with a website via multi-step web tests. This article will walk you through the process of creating a multi-step web test with Visual Studio Enterprise.
 
+> [!IMPORTANT]
+> [Multi-step web tests have been deprecated](https://azure.microsoft.com/updates/retirement-notice-transition-to-custom-availability-tests-in-application-insights/). We recommend using [TrackAvailability()](/dotnet/api/microsoft.applicationinsights.telemetryclient.trackavailability) to submit [custom availability tests](availability-azure-functions.md) instead of multi-step web tests. With TrackAvailability() and custom availability tests, you can run tests on any compute you want and use C# to easily author new tests.
+
 > [!NOTE]
-> Multi-step web tests depend on Visual Studio webtest files. It was [announced](https://devblogs.microsoft.com/devops/cloud-based-load-testing-service-eol/) that Visual Studio 2019 will be the last version with webtest functionality. It is important to understand that while no new features will be added, webtest functionality in Visual Studio 2019 is still currently supported and will continue to be supported during the support lifecycle of the product. The Azure Monitor product team has addressed questions regarding the future of multi-step availability tests [here](https://github.com/MicrosoftDocs/azure-docs/issues/26050#issuecomment-468814101).  
+> Multi-step web tests **are not supported** in the [Azure Government](../../azure-government/index.yml) cloud.
+
+
+Multi-step web tests are categorized as classic tests and can be found under **Add Classic Test** in the Availability pane.
+
+## Multi-step webtest alternative
+
+Multi-step web tests depend on Visual Studio webtest files. It was [announced](https://devblogs.microsoft.com/devops/cloud-based-load-testing-service-eol/) that Visual Studio 2019 will be the last version with webtest functionality. It's important to understand that while no new features will be added, webtest functionality in Visual Studio 2019 is still currently supported and will continue to be supported during the support lifecycle of the product. 
+
+We recommend using the [TrackAvailability](/dotnet/api/microsoft.applicationinsights.telemetryclient.trackavailability) to submit [custom availability tests](./availability-azure-functions.md) instead of Multi-step web tests. This is the long term supported solution for multi request or authentication test scenarios. With TrackAvailability() and custom availability tests, you can run tests on any compute you want and use C# to easily author new tests.
 
 ## Pre-requisites
 
@@ -30,44 +37,19 @@ To locate the testing tools pre-requisite. Launch the **Visual Studio Installer*
 > [!NOTE]
 > Multi-step web tests have additional costs associated with them. To learn more consult the [official pricing guide](https://azure.microsoft.com/pricing/details/application-insights/).
 
-## Record a multi-step web test
+## Record a multi-step web test 
 
-To create a multi-step test, you record the scenario by using Visual Studio Enterprise, and then upload the recording to Application Insights. Application Insights replays the scenario at set intervals and verifies the response.
+> [!WARNING]
+> We no longer recommend using the multi-step recorder. The recorder was developed for static HTML pages with basic interactions, and does not provide a functional experience for modern web pages.
 
-> [!IMPORTANT]
-> * You can't use coded functions or loops in your tests. The test must be contained completely in the .webtest script. However, you can use standard plugins.
-> * Only English characters are supported in the multi-step web tests. If you use Visual Studio in other languages, please update the web test definition file to translate/exclude non-English characters.
-
-Use Visual Studio Enterprise to record a web session.
-
-1. Create a Web performance and Load Test Project. **File** > **New** > **Project** > **Visual C#** > **Test**
-
-    ![Visual Studio new project UI](./media/availability-multistep/vs-web-performance-and-load-test.png)
-
-2. Open the `.webtest` file and start recording.
-
-    ![Visual Studio test recording UI](./media/availability-multistep/open-web-test.png)
-
-3. Click through the steps you want your test to simulate as part of the recording.
-
-    ![Browser recording UI](./media/availability-multistep/record.png)
-
-4. Edit the test to:
-
-    * Add validations to check the received text and response codes.
-    * Remove any uneccesary interactions. You could also remove dependent requests for pictures or add tracking sites which aren't relevant to you considering your test a success.
-    
-    Keep in mind that you can only edit the test script - you can add custom code or call other web tests. Don't insert loops in the test. You can use standard web test plug-ins.
-
-5. Run the test in Visual Studio to validate and make sure it works.
-
-    The web test runner opens a web browser and repeats the actions you recorded. Make sure everything behaves as expected.
+For guidance on creating Visual Studio web tests consult the [official Visual Studio 2019 documentation](/visualstudio/test/how-to-create-a-web-service-test).
 
 ## Upload the web test
 
-1. In the Application Insights portal on the Availability pane select **Create Test** > **Test type** > **Multi-step web test**.
-
-2. Set the test locations, frequency, and alert parameters.
+1. In the Application Insights portal on the Availability pane select **Add Classic test**, then select **Multi-step** as the *SKU*.
+2. Upload your multi-step web test.
+3. Set the test locations, frequency, and alert parameters.
+4. Select **Create**.
 
 ### Frequency & location
 
@@ -89,10 +71,9 @@ Use Visual Studio Enterprise to record a web session.
 |Setting| Explanation
 |----|----|----|
 |**Near-realtime (Preview)** | We recommend using Near-realtime alerts. Configuring this type of alert is done after your availability test is created.  |
-|**Classic** | We no longer recommended using classic alerts for new availability tests.|
 |**Alert location threshold**|We recommend a minimum of 3/5 locations. The optimal relationship between alert location threshold and the number of test locations is **alert location threshold** = **number of test locations - 2, with a minimum of five test locations.**|
 
-## Advanced Configuration
+## Configuration
 
 ### Plugging time and random numbers into your test
 

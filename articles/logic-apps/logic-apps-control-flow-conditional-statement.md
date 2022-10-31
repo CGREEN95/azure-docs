@@ -1,27 +1,26 @@
 ---
-title: Add conditional statements to workflows - Azure Logic Apps | Microsoft Docs
-description: How to create conditions that control actions in workflows in Azure Logic Apps
+title: Add conditions to workflows
+description: Create conditions that control actions in workflows in Azure Logic Apps.
 services: logic-apps
-ms.service: logic-apps
 ms.suite: integration
-author: ecfan
-ms.author: estfan
-ms.reviewer: klam, LADocs
-ms.topic: article
-ms.date: 10/09/2018
+ms.reviewer: estfan, azla
+ms.topic: how-to
+ms.date: 09/01/2022
 ---
 
-# Create conditional statements that control workflow actions in Azure Logic Apps
+# Add conditions to control workflow actions in Azure Logic Apps
+
+[!INCLUDE [logic-apps-sku-consumption](../../includes/logic-apps-sku-consumption.md)]
 
 To run specific actions in your logic app only after passing a specified condition, 
-add a *conditional statement*. This control structure compares the data in your 
+add a *condition action*. This control structure compares the data in your 
 workflow against specific values or fields. You can then specify different actions 
 that run based on whether or not the data meets the condition. 
 You can nest conditions inside each other.
 
 For example, suppose you have a logic app that sends too 
 many emails when new items appear on a website's RSS feed. 
-You can add a conditional statement to send email only 
+You can add a condition action to send email only 
 when the new item includes a specific string. 
 
 > [!TIP]
@@ -37,7 +36,7 @@ when the new item includes a specific string.
 
 * To follow the example in this article, 
 [create this sample logic app](../logic-apps/quickstart-create-first-logic-app-workflow.md) 
-with an Outlook.com or Office 365 Outlook account.
+with an Outlook.com account or a work or school account.
 
 ## Add condition
 
@@ -100,7 +99,7 @@ This logic app now sends mail only when the new items in the RSS feed meet your 
 
 ## JSON definition
 
-Here's the high-level code definition behind a conditional statement:
+Here's the high-level code definition behind a condition action:
 
 ``` json
 "actions": {
@@ -128,13 +127,13 @@ Here's the high-level code definition behind a conditional statement:
 
 ## Get support
 
-* For questions, visit the [Azure Logic Apps forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=azurelogicapps).
+* For questions, visit the [Microsoft Q&A question page for Azure Logic Apps](/answers/topics/azure-logic-apps.html).
 * To submit or vote on features and suggestions, visit the 
 [Azure Logic Apps user feedback site](https://aka.ms/logicapps-wish).
 
 ## Next steps
 
-* [Run steps based on different values (switch statements)](../logic-apps/logic-apps-control-flow-switch-statement.md)
+* [Run steps based on different values (switch actions)](../logic-apps/logic-apps-control-flow-switch-statement.md)
 * [Run and repeat steps (loops)](../logic-apps/logic-apps-control-flow-loops.md)
 * [Run or merge parallel steps (branches)](../logic-apps/logic-apps-control-flow-branches.md)
 * [Run steps based on grouped action status (scopes)](../logic-apps/logic-apps-control-flow-run-steps-group-scopes.md)

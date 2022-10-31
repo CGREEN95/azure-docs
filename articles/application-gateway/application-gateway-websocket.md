@@ -1,13 +1,14 @@
 ---
-title: WebSocket support in Azure Application Gateway | Microsoft Docs
-description: This page provides an overview of the Application Gateway WebSocket support.
-author: vhorne
-ms.author: amsriva
+title: WebSocket support in Azure Application Gateway
+description: Application Gateway provides native support for WebSocket across all gateway sizes. There are no user-configurable settings.
+author: greg-lindsay
+ms.author: greglin
 ms.service: application-gateway
+services: application-gateway
 ms.topic: conceptual
-ms.workload: infrastructure-services
-ms.date: 03/18/2019
+ms.date: 11/16/2019
 ---
+
 # Overview of WebSocket support in Application Gateway
 
 Application Gateway provides native support for WebSocket across all gateway sizes. There is no user-configurable setting to selectively enable or disable WebSocket support. 
@@ -22,7 +23,10 @@ It's used in apps that benefit from fast, real-time communication, such as chat,
 
 To establish a WebSocket connection, a specific HTTP-based handshake is exchanged between the client and the server. If successful, the application-layer protocol is "upgraded" from HTTP to WebSockets, using the previously established TCP connection. Once this occurs, HTTP is completely out of the picture; data can be sent or received using the WebSocket protocol by both endpoints, until the WebSocket connection is closed. 
 
-![websocket](./media/application-gateway-websocket/websocket.png)
+![Diagram compares a client interacting with a web server, connecting twice to get two replies, with a WebSocket interaction, where a client connects to a server once to get multiple replies.](./media/application-gateway-websocket/websocket.png)
+
+> [!NOTE]
+> As described, the HTTP protocol is used only to perform a handshake when establishing a WebSocket connection. Once the handshake is completed, a WebSocket connection gets opened for transmitting the data, and the Web Application Firewall (WAF) cannot parse any contents. Therefore, WAF doesn't perform any inspections on such data.
 
 ### Listener configuration element
 
@@ -113,7 +117,7 @@ Your backend must have a HTTP/HTTPS web server running on the configured port (u
     Sec-WebSocket-Version: 13
 ```
 
-Another reason for this is that application gateway backend health probe supports HTTP and HTTPS protocols only. If the backend server does not respond to HTTP or HTTPS probes, it is taken out of backend pool.
+Another reason for this is that application gateway backend health probe supports HTTP and HTTPS protocols only. If the backend server doesn't respond to HTTP or HTTPS probes, it is taken out of backend pool.
 
 ## Next steps
 

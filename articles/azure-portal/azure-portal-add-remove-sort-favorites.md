@@ -1,54 +1,50 @@
 ---
-title: Add, remove, and sort favorites in Azure portal | Microsoft Docs 
-description: Learn how to add or remove items from the favorites list and sort the order of items
-services: azure-portal
-keywords: favorites
-author: kfollis
-ms.author: kfollis
-ms.date: 04/03/2019
-ms.topic: conceptual
-
-ms.service: azure-portal
-ms.custom: 
-manager:  mtillman
+title: Add, remove, and arrange favorites in Azure portal
+description: Learn how to add or remove items from the favorites list and rearrange the order of items
+keywords: favorites,portal
+ms.date: 02/17/2022
+ms.topic: how-to
 ---
-# Add, remove, and sort favorites
 
-Add or remove items from your **Favorites** list so that you can quickly go to the services that you use most often. We already added some common services to your **Favorites** list, but you’ll likely want to customize it. You're the only one who sees the changes you make to **Favorites**.
+# Add, remove, and rearrange favorites
 
-## Add or remove a favorite
+Add or remove items from your **Favorites** list in the Azure portal so that you can quickly go to the services you use most often. We've already added some common services to your **Favorites** list, but you'll likely want to customize it. You're the only one who sees the changes you make to **Favorites**.
 
-Items that are listed under **Favorites** are selected from **All services**. A star icon ![Yellow star icon](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-star.png) next to each service indicates whether the item appears on the list. Select the star icon to add or remove a service from the **Favorites** list.
+## Add a favorite
 
-### Add Cost Management + Billing to Favorites
+Items that are listed under **Favorites** are selected from **All services**. Hover over a service name to display information and resources related to the service. A filled star icon ![Filled star icon](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-graystar.png) next to the service name indicates that the item appears on the **Favorites** list. Select the star icon to add a service to the **Favorites** list.
 
-1. Select **All services** from the top section of the sidebar.
+In this example, we'll add Cost Management + Billing to the **Favorites** list.
 
-    ![Screenshot showing All services selected](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-all-services.png)
+1. Select **All services** from the Azure portal menu.
 
-1. Enter the word "cost" in the search field. Only services that have "cost" in the title or that have "cost" as a keyword will be shown.
+   :::image type="content" source="media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-new-all-services.png" alt-text="Screenshot showing All services in the Azure portal menu.":::
 
-   ![Screenshot showing search in All services](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-search.png)
+1. Enter the word "cost" in the search field. Services that have "cost" in the title or that have "cost" as a keyword are shown.
 
-1. Select the star icon.
+   :::image type="content" source="media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-find-service.png" alt-text="Screenshot showing a search in All services in the Azure portal.":::
 
-   ![Screenshot showing star next to cost management + billing selected](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-add.png)
+1. Hover over the service name to display the **Cost Management + Billing** information card. Select the star icon.
+
+   :::image type="content" source="media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-add.png" alt-text="Screenshot showing the star icon to add a service to Favorites in the Azure portal.":::
 
 1. **Cost Management + Billing** is now added as the last item in your **Favorites** list.
 
-## Sort favorites
+## Remove an item from Favorites
 
-You can change the order that your favorite services are listed. Just drag and drop the menu item to another location under **Favorites**.
+You can now remove an item directly from the **Favorites** list.
 
-### Move Cost Management + Billing to the top of Favorites
+1. In the **Favorites** section of the portal menu, hover over the name of the service you want to remove.
 
-1. Select and hold the **Cost Management + Billing** entry on the **Favorites** list.
+   :::image type="content" source="media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-remove.png" alt-text="Screenshot showing how to remove a service from Favorites in the Azure portal.":::
 
-   ![Screenshot showing cost management + billing selected](./media/azure-portal-add-remove-sort-favorites/azure-portal-favorites-sort.png)
+2. On the information card, select the star so that it changes from filled to unfilled. The service is removed from the **Favorites** list.
 
-1. While continuing to hold, drag the item to the top of **Favorites** and then release.
+## Rearrange favorites
+
+You can change the order in which your favorite services are listed. Just select an item, then drag and drop it  to another location under **Favorites**.
 
 ## Next steps
 
-* To create a project-focused workspace, see [Create and share dashboards in the Azure portal](../azure-portal/azure-portal-dashboards.md)
-* Discover more how-to's in the [Azure portal how-to video series](https://www.youtube.com/playlist?list=PLLasX02E8BPBKgXP4oflOL29TtqTzwhxR)
+- To create a project-focused workspace, see [Create and share dashboards in the Azure portal](../azure-portal/azure-portal-dashboards.md).
+- Explore the [Azure portal how-to video series](https://www.youtube.com/playlist?list=PLLasX02E8BPBKgXP4oflOL29TtqTzwhxR).

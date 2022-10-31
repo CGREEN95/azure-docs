@@ -1,22 +1,21 @@
 ---
 
-title: 'Troubleshooting: Missing data in the downloaded Azure Active Directory activity logs | Microsoft Docs'
+title: 'Troubleshooting: Missing data in the downloaded activity logs | Microsoft Docs'
 description: Provides you with a resolution to missing data in downloaded Azure Active Directory activity logs.
 services: active-directory
 documentationcenter: ''
-author: cawrites
-manager: daveba
+author: MarkusVi
+manager: amycolannino
 editor: ''
 
 ms.assetid: ffce7eb1-99da-4ea7-9c4d-2322b755c8ce
 ms.service: active-directory
-ms.devlang: na
-ms.topic: conceptual
+ms.topic: troubleshooting
 ms.tgt_pltfrm: na
 ms.workload: identity
 ms.subservice: report-monitor
-ms.date: 11/13/2018
-ms.author: chadam
+ms.date: 08/26/2022
+ms.author: markvi
 ms.reviewer: dhanyahk
 
 ms.collection: M365-identity-device-management
@@ -40,5 +39,5 @@ You can leverage [Azure AD Reporting APIs](concept-reporting-api.md) to fetch up
 
 ## Next steps
 
-* [Azure Active Directory reports FAQ](reports-faq.md)
+* [Azure Active Directory reports FAQ](reports-faq.yml)
 

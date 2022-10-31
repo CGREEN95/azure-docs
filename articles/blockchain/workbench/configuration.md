@@ -1,17 +1,14 @@
 ---
-title: Azure Blockchain Workbench configuration reference
-description: Azure Blockchain Workbench Preview application configuration overview.
-services: azure-blockchain
-keywords: 
-author: PatAltimore
-ms.author: patricka
-ms.date: 09/05/2019
+title: Azure Blockchain Workbench configuration metadata reference
+description: Azure Blockchain Workbench Preview application configuration metadata overview.
+ms.date: 02/18/2022
 ms.topic: article
-ms.service: azure-blockchain
 ms.reviewer: brendal
-manager: femila
+#Customer intent: As a developer, I want to understand application configuration metadata details used by Azure Blockchain Workbench.
 ---
 # Azure Blockchain Workbench configuration reference
+
+[!INCLUDE [Retirement note](./includes/retire.md)]
 
 Azure Blockchain Workbench applications are multi-party workflows defined by configuration metadata and smart contract code. Configuration metadata defines the high-level workflows and interaction model of the blockchain application. Smart contracts define the business logic of the blockchain application. Workbench uses configuration and smart contract code to generate blockchain application user experiences.
 
@@ -391,6 +388,7 @@ Identifiers represent a collection of information used to describe workflow prop
 | Name | The unique name of the property or parameter. The corresponding smart contract must use the same **Name** for the applicable property or parameter. | Yes | 50 |
 | DisplayName | Friendly display name for the property or parameter. | Yes | 255 |
 | Description | Description of the property or parameter. | No | 255 |
+| Type | Property [data type](#type). | Yes |
 
 ### Identifiers example
 
@@ -996,5 +994,4 @@ The following configuration file is for the asset transfer sample:
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Azure Blockchain Workbench REST API reference](https://docs.microsoft.com/rest/api/azure-blockchain-workbench)
-
+> [Azure Blockchain Workbench REST API reference](/rest/api/azure-blockchain-workbench)

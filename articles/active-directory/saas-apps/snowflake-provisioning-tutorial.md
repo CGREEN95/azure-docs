@@ -1,173 +1,212 @@
 ---
 title: 'Tutorial: Configure Snowflake for automatic user provisioning with Azure Active Directory | Microsoft Docs'
-description: Learn how to configure Azure Active Directory to automatically provision and de-provision user accounts to Snowflake.
+description: Learn how to configure Azure Active Directory to automatically provision and deprovision user accounts to Snowflake.
 services: active-directory
-documentationcenter: ''
-author: zchia
-writer: zchia
-manager: beatrizd
-
-ms.assetid: f9ce85f4-0992-4bc6-8276-4b2efbce8dcb
+author: twimmers
+writer: twimmers
+manager: CelesteDG
 ms.service: active-directory
 ms.subservice: saas-app-tutorial
 ms.workload: identity
-ms.tgt_pltfrm: na
-ms.devlang: na
-ms.topic: article
+ms.topic: tutorial
 ms.date: 07/26/2019
-ms.author: zhchia
+ms.author: thwimmer
 ---
 
 # Tutorial: Configure Snowflake for automatic user provisioning
 
-The objective of this tutorial is to demonstrate the steps to be performed in Snowflake and Azure Active Directory (Azure AD) to configure Azure AD to automatically provision and de-provision users and/or groups to Snowflake.
+This tutorial demonstrates the steps that you perform in Snowflake and Azure Active Directory (Azure AD) to configure Azure AD to automatically provision and deprovision users and groups to [Snowflake](https://www.Snowflake.com/pricing/). For important details on what this service does, how it works, and frequently asked questions, see [What is automated SaaS app user provisioning in Azure AD?](../app-provisioning/user-provisioning.md). 
 
 > [!NOTE]
-> This tutorial describes a connector built on top of the Azure AD User Provisioning Service. For important details on what this service does, how it works, and frequently asked questions, see [Automate user provisioning and deprovisioning to SaaS applications with Azure Active Directory](../manage-apps/user-provisioning.md).
+> This connector is currently in public preview. For information about terms of use, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+
+## Capabilities supported
+
+> [!div class="checklist"]
 >
-> This connector is currently in Public Preview. For more information on the general Microsoft Azure terms of use for Preview features, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+> * Create users in Snowflake
+> * Remove users in Snowflake when they don't require access anymore
+> * Keep user attributes synchronized between Azure AD and Snowflake
+> * Provision groups and group memberships in Snowflake
+> * Allow [single sign-on](./snowflake-tutorial.md) to Snowflake (recommended)
 
 ## Prerequisites
 
 The scenario outlined in this tutorial assumes that you already have the following prerequisites:
 
-* An Azure AD tenant.
-* [A Snowflake tenant](https://www.Snowflake.com/pricing/).
-* A user account in Snowflake with Admin permissions.
+* [An Azure AD tenant](../develop/quickstart-create-new-tenant.md)
+* A user account in Azure AD with [permission](../roles/permissions-reference.md) to configure provisioning (Application Administrator, Cloud Application Administrator, Application Owner, or Global Administrator)
+* [A Snowflake tenant](https://www.Snowflake.com/pricing/)
+* At least one user in Snowflake with the **ACCOUNTADMIN** role.
 
-## Assigning users to Snowflake
+## Step 1: Plan your provisioning deployment
 
-Azure Active Directory uses a concept called *assignments* to determine which users should receive access to selected apps. In the context of automatic user provisioning, only the users and/or groups that have been assigned to an application in Azure AD are synchronized.
+1. Learn about [how the provisioning service works](../app-provisioning/user-provisioning.md).
+1. Determine who will be in [scope for provisioning](../app-provisioning/define-conditional-rules-for-provisioning-user-accounts.md).
+1. Determine what data to [map between Azure AD and Snowflake](../app-provisioning/customize-application-attributes.md). 
 
-Before configuring and enabling automatic user provisioning, you should decide which users and/or groups in Azure AD need access to Snowflake. Once decided, you can assign these users and/or groups to Snowflake by following the instructions here:
-* [Assign a user or group to an enterprise app](../manage-apps/assign-user-or-group-access-portal.md)
+## Step 2: Configure Snowflake to support provisioning with Azure AD
 
-## Important tips for assigning users to Snowflake
+Before you configure Snowflake for automatic user provisioning with Azure AD, you need to enable System for Cross-domain Identity Management (SCIM) provisioning on Snowflake.
 
-* It is recommended that a single Azure AD user is assigned to Snowflake to test the automatic user provisioning configuration. Additional users and/or groups may be assigned later.
+1. Sign in to Snowflake as an administrator and execute the following from either the Snowflake worksheet interface or SnowSQL.
 
-* When assigning a user to Snowflake, you must select any valid application-specific role (if available) in the assignment dialog. Users with the **Default Access** role are excluded from provisioning.
+   ```
+   use role accountadmin;
+   
+    create role if not exists aad_provisioner;
+    grant create user on account to role aad_provisioner;
+    grant create role on account to role aad_provisioner;
+   grant role aad_provisioner to role accountadmin;
+    create or replace security integration aad_provisioning
+        type = scim
+        scim_client = 'azure'
+        run_as_role = 'AAD_PROVISIONER';
+    select system$generate_scim_access_token('AAD_PROVISIONING');
+   ```
 
-## Setup Snowflake for provisioning
+1. Use the ACCOUNTADMIN role.
 
-Before configuring Snowflake for automatic user provisioning with Azure AD, you will need to enable SCIM provisioning on Snowflake.
+    ![Screenshot of a worksheet in the Snowflake UI with the SCIM access token called out.](media/Snowflake-provisioning-tutorial/step-2.png)
 
-> [!NOTE]
-> This integration is in Private Preview in Snowflake today. If you would like to enable this feature in your Snowflake account, contact your Snowflake Sales Representative.
+1. Create the custom role AAD_PROVISIONER. All users and roles in Snowflake created by Azure AD will be owned by the scoped down AAD_PROVISIONER role.
 
-1. Sign in to your Snowflake Admin Console. Enter the query shown below in the workspace highlighted and click **Run**.
+    ![Screenshot showing the custom role.](media/Snowflake-provisioning-tutorial/step-3.png)
 
-	![Snowflake Admin Console](media/Snowflake-provisioning-tutorial/image00.png)
+1. Let the ACCOUNTADMIN role create the security integration using the AAD_PROVISIONER custom role.
 
-2.  A SCIM Access Token will be generated for your Snowflake tenant. To retrieve it, click on the link highlighted below.
+    ![Screenshot showing the security integrations.](media/Snowflake-provisioning-tutorial/step-4.png)
 
-	![Snowflake Add SCIM](media/Snowflake-provisioning-tutorial/image01.png)
+1. Create and copy the authorization token to the clipboard and store securely for later use. Use this token for each SCIM REST API request and place it in the request header. The access token expires after six months and a new access token can be generated with this statement.
 
-3. Copy the generated token value and click **Done**. This value will be entered in the **Secret Token** field in the Provisioning tab of your Snowflake application in the Azure portal.
+    ![Screenshot showing the token generation.](media/Snowflake-provisioning-tutorial/step-5.png)
 
-	![Snowflake Add SCIM](media/Snowflake-provisioning-tutorial/image02.png)
+## Step 3: Add Snowflake from the Azure AD application gallery
 
-## Add Snowflake from the gallery
+Add Snowflake from the Azure AD application gallery to start managing provisioning to Snowflake. If you previously set up Snowflake for single sign-on (SSO), you can use the same application. However, we recommend that you create a separate app when you're initially testing the integration. [Learn more about adding an application from the gallery](../manage-apps/add-application-portal.md).
 
-To configure Snowflake for automatic user provisioning with Azure AD, you need to addSnowflake from the Azure AD application gallery to your list of managed SaaS applications.
+## Step 4: Define who will be in scope for provisioning
 
-**To add Snowflake from the Azure AD application gallery, perform the following steps:**
+The Azure AD provisioning service allows you to scope who will be provisioned based on assignment to the application, or based on attributes of the user or group. If you choose to scope who will be provisioned to your app based on assignment, you can use the [steps to assign users and groups to the application](../manage-apps/assign-user-or-group-access-portal.md). If you choose to scope who will be provisioned based solely on attributes of the user or group, you can [use a scoping filter](../app-provisioning/define-conditional-rules-for-provisioning-user-accounts.md).
 
-1. In the **[Azure portal](https://portal.azure.com)**, in the left navigation panel, select **Azure Active Directory**.
+Keep these tips in mind:
 
-	![The Azure Active Directory button](common/select-azuread.png)
+* When you're assigning users and groups to Snowflake, you must select a role other than Default Access. Users with the Default Access role are excluded from provisioning and will be marked as not effectively entitled in the provisioning logs. If the only role available on the application is the Default Access role, you can [update the application manifest](../develop/howto-add-app-roles-in-azure-ad-apps.md) to add more roles.
 
-2. Go to **Enterprise applications**, and then select **All applications**.
+* If you need additional roles, you can [update the application manifest](../develop/howto-add-app-roles-in-azure-ad-apps.md) to add new roles.
 
-	![The Enterprise applications blade](common/enterprise-applications.png)
+## Step 5: Configure automatic user provisioning to Snowflake
 
-3. To add a new application, select the **New application** button at the top of the pane.
+This section guides you through the steps to configure the Azure AD provisioning service to create, update, and disable users and groups in Snowflake. You can base the configuration on user and group assignments in Azure AD.
 
-	![The New application button](common/add-new-app.png)
+To configure automatic user provisioning for Snowflake in Azure AD:
 
-4. In the search box, enter **Snowflake**, select **Snowflake** in the results panel, and then click the **Add** button to add the application.
+1. Sign in to the [Azure portal](https://portal.azure.com). Select **Enterprise applications** > **All applications**.
 
-	![Snowflake in the results list](common/search-new-app.png)
+    ![Screenshot that shows the Enterprise applications pane.](common/enterprise-applications.png)
 
-## Configuring automatic user provisioning to Snowflake 
+1. In the list of applications, select **Snowflake**.
 
-This section guides you through the steps to configure the Azure AD provisioning service to create, update, and disable users and/or groups in Snowflake based on user and/or group assignments in Azure AD.
+   ![Screenshot that shows a list of applications.](common/all-applications.png)
 
-> [!TIP]
-> You may also choose to enable SAML-based single sign-on for Snowflake , following the instructions provided in the [Snowflake Single sign-on tutorial](Snowflake-tutorial.md). Single sign-on can be configured independently of automatic user provisioning, though these two features compliment each other.
+1. Select the **Provisioning** tab.
 
-### To configure automatic user provisioning for Snowflake in Azure AD:
+   ![Screenshot of the Manage options with the Provisioning option called out.](common/provisioning.png)
 
-1. Sign in to the [Azure portal](https://portal.azure.com). Select **Enterprise Applications**, then select **All applications**.
+1. Set **Provisioning Mode** to **Automatic**.
 
-	![Enterprise applications blade](common/enterprise-applications.png)
+    ![Screenshot of the Provisioning Mode drop-down list with the Automatic option called out.](common/provisioning-automatic.png)
 
-2. In the applications list, select **Snowflake**.
+1. In the **Admin Credentials** section, enter the SCIM 2.0 base URL and authentication token that you retrieved earlier in the **Tenant URL** and **Secret Token** boxes, respectively.
+    >[!NOTE]
+    >The Snowflake SCIM endpoint consists of the Snowflake account URL appended with `/scim/v2/`. For example, if your Snowflake account name is `acme` and your Snowflake account is in the `east-us-2` Azure region, the **Tenant URL** value is `https://acme.east-us-2.azure.snowflakecomputing.com/scim/v2`.
 
-	![The Snowflake link in the Applications list](common/all-applications.png)
+   Select **Test Connection** to ensure that Azure AD can connect to Snowflake. If the connection fails, ensure that your Snowflake account has admin permissions and try again.
 
-3. Select the **Provisioning** tab.
+    ![Screenshot that shows boxes for tenant URL and secret token, along with the Test Connection button.](common/provisioning-testconnection-tenanturltoken.png)
 
-	![Provisioning tab](common/provisioning.png)
+1. In the **Notification Email** box, enter the email address of a person or group who should receive the provisioning error notifications. Then select the **Send an email notification when a failure occurs** check box.
 
-4. Set the **Provisioning Mode** to **Automatic**.
+    ![Screenshot that shows boxes for notification email.](common/provisioning-notification-email.png)
 
-	![Provisioning tab](common/provisioning-automatic.png)
+1. Select **Save**.
 
-5. Under the Admin Credentials section, input `https://<Snowflake Account URL>/scim/v2` in tenant 	URL. An example of the tenant URL: `https://acme.snowflakecomputing.com/scim/v2`
+1. In the **Mappings** section, select **Synchronize Azure Active Directory Users to Snowflake**.
 
-6. Input the **SCIM Authentication Token** value retrieved earlier in **Secret Token**. Click **Test Connection** to ensure Azure AD can connect to Snowflake. If the connection fails, ensure your Snowflake account has Admin permissions and try again.
+1. Review the user attributes that are synchronized from Azure AD to Snowflake in the **Attribute Mapping** section. The attributes selected as **Matching** properties are used to match the user accounts in Snowflake for update operations. Select the **Save** button to commit any changes.
 
-	![Tenant URL + Token](common/provisioning-testconnection-tenanturltoken.png)
+   |Attribute|Type|
+   |---|---|
+   |active|Boolean|
+   |displayName|String|
+   |emails[type eq "work"].value|String|
+   |userName|String|
+   |name.givenName|String|
+   |name.familyName|String|
+   |externalId|String|
 
-7. In the **Notification Email** field, enter the email address of a person or group who should receive the provisioning error notifications and check the checkbox - **Send an email notification when a failure occurs**.
+    >[!NOTE]
+    >Snowflake supported custom extension user attributes during SCIM provisioning:
+    >* DEFAULT_ROLE
+    >* DEFAULT_WAREHOUSE
+    >* DEFAULT_SECONDARY_ROLES
+    >* SNOWFLAKE NAME AND LOGIN_NAME FIELDS TO BE DIFFERENT
 
-	![Notification Email](common/provisioning-notification-email.png)
+    > How to set up Snowflake custom extension attributes in Azure AD SCIM user provisioning is explained [here](https://community.snowflake.com/s/article/HowTo-How-to-Set-up-Snowflake-Custom-Attributes-in-Azure-AD-SCIM-for-Default-Roles-and-Default-Warehouses).
 
-8. Click **Save**.
+1. In the **Mappings** section, select **Synchronize Azure Active Directory Groups to Snowflake**.
 
-9. Under the **Mappings** section, select **Synchronize Azure Active Directory Users to Snowflake**.
+1. Review the group attributes that are synchronized from Azure AD to Snowflake in the **Attribute Mapping** section. The attributes selected as **Matching** properties are used to match the groups in Snowflake for update operations. Select the **Save** button to commit any changes.
 
-	![Snowflake User Mappings](media/Snowflake-provisioning-tutorial/user-mapping.png)
+    |Attribute|Type|
+    |---|---|
+    |displayName|String|
+    |members|Reference|
 
-10. Review the user attributes that are synchronized from Azure AD to Snowflake in the **Attribute Mapping** section. The attributes selected as **Matching** properties are used to match the user accounts in Snowflake for update operations. Select the **Save** button to commit any changes.
+1. To configure scoping filters, see the instructions in the      [Scoping filter tutorial](../app-provisioning/define-conditional-rules-for-provisioning-user-accounts.md).
 
-	![Snowflake User Attributes](media/Snowflake-provisioning-tutorial/user-attribute.png)
+1. To enable the Azure AD provisioning service for Snowflake, change **Provisioning Status** to **On** in the **Settings** section.
 
-11. Under the **Mappings** section, select **Synchronize Azure Active Directory Groups to Snowflake**.
+    ![Screenshot that shows Provisioning Status switched on.](common/provisioning-toggle-on.png)
 
-	![Snowflake Group Mappings](media/Snowflake-provisioning-tutorial/group-mapping.png)
+1. Define the users and groups that you want to provision to Snowflake by choosing the desired values in **Scope** in the **Settings** section. 
 
-12. Review the group attributes that are synchronized from Azure AD to Snowflake in the **Attribute Mapping** section. The attributes selected as **Matching** properties are used to match the groups in Snowflake for update operations. Select the **Save** button to commit any changes.
+    If this option is not available, configure the required fields under **Admin Credentials**, select **Save**, and refresh the page. 
 
-	![Snowflake Group Attributes](media/Snowflake-provisioning-tutorial/group-attribute.png)
+    ![Screenshot that shows choices for provisioning scope.](common/provisioning-scope.png)
 
-13. To configure scoping filters, refer to the following instructions provided in the [Scoping filter tutorial](../manage-apps/define-conditional-rules-for-provisioning-user-accounts.md).
+1. When you're ready to provision, select **Save**.
 
-14. To enable the Azure AD provisioning service for Snowflake, change the **Provisioning Status** to **On** in the **Settings** section.
+    ![Screenshot of the button for saving a provisioning configuration.](common/provisioning-configuration-save.png)
 
-	![Provisioning Status Toggled On](common/provisioning-toggle-on.png)
+This operation starts the initial synchronization of all users and groups defined in **Scope** in the **Settings** section. The initial sync takes longer to perform than subsequent syncs. Subsequent syncs occur about every 40 minutes, as long as the Azure AD provisioning service is running.
 
-15. Define the users and/or groups that you would like to provision to Snowflake by choosing the desired values in **Scope** in the **Settings** section.
+## Step 6: Monitor your deployment
 
-	![Provisioning Scope](common/provisioning-scope.png)
+After you've configured provisioning, use the following resources to monitor your deployment:
 
-16. When you are ready to provision, click **Save**.
-
-	![Saving Provisioning Configuration](common/provisioning-configuration-save.png)
-
-	This operation starts the initial synchronization of all users and/or groups defined in **Scope** in the **Settings** section. The initial sync takes longer to perform than subsequent syncs, which occur approximately every 40 minutes as long as the Azure AD provisioning service is running. You can use the **Synchronization Details** section to monitor progress and follow links to provisioning activity report, which describes all actions performed by the Azure AD provisioning service on Snowflake.
-
-	For more information on how to read the Azure AD provisioning logs, see [Reporting on automatic user account provisioning](../manage-apps/check-status-user-account-provisioning.md)
+* Use the [provisioning logs](../reports-monitoring/concept-provisioning-logs.md) to determine which users have been provisioned successfully or unsuccessfully.
+* Check the [progress bar](../app-provisioning/application-provisioning-when-will-provisioning-finish-specific-user.md) to see the status of the provisioning cycle and how close it is to completion.
+* If the provisioning configuration seems to be in an unhealthy state, the application will go into quarantine. [Learn more about quarantine states](../app-provisioning/application-provisioning-quarantine-status.md).  
 
 ## Connector limitations
 
-* Snowflake generated SCIM tokens expire in 6 months. Be aware that these need to be refreshed before they expire to allow the provisioning syncs to continue working. 
+Snowflake-generated SCIM tokens expire in 6 months. Be aware that you need to refresh these tokens before they expire, to allow the provisioning syncs to continue working.
+
+## Troubleshooting tips
+
+The Azure AD provisioning service currently operates under particular [IP ranges](../app-provisioning/use-scim-to-provision-users-and-groups.md#ip-ranges). If necessary, you can restrict other IP ranges and add these particular IP ranges to the allowlist of your application. That technique will allow traffic flow from the Azure AD provisioning service to your application.
+
+## Change log
+
+* 07/21/2020: Enabled soft-delete for all users (via the active attribute).
+* 10/12/2022: Updated Snowflake SCIM Configuration.
 
 ## Additional resources
 
-* [Managing user account provisioning for Enterprise Apps](../manage-apps/configure-automatic-user-provisioning-portal.md).
-* [What is application access and single sign-on with Azure Active Directory?](../manage-apps/what-is-single-sign-on.md)
+* [Managing user account provisioning for enterprise apps](../app-provisioning/configure-automatic-user-provisioning-portal.md)
+* [What are application access and single sign-on with Azure Active Directory?](../manage-apps/what-is-single-sign-on.md)
 
 ## Next steps
-* [Learn how to review logs and get reports on provisioning activity](../manage-apps/check-status-user-account-provisioning.md).
+
+* [Learn how to review logs and get reports on provisioning activity](../app-provisioning/check-status-user-account-provisioning.md)

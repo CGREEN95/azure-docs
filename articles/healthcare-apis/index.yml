@@ -1,49 +1,108 @@
-### YamlMime:YamlDocument
-documentType: LandingData
-title: Azure API for FHIR Documentation
+### YamlMime:Landing
+
+title: Azure Health Data Services documentation
+summary: Documentation for all of Azure Health Data Services capabilities, including features from FHIR, DICOM, and MedTech service.
+
 metadata:
-  title: Azure API for FHIR Documentation
-  meta.description: Learn how Azure API for FHIR can power healthcare iteroperability in Azure.
+  title: Azure Health Data Services documentation
+  description: documentation for all of Azure Health Data Services products and services, including FHIR, DICOM, and MedTech service
   services: healthcare-apis
-  author: hansenms
-  manager: dougseven
-  ms.author: mihansen
   ms.service: healthcare-apis
-  ms.subservice: fhir
-  ms.topic: landing-page
-  ms.date: 02/07/2019
-abstract:
-  description: Azure API for FHIR® is a fully managed, standards-based, compliant API for clinical health data that enables you to create new systems of engagement for analytics, machine learning, and actionable intelligence with your health data. 
-sections:
-- title:  
-  items:
-    - type: paragraph
-      text: FHIR&reg; is the registered trademark of HL7 and is used with the permission of HL7.
-- title: 5-Minute Quickstarts
-  items:
-    - type: paragraph
-      text: Learn how Azure API for FHIR can power healthcare interoperability in Azure by selecting an arrow link <img src="media/index/link.jpg" height="15" width="15"></img>.
-    - type: table
-      style: dataMatrix
-      columns:
-        - image:
-            src: media/index/portal.svg
-          title: Azure portal
-        - image:
-            src: media/index/powershell.svg
-          title: Azure PowerShell
-        - image:
-            src: media/index/cli.svg
-          title: Azure CLI
-      rows:
-        - title: Deploy Azure API for FHIR
-          values:
-          - href: fhir-paas-portal-quickstart.md
-          - href: fhir-paas-powershell-quickstart.md
-          - href: fhir-paas-cli-quickstart.md
-        - title: Deploy Open Source FHIR Server
-          values:
-          - href: fhir-oss-portal-quickstart.md
-          - href: fhir-oss-powershell-quickstart.md
-          - href: fhir-oss-cli-quickstart.md
-          
+  ms.topic: landing-page 
+  ms.collection: collection
+  author: msjasteppe
+  ms.author: jasteppe
+  ms.date: 05/04/2022
+
+# linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | tutorial | video | whats-new
+
+landingContent:
+
+  - title: What is Azure Health Data Services?
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: About Azure Health Data Services
+            url: healthcare-apis-overview.md
+          - text: About workspace
+            url: workspace-overview.md
+      - linkListType: quickstart
+        links:
+          - text: Get started with Azure Health Data Services
+            url: get-started-with-health-data-services.md
+      - linkListType: deploy
+        links:
+          - text: Deploy Azure Health Data Services workspace
+            url: healthcare-apis-quickstart.md
+  
+  - title: Using Azure Health Data Services
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+          - text: Authentication & Authorization
+            url: authentication-authorization.md
+      - linkListType: reference
+        links:
+          - text: Azure Health Data Services FAQs
+            url: healthcare-apis-faqs.md
+  
+  - title: FHIR service
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: About FHIR service
+            url: ./fhir/overview.md
+      - linkListType: quickstart
+        links:
+          - text: Get started with FHIR service
+            url: ./fhir/get-started-with-fhir.md
+      - linkListType: deploy
+        links:
+          - text: Deploy FHIR service using portal
+            url: ./fhir/fhir-portal-quickstart.md
+      - linkListType: tutorial
+        links:
+          - text: Interoperability and Patient Access
+            url: ./fhir/cms-tutorial-introduction.md
+          - text: FHIR search operation
+            url: ./fhir/overview-of-search.md
+
+  - title: DICOM service
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: About DICOM service 
+            url: ./dicom/dicom-services-overview.md
+      - linkListType: quickstart
+        links:
+          - text: Get started with DICOM service
+            url: ./dicom/get-started-with-dicom.md
+      - linkListType: deploy
+        links:
+          - text: Deploy DICOM service using portal
+            url: ./dicom/deploy-dicom-services-in-azure.md
+      - linkListType: tutorial
+        links:
+          - text: DICOMweb Standard APIs
+            url: ./dicom/dicomweb-standard-apis-with-dicom-services.md
+          - text: DICOM change feed
+            url: ./dicom/pull-dicom-changes-from-change-feed.md
+  
+  - title: MedTech service
+    linkLists:
+      - linkListType: overview
+        links:
+          - text: About MedTech service
+            url: ./iot/iot-connector-overview.md
+      - linkListType: quickstart
+        links:
+          - text: Get started with MedTech service
+            url: ./iot/get-started-with-iot.md
+      - linkListType: deploy
+        links:
+          - text: Deploy MedTech service using portal
+            url: ./iot/deploy-iot-connector-in-azure.md
+      - linkListType: tutorial
+        links:
+          - text: Receive device data through Azure IoT Hub
+            url: ./iot/device-data-through-iot-hub.md

@@ -1,143 +1,132 @@
 ---
-title: Connect CEF data to Azure Sentinel Preview| Microsoft Docs
-description: Learn how to connect CEF data to Azure Sentinel.
-services: sentinel
-documentationcenter: na
-author: rkarlin
-manager: rkarlin
-editor: ''
-
-ms.service: azure-sentinel
-ms.subservice: azure-sentinel
-ms.devlang: na
+title: Get CEF-formatted logs from your device or appliance into Microsoft Sentinel | Microsoft Docs
+description: Use the Log Analytics agent, installed on a Linux-based log forwarder, to ingest logs sent in Common Event Format (CEF) over Syslog into your Microsoft Sentinel workspace.
+author: yelevin
 ms.topic: conceptual
-ms.tgt_pltfrm: na
-ms.workload: na
-ms.date: 09/23/2019
-ms.author: rkarlin
-
+ms.date: 11/09/2021
+ms.author: yelevin
+ms.custom: ignite-fall-2021
 ---
-# Connect your external solution using Common Event Format
 
-You can connect Azure Sentinel with an external solution that enables you to save log files in Syslog. If your appliance enables you to save logs as Syslog Common Event Format (CEF), the integration with Azure Sentinel enables you to easily run analytics and queries across the data.
+# Get CEF-formatted logs from your device or appliance into Microsoft Sentinel
 
-> [!NOTE] 
-> Data is stored in the geographic location of the workspace on which you are running Azure Sentinel.
+[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
-## How it works
+[!INCLUDE [reference-to-feature-availability](includes/reference-to-feature-availability.md)]
 
-The connection between Azure Sentinel and your CEF appliance takes place in three steps:
+Many networking and security devices and appliances send their system logs over the Syslog protocol in a specialized format known as Common Event Format (CEF). This format includes more information than the standard Syslog format, and it presents the information in a parsed key-value arrangement. The Log Analytics Agent accepts CEF logs and formats them especially for use with Microsoft Sentinel, before forwarding them on to your Microsoft Sentinel workspace.
 
-1. On the appliance, you need to set these values so that the appliance sends the necessary logs in the necessary format to the Azure Sentinel Syslog agent, based on the Microsoft Monitoring Agent. You can modify these parameters in your appliance, as long as you also modify them in the Syslog daemon on the Azure Sentinel agent.
-    - Protocol = UDP
-    - Port = 514
-    - Facility = Local4
-    - Format = CEF
-2. The Syslog agent collects the data and sends it securely to Log Analytics, where it is parsed and enriched.
-3. The agent stores the data in a Log Analytics workspace so it can be queried as needed, using analytics, correlation rules, and dashboards.
+This article describes the process of using CEF-formatted logs to connect your data sources. For information about data connectors that use this method, see [Microsoft Sentinel data connectors reference](data-connectors-reference.md).
+
+There are two main steps to making this connection, that will be explained below in detail:
+
+- Designating a Linux machine or VM as a dedicated log forwarder, installing the Log Analytics agent on it, and configuring the agent to forward the logs to your Microsoft Sentinel workspace. The installation and configuration of the agent are handled by a deployment script.
+
+- Configuring your device to send its logs in CEF format to a Syslog server.
 
 > [!NOTE]
-> The agent can collect logs from multiple sources, but must be installed on dedicated machine.
+> Data is stored in the geographic location of the workspace on which you are running Microsoft Sentinel.
 
+## Supported architectures
+
+The following diagram describes the setup in the case of a Linux VM in Azure:
 
  ![CEF in Azure](./media/connect-cef/cef-syslog-azure.png)
 
-Alternatively, you can deploy the agent manually on an existing Azure VM, on a VM in another cloud, or on an on-premises machine. 
+Alternatively, you'll use the following setup if you use a VM in another cloud, or an on-premises machine:
 
  ![CEF on premises](./media/connect-cef/cef-syslog-onprem.png)
 
-## Security considerations
+## Prerequisites
 
-Make sure to configure the machine's security according to your organization's security policy. For example, you can configure your network to align with your corporate network security policy and change the ports and protocols in the daemon to align with your requirements. You can use the following instructions to improve your machine security configuration:  [Secure VM in Azure](../virtual-machines/linux/security-policy.md), [Best practices for Network security](../security/fundamentals/network-best-practices.md).
+A Microsoft Sentinel workspace is required in order to ingest CEF data into Log Analytics.
 
-To use TLS communication between the security solution and the Syslog machine, you will need to configure the Syslog daemon (rsyslog or syslog-ng) to communicate in TLS: [Encrypting Syslog Traffic with TLS -rsyslog](https://www.rsyslog.com/doc/v8-stable/tutorials/tls_cert_summary.html), [Encrypting log messages with TLS –syslog-ng](https://support.oneidentity.com/technical-documents/syslog-ng-open-source-edition/3.22/administration-guide/60#TOPIC-1209298).
+- You must have read and write permissions on this workspace.
 
+- You must have read permissions to the shared keys for the workspace. [Learn more about workspace keys](../azure-monitor/agents/agent-windows.md).
 
-## Step 1: Configure your Syslog VM
+## Designate a log forwarder and install the Log Analytics agent
 
-You need to deploy an agent on a dedicated Linux machine (VM or on premises) to support the communication between the appliance and Azure Sentinel. 
+This section describes how to designate and configure the Linux machine that will forward the logs from your device to your Microsoft Sentinel workspace.
 
-> [!NOTE]
-> Make sure to configure the machine's security according to your organization's security policy. For example, you can configure your network to align with your corporate network security policy and change the ports and protocols in the daemon to align with your requirements. 
+Your Linux machine can be a physical or virtual machine in your on-premises environment, an Azure VM, or a VM in another cloud.
 
+Use the link provided on the **Common Event Format (CEF) data connector page** to run a script on the designated machine and perform the following tasks:
 
-1. In the Azure Sentinel portal, click **Data connectors** and select **Common Event Format (CEF)** and then **Open connector page**. 
+- **Installs the Log Analytics agent for Linux** (also known as the OMS agent) and configures it for the following purposes:
+    - listening for CEF messages from the built-in Linux Syslog daemon on TCP port 25226
+    - sending the messages securely over TLS to your Microsoft Sentinel workspace, where they are parsed and enriched
 
-1. Under **Download and install the Syslog agent**, select your machine type, either Azure or on-premises. 
-1. In the **Virtual machines** screen that opens, select the machine you want to use and click **Connect**.
-1. If you choose **Download and install agent for Azure Linux virtual machines**, select the machine and click **Connect**. If you chose **Download and install agent for non-Azure Linux virtual machines**, in the **Direct Agent** screen, run the script under **Download and onboard agent for Linux**.
-1. In the CEF connector screen, under **Configure and forward Syslog**, set whether your Syslog daemon is **rsyslog.d** or **syslog-ng**. 
-1. Copy these commands and run them on your appliance:
-    - If you selected rsyslog.d:
-              
-       1. Tell the Syslog daemon to listen on facility local_4 and to send the Syslog messages to the Azure Sentinel agent using port 25226. `sudo bash -c "printf 'local4.debug  @127.0.0.1:25226' > /etc/rsyslog.d/security-config-omsagent.conf"`
-            
-       2. Download and install the [security_events config file](https://aka.ms/asi-syslog-config-file-linux) that configures the Syslog agent to listen on port 25226. `sudo wget -O /etc/opt/microsoft/omsagent/{0}/conf/omsagent.d/security_events.conf "https://aka.ms/syslog-config-file-linux"` Where {0} should be replaced with your workspace GUID.
-            
-       1. Restart the syslog daemon `sudo service rsyslog restart`<br> For more information, see the [rsyslog documentation](https://www.rsyslog.com/doc/v8-stable/tutorials/tls_cert_summary.html)
-           
-    - If you selected syslog-ng:
-       1. Tell the Syslog daemon to listen on facility local_4 and to send the Syslog messages to the Azure Sentinel agent using port 25226. `sudo bash -c "printf 'filter f_local4_oms { facility(local4); };\n  destination security_oms { tcp(\"127.0.0.1\" port(25226)); };\n  log { source(src); filter(f_local4_oms); destination(security_oms); };' > /etc/syslog-ng/security-config-omsagent.conf"`
-       2. Download and install the [security_events config file](https://aka.ms/asi-syslog-config-file-linux) that configures the Syslog agent to listen on port 25226. `sudo wget -O /etc/opt/microsoft/omsagent/{0}/conf/omsagent.d/security_events.conf "https://aka.ms/syslog-config-file-linux"` Where {0} should be replaced with your workspace GUID.
+- **Configures the built-in Linux Syslog daemon** (rsyslog.d/syslog-ng) for the following purposes:
+    - listening for Syslog messages from your security solutions on TCP port 514
+    - forwarding only the messages it identifies as CEF to the Log Analytics agent on localhost using TCP port 25226
 
-        3. Restart the syslog daemon `sudo service syslog-ng restart` <br>For more information, see the [syslog-ng documentation](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/mutual-authentication-using-tls/2)
-1. Restart the Syslog agent using this command: `sudo /opt/microsoft/omsagent/bin/service_control restart [{workspace GUID}]`
-1. Confirm that there are no errors in the agent log by running this command: `tail /var/opt/microsoft/omsagent/log/omsagent.log`
+For more information, see [Deploy a log forwarder to ingest Syslog and CEF logs to Microsoft Sentinel](connect-log-forwarder.md).
 
-To use the relevant schema in Log Analytics for the CEF events, search for `CommonSecurityLog`.
+### Security considerations
 
-## Step 2: Forward Common Event Format (CEF) logs to Syslog agent
+Make sure to configure the machine's security according to your organization's security policy. For example, you can configure your network to align with your corporate network security policy and change the ports and protocols in the daemon to align with your requirements.
 
-Set your security solution to send Syslog messages in CEF format to your Syslog agent.​ Make sure you use the same parameters that appear in your agent configuration.​ These are usually:​
+For more information, see [Secure VM in Azure](../virtual-machines/security-policy.md) and [Best practices for Network security](../security/fundamentals/network-best-practices.md).
 
-- Port 514
-- Facility local4
+If your devices are sending Syslog and CEF logs over TLS, such as when your log forwarder is in the cloud, you will need to configure the Syslog daemon (rsyslog or syslog-ng) to communicate in TLS. 
 
-## Step 3: Validate connectivity
+For more information, see:
 
-It may take upwards of 20 minutes until your logs start to appear in Log Analytics. 
+- [Encrypting Syslog traffic with TLS – rsyslog](https://www.rsyslog.com/doc/v8-stable/tutorials/tls_cert_summary.html)
+- [Encrypting log messages with TLS – syslog-ng](https://support.oneidentity.com/technical-documents/syslog-ng-open-source-edition/3.22/administration-guide/60#TOPIC-1209298)
 
-1. Make sure you use the right facility. The facility must be the same in your appliance and in Azure Sentinel. You can check which facility file you're using in Azure Sentinel and modify it in the file `security-config-omsagent.conf`. 
+## Configure your device
 
-2. Make sure that your logs are getting to the right port in the Syslog agent. Run this command on the Syslog agent machine: `tcpdump -A -ni any  port 514 -vv` This command shows you the logs that streams from the device to the Syslog machine. Make sure that logs are being received from the source appliance on the right port and right facility.
+Locate and follow your device vendor's configuration instructions for sending logs in CEF format to a SIEM or log server. 
 
-3. Make sure that the logs you send comply with [RFC 3164](https://tools.ietf.org/html/rfc3164).
+If your product appears in the data connectors gallery, you can consult the [Microsoft Sentinel data connectors reference](data-connectors-reference.md) for assistance, where the configuration instructions should include the settings in the list below.
 
-4. On the computer running the Syslog agent, make sure these ports 514, 25226 are open and listening, using the command `netstat -a -n:`. For more information about using this command, see [netstat(8) - Linux man page](https://linux.die.net/man/8/netstat). If it’s listening properly, you’ll see this:
+   - Protocol = TCP
+   - Port = 514
+   - Format = CEF
+   - IP address - make sure to send the CEF messages to the IP address of the virtual machine you dedicated for this purpose.
 
-   ![Azure Sentinel ports](./media/connect-cef/ports.png) 
+This solution supports Syslog RFC 3164 or RFC 5424.
 
-5. Make sure the daemon is set to listen on port 514, on which you’re sending the logs.
-    - For rsyslog:<br>Make sure that the file `/etc/rsyslog.conf` includes this configuration:
+> [!TIP]
+> Define a different protocol or port number in your device as needed, as long as you also make the same changes in the Syslog daemon on the log forwarder.
+>
 
-           # provides UDP syslog reception
-           module(load="imudp")
-           input(type="imudp" port="514")
-        
-           # provides TCP syslog reception
-           module(load="imtcp")
-           input(type="imtcp" port="514")
+## Find your data
 
-      For more information, see [imudp: UDP Syslog Input Module](https://www.rsyslog.com/doc/v8-stable/configuration/modules/imudp.html#imudp-udp-syslog-input-module) and [imtcp: TCP Syslog Input Module](https://www.rsyslog.com/doc/v8-stable/configuration/modules/imtcp.html#imtcp-tcp-syslog-input-module)
+It may take up to 20 minutes after the connection is made for data to appear in Log Analytics.
 
-   - For syslog-ng:<br>Make sure that the file `/etc/syslog-ng/syslog-ng.conf` includes this configuration:
+To search for CEF events in Log Analytics, query the `CommonSecurityLog` table in the query window.
 
-           # source s_network {
-            network( transport(UDP) port(514));
-             };
-     For more information, see [syslog-ng Open Source Edition 3.16 - Administration Guide](https://www.syslog-ng.com/technical-documents/doc/syslog-ng-open-source-edition/3.16/administration-guide/19#TOPIC-956455).
+Some products listed in the data connectors gallery require the use of additional parsers for best results. These parsers are implemented through the use of Kusto functions. For more information, see the section for your product on the [Microsoft Sentinel data connectors reference](data-connectors-reference.md) page.
 
-1. Check that there is communication between the Syslog daemon and the agent. Run this command on the Syslog agent machine: `tcpdump -A -ni any  port 25226 -vv` This command shows you the logs that streams from the device to the Syslog machine. Make sure that the logs are also being received on the agent.
+To find CEF events for these products, enter the name of the Kusto function as your query subject, instead of "CommonSecurityLog."
 
-6. If both of those commands provided successful results, check Log Analytics to see if your logs are arriving. All events streamed from these appliances appear in raw form in Log Analytics under `CommonSecurityLog` type.
+You can find helpful sample queries, workbooks, and analytics rule templates made especially for your product on the **Next steps** tab of your product's data connector page in the Microsoft Sentinel portal.
 
-7. To check if there are errors or if the logs aren't arriving, look in `tail /var/opt/microsoft/omsagent/<workspace id>/log/omsagent.log`. If it says there are log format mismatch errors, go to `/etc/opt/microsoft/omsagent/{0}/conf/omsagent.d/security_events.conf "https://aka.ms/syslog-config-file-linux"` and look at the file `security_events.conf`and make sure that your logs match the regex format you see in this file.
+If you're not seeing any data, see the [CEF troubleshooting](./troubleshooting-cef-syslog.md) page for guidance.
 
-8. Make sure that your Syslog message default size is limited to 2048 bytes (2 KB). If logs are too long, update the security_events.conf using this command: `message_length_limit 4096`
+### Changing the source of the TimeGenerated field
 
+By default, the Log Analytics agent populates the *TimeGenerated* field in the schema with the time the agent received the event from the Syslog daemon. As a result, the time at which the event was generated on the source system is not recorded in Microsoft Sentinel.
+
+You can, however, run the following command, which will download and run the `TimeGenerated.py` script. This script configures the Log Analytics agent to populate the *TimeGenerated* field with the event's original time on its source system, instead of the time it was received by the agent.
+
+```bash
+wget -O TimeGenerated.py https://raw.githubusercontent.com/Azure/Azure-Sentinel/master/DataConnectors/CEF/TimeGenerated.py && python TimeGenerated.py {ws_id}
+```
 
 ## Next steps
-In this document, you learned how to connect CEF appliances to Azure Sentinel. To learn more about Azure Sentinel, see the following articles:
-- Learn how to [get visibility into your data, and potential threats](quickstart-get-visibility.md).
-- Get started [detecting threats with Azure Sentinel](tutorial-detect-threats-built-in.md).
 
+In this document, you learned how Microsoft Sentinel collects CEF logs from devices and appliances. To learn more about connecting your product to Microsoft Sentinel, see the following articles:
+
+- [Deploy a Syslog/CEF forwarder](connect-log-forwarder.md)
+- [Microsoft Sentinel data connectors reference](data-connectors-reference.md)
+- [Troubleshoot log forwarder connectivity](troubleshooting-cef-syslog.md#validate-cef-connectivity)
+
+To learn more about what to do with the data you've collected in Microsoft Sentinel, see the following articles:
+
+- Learn about [CEF and CommonSecurityLog field mapping](cef-name-mapping.md).
+- Learn how to [get visibility into your data and potential threats](get-visibility.md).
+- Get started [detecting threats with Microsoft Sentinel](./detect-threats-built-in.md).

@@ -1,18 +1,16 @@
 ---
-title: Create and manage variables for storing values - Azure Logic Apps
-description: How to store and manage values by using variables in Azure Logic Apps
+title: Create and manage variables for storing and passing values
+description: Store, manage, use, and pass values with variables for workflows in Azure Logic Apps.
 services: logic-apps
-ms.service: logic-apps
 ms.suite: integration
-author: ecfan
-ms.author: estfan
-manager: carmonm
-ms.reviewer: klam, LADocs
-ms.topic: conceptual
-ms.date: 09/20/2019
+ms.reviewer: estfan, azla
+ms.topic: how-to
+ms.date: 09/01/2022
 ---
 
 # Store and manage values by using variables in Azure Logic Apps
+
+[!INCLUDE [logic-apps-sku-consumption](../../includes/logic-apps-sku-consumption.md)]
 
 This article shows how to create and work with variables that you use to store values in your logic app. For example, variables can help you track the number of times that a loop runs. To iterate over an array or check an array for a specific item, you can use a variable to reference the index number for each array item.
 
@@ -21,7 +19,7 @@ You can create variables for data types such as integer, float, boolean, string,
 * Get or reference the variable's value.
 * Increase or decrease the variable by a constant value, also known as *increment* and *decrement*.
 * Assign a different value to the variable.
-* Insert or *append* the variable's value as the last time in a string or array.
+* Insert or *append* the variable's value as the last item in a string or array.
 
 Variables exist and are global only within the logic app instance that creates them. Also, they persist across any loop iterations inside a logic app instance. When you reference a variable, use the variable's name as the token, not the action's name, which is the usual way to reference an action's outputs.
 
@@ -56,7 +54,7 @@ You can create a variable and declare its data type and initial value - all with
 
    * To add an action under the last step, select **New step**.
 
-     ![Add action](./media/logic-apps-create-variables-store-values/add-action.png)
+     ![Screenshot that shows the "New Step" action selected on the "Logic app designer" page.](./media/logic-apps-create-variables-store-values/add-action.png)
 
    * To add an action between steps, move your mouse over the connecting arrow so that the plus sign (**+**) appears. Select the plus sign, and then select **Add an action**.
 

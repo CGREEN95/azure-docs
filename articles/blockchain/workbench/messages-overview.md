@@ -1,18 +1,15 @@
 ﻿---
-title: Azure Blockchain Workbench messages integration overview
-description: Overview of using messages in Azure Blockchain Workbench Preview.
-services: azure-blockchain
-keywords: 
-author: PatAltimore
-ms.author: patricka
-ms.date: 09/05/2019
+title: Use messages to integrate with Azure Blockchain Workbench
+description: Overview of using messages to integrate Azure Blockchain Workbench Preview with other systems.
+ms.date: 02/18/2022
 ms.topic: article
-ms.service: azure-blockchain
 ms.reviewer: brendal
-manager: femila
+#Customer intent: As an developer, I want to use messages to integrate external systems with Azure Blockchain Workbench.
 ---
 
 # Azure Blockchain Workbench messaging integration
+
+[!INCLUDE [Retirement note](./includes/retire.md)]
 
 In addition to providing a REST API, Azure Blockchain Workbench also provides messaging-based integration. Workbench publishes ledger-centric events via Azure Event Grid, enabling downstream consumers to ingest data or take action based on these events. For those clients that require reliable messaging, Azure Blockchain Workbench delivers messages to an Azure Service Bus endpoint as well.
 
@@ -109,7 +106,7 @@ The request requires the following fields:
 | **Name**             | **Description**                                                                                                           |
 |----------------------|---------------------------------------------------------------------------------------------------------------------------|
 | requestId            | Client supplied GUID |
-| userChainIdentifier  | Address of the user that was created on the blockchain network. In Ethereum, this address is the user’s **on chain** address. |
+| userChainIdentifier  | Address of the user that was created on the blockchain network. In Ethereum, this address is the user's **on chain** address. |
 | applicationName      | Name of the application |
 | version              | Version of the application. Required if you have multiple versions of the application enabled. Otherwise, version is optional. For more information on application versioning, see [Azure Blockchain Workbench application versioning](version-app.md). |
 | workflowName         | Name of the workflow |
@@ -213,7 +210,7 @@ The request requires the following fields:
 | **Name**                 | **Description**                                                                                                           |
 |--------------------------|---------------------------------------------------------------------------------------------------------------------------|
 | requestId                | Client supplied GUID |
-| userChainIdentifier      | Address of the user that was created on the blockchain network. In Ethereum, this address is the user’s **on chain** address. |
+| userChainIdentifier      | Address of the user that was created on the blockchain network. In Ethereum, this address is the user's **on chain** address. |
 | contractLedgerIdentifier | Address of the contract on the ledger |
 | version                  | Version of the application. Required if you have multiple versions of the application enabled. Otherwise, version is optional. For more information on application versioning, see [Azure Blockchain Workbench application versioning](version-app.md). |
 | workflowFunctionName     | Name of the workflow function |
@@ -341,7 +338,7 @@ If a user wants to use Event Grid to be notified about events that happen in Blo
 2. Create a new function.
 3. Locate the template for Event Grid. Basic template code for reading the message is shown. Modify the code as needed.
 4. Save the Function. 
-5. Select the Event Grid from Blockchain Workbench’s resource group.
+5. Select the Event Grid from Blockchain Workbench's resource group.
 
 ### Consuming Event Grid events with Logic Apps
 
@@ -355,7 +352,7 @@ If a user wants to use Event Grid to be notified about events that happen in Blo
 
 Service Bus Topics can be used to notify users about events that happen in Blockchain Workbench. 
 
-1. Browse to the Service Bus within the Workbench’s resource group.
+1. Browse to the Service Bus within the Workbench's resource group.
 2. Select **Topics**.
 3. Select **egress-topic**.
 4. Create a new subscription to this topic. Obtain a key for it.
@@ -712,7 +709,7 @@ Example of an *EventMessage ApplicationIngestion* from Blockchain Workbench:
     "applicationId": 31,
     "applicationName": "AssetTransfer",
     "applicationDisplayName": "Asset Transfer",
-    "applicationVersion": “1.0”,
+    "applicationVersion": "1.0",
     "applicationDefinitionLocation": "http://url",
     "contractCodes": [
         {
@@ -791,14 +788,14 @@ Example of an *EventMessage ApplicationIngestion* from Blockchain Workbench:
                     "id": 879,
                     "name": "Description",
                     "type": {
-                                "name": "string"
+                        "name": "string"
                      }
                 },
                 {
                     "id": 880,
                     "name": "Price",
                     "type": {
-                                "name": "int"
+                        "name": "int"
                      }
                 }
             ]
@@ -878,7 +875,7 @@ Example of an *EventMessage RoleAssignment* from Blockchain Workbench:
     "applicationId": 31,
     "applicationName": "AssetTransfer",
     "applicationDisplayName": "Asset Transfer",
-    "applicationVersion": “1.0”,
+    "applicationVersion": "1.0",
     "applicationRole": {
         "id": 134,
         "name": "Buyer"

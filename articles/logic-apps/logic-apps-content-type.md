@@ -1,17 +1,16 @@
 ---
-title: Handle content types - Azure Logic Apps
-description: Learn how Logic Apps handles content types at design time and run time
+title: Handle content types
+description: Learn how to handle various content types in workflows during design time and run time in Azure Logic Apps.
 services: logic-apps
-ms.service: logic-apps
 ms.suite: integration
-author: ecfan
-ms.author: estfan
-ms.reviewer: klam, LADocs
-ms.topic: conceptual
-ms.date: 07/20/2018
+ms.reviewer: estfan, azla
+ms.topic: how-to
+ms.date: 09/01/2022
 ---
 
 # Handle content types in Azure Logic Apps
+
+[!INCLUDE [logic-apps-sku-consumption-standard](../../includes/logic-apps-sku-consumption-standard.md)]
 
 Various content types can flow through a logic app, 
 for example, JSON, XML, flat files, and binary data. 
@@ -81,7 +80,7 @@ reference and use those properties more easily in your logic app's workflow.
   2. Under **Enter or paste a sample JSON payload**, provide a sample payload 
   and then choose **Done**. For example: 
 
-     ![Provide sample JSON payload](./media/logic-apps-content-type/request-trigger.png)
+     ![Screenshot that shows the "When a HTTP request is received" action with a sample JSON payload.](./media/logic-apps-content-type/request-trigger.png)
 
      The generated schema now appears in your trigger.
 

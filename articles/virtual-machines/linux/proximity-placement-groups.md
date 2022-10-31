@@ -1,42 +1,37 @@
 ---
-title: Use proximity placement groups preview for Linux VMs | Microsoft Docs
-description: Learn about creating and using proximity placement groups for Linux virtual machines in Azure. 
-services: virtual-machines-linux
-author: cynthn
-manager: jeconnoc
-
-ms.service: virtual-machines-linux
-ms.topic: article
-ms.tgt_pltfrm: vm-linux
+title: Create a proximity placement group using the Azure CLI
+description: Learn about creating and using proximity placement groups for virtual machines in Azure. 
+author: mattmcinnes
+ms.service: virtual-machines
+ms.subservice: proximity-placement-groups
+ms.topic: how-to
 ms.workload: infrastructure-services
-ms.date: 07/01/2019
-ms.author: cynthn
+ms.date: 3/8/2021
+ms.author: mattmcinnes
 
 ---
 
-# Preview: Deploy VMs to proximity placement groups using Azure CLI
+# Deploy VMs to proximity placement groups using Azure CLI
 
-To get VMs as close as possible, achieving the lowest possible latency, you should deploy them within a [proximity placement group](co-location.md#preview-proximity-placement-groups).
+**Applies to:** :heavy_check_mark: Linux VMs :heavy_check_mark: Flexible scale sets 
+
+To get VMs as close as possible, achieving the lowest possible latency, you should deploy them within a [proximity placement group](../co-location.md#proximity-placement-groups).
 
 A proximity placement group is a logical grouping used to make sure that Azure compute resources are physically located close to each other. Proximity placement groups are useful for workloads where low latency is a requirement.
 
-> [!IMPORTANT]
-> Proximity Placement Groups is currently in public preview.
-> This preview version is provided without a service level agreement, and it's not recommended for production workloads. Certain features might not be supported or might have constrained capabilities. 
-> For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
->
-> Proximity placement groups are not available in these regions during the preview: **Japan East**, **Australia East** and **India Central**.
 
 ## Create the proximity placement group
 Create a proximity placement group using [`az ppg create`](/cli/azure/ppg#az-ppg-create). 
 
 ```azurecli-interactive
-az group create --name myPPGGroup --location westus
+az group create --name myPPGGroup --location eastus
 az ppg create \
    -n myPPG \
    -g myPPGGroup \
-   -l westus \
+   -l eastus \
    -t standard 
+   --intent-vm-sizes Standard_E64s_v4 Standard_M416ms_v2 \
+   -z 1
 ```
 
 ## List proximity placement groups
@@ -46,10 +41,39 @@ You can list all of your proximity placement groups using [az ppg list](/cli/azu
 ```azurecli-interactive
 az ppg list -o table
 ```
+## Show proximity placement group
+
+You can see the proximity placement group details and resources using [az ppg show](/cli/azure/ppg#az-ppg-show)
+
+```azurecli-interactive
+az ppg show --name myPPG --resource-group myPPGGroup
+{  "availabilitySets": [],  
+   "colocationStatus": null,  
+   "id": "/subscriptions/[subscriptionId]/resourceGroups/myPPGGroup/providers/Microsoft.Compute/proximityPlacementGroups/MyPPG",  
+   "intent": {    
+    "vmSizes": [      
+      "Standard_E64s_v4",      
+      "Standard_M416ms_v2"    
+    ]  
+   },  
+   "location": "eastus",  
+   "name": "MyPPG",  
+   "proximityPlacementGroupType": "Standard",  
+   "resourceGroup": "myPPGGroup",  
+   "tags": {},  
+   "type": "Microsoft.Compute/proximityPlacementGroups",  
+   "virtualMachineScaleSets": [],  
+   "virtualMachines": [],  
+   "zones": [    
+    "1" 
+   ]
+}
+```
 
 ## Create a VM
 
 Create a VM within the proximity placement group using [new az vm](/cli/azure/vm#az-vm-create).
+
 ```azurecli-interactive
 az vm create \
    -n myVM \
@@ -57,8 +81,8 @@ az vm create \
    --image UbuntuLTS \
    --ppg myPPG  \
    --generate-ssh-keys \
-   --size Standard_D1_v2  \
-   -l westus
+   --size Standard_E64s_v4 \
+   -l eastus
 ```
 
 You can see the VM in the proximity placement group using [az ppg show](/cli/azure/ppg#az-ppg-show).
@@ -72,7 +96,7 @@ You can also create an  availability set in your proximity placement group. Use 
 
 ## Scale sets
 
-You can also create a scale set in your proximity placement group. Use the same `--ppg` parameter with [az vmss create](/cli/azure/vmss?view=azure-cli-latest#az-vmss-create) to create a scale set and all of the instances will be created in the same proximity placement group.
+You can also create a scale set in your proximity placement group. Use the same `--ppg` parameter with [az vmss create](/cli/azure/vmss#az-vmss-create) to create a scale set and all of the instances will be created in the same proximity placement group.
 
 ## Next steps
 

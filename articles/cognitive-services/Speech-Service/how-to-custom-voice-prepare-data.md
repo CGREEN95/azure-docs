@@ -1,150 +1,139 @@
 ---
-title: "How to prepare data for Custom Voice - Speech Service"
+title: "How to prepare data for Custom Voice - Speech service"
 titleSuffix: Azure Cognitive Services
-description: "Create a custom voice for your brand with Speech Service. You provide studio recordings and the associated scripts, the service generates a unique voice model tuned to the recorded voice. Use this voice to synthesize speech in your products, tools, and applications."
+description: "Learn how to provide studio recordings and the associated scripts that will be used to train your Custom Neural Voice."
 services: cognitive-services
-author: erhopf
+author: eric-urban
 manager: nitinme
 ms.service: cognitive-services
 ms.subservice: speech-service
-ms.topic: conceptual
-ms.date: 07/05/2019
-ms.author: erhopf
+ms.topic: how-to
+ms.date: 10/27/2022
+ms.author: eur
 ---
 
-# Prepare data to create a custom voice
+# Prepare training data for Custom Neural Voice
 
-When you're ready to create a custom text-to-speech voice for your application, the first step is to gather audio recordings and associated scripts to start training the voice model. The service uses this data to create a unique voice tuned to match the voice in the recordings. After you've trained the voice, you can start synthesizing speech in your applications.
+When you're ready to create a custom Text-to-Speech voice for your application, the first step is to gather audio recordings and associated scripts to start training the voice model. For details on recording voice samples, see [the tutorial](record-custom-voice-samples.md). The Speech service uses this data to create a unique voice tuned to match the voice in the recordings. After you've trained the voice, you can start synthesizing speech in your applications.
 
-You can start with a small amount of data to create a proof of concept. However, the more data that you provide, the more natural your custom voice will sound. Before you can train your own text-to-speech voice model, you'll need audio recordings and the associated text transcriptions. On this page, we'll review data types, how they are used, and how to manage each.
-
-## Data types
-
-A voice training dataset includes audio recordings, and a text file with the associated transcriptions. Each audio file should contain a single utterance (a single sentence or a single turn for a dialog system), and be less than 15 seconds long.
-
-In some cases, you may not have the right dataset ready and will want to test the custom voice training with available audio files, short or long, with or without transcripts. We provide tools (beta) to help you segment your audio into utterances and prepare transcripts using the [Batch Transcription API](batch-transcription.md).
-
-This table lists data types and how each is used to create a custom text-to-speech voice model.
-
-| Data type | Description | When to use | Additional service required | Quantity for training a model | Locale(s) |
-| --------- | ----------- | ----------- | --------------------------- | ----------------------------- | --------- |
-| **Individual utterances + matching transcript** | A collection (.zip) of audio files (.wav) as individual utterances. Each audio file should be 15 seconds or less in length, paired with a formatted transcript (.txt). | Professional recordings with matching transcripts | Ready for training. | No hard requirement for en-US and zh-CN. More than 2,000+ distinct utterances for other locales. | All Custom Voice locales |
-| **Long audio + transcript (beta)** | A collection (.zip) of long, unsegmented audio files (longer than 20 seconds), paired with a transcript (.txt) that contains all spoken words. | You have audio files and matching transcripts, but they are not segmented into utterances. | Segmentation (using batch transcription).<br>Audio format transformation where required. | No hard requirement for en-US and zh-CN. | `en-US` and `zh-CN` |
-| **Audio only (beta)** | A collection (.zip) of audio files without a transcript. | You only have audio files available, without transcripts. | Segmentation + transcript generation (using batch transcription).<br>Audio format transformation where required.| No hard requirement for `en-US` and `zh-CN`. | `en-US` and `zh-CN` |
-
-Files should be grouped by type into a dataset and uploaded as a zip file. Each dataset can only contain a single data type.
+All data you upload must meet the requirements for the data type that you choose. It's important to correctly format your data before it's uploaded, which ensures the data will be accurately processed by the Speech service. To confirm that your data is correctly formatted, see [Training data types](how-to-custom-voice-training-data.md).
 
 > [!NOTE]
-> The maximum number of datasets allowed to be imported per subscription is 10 .zip files for free subscription (F0) users and 500 for standard subscription (S0) users.
+> - Standard subscription (S0) users can upload five data files simultaneously. If you reach the limit, wait until at least one of your data files finishes importing. Then try again.
+> - The maximum number of data files allowed to be imported per subscription is 500 .zip files for standard subscription (S0) users. Please see out [Speech service quotas and limits](speech-services-quotas-and-limits.md#custom-neural-voice) for more details.
 
-## Individual utterances + matching transcript
+## Upload your data
 
-You can prepare recordings of individual utterances and the matching transcript in two ways. Either write a script and have it read by a voice talent or use publicly available audio and transcribe it to text. If you do the latter, edit disfluencies from the audio files, such as "um" and other filler sounds, stutters, mumbled words, or mispronunciations.
+When you're ready to upload your data, go to the **Prepare training data** tab to add your first training set and upload data. A *training set* is a set of audio utterances and their mapping scripts used for training a voice model. You can use a training set to organize your training data. The service checks data readiness per each training set. You can import multiple data to a training set.
 
-To produce a good voice font, create the recordings in a quiet room with a high-quality microphone. Consistent volume, speaking rate, speaking pitch, and expressive mannerisms of speech are essential.
+To upload training data, follow these steps:
 
-> [!TIP]
-> To create a voice for production use, we recommend you use a professional recording studio and voice talent. For more information, see [How to record voice samples for a custom voice](record-custom-voice-samples.md).
-
-### Audio files
-
-Each audio file should contain a single utterance (a single sentence or a single turn of a dialog system), less than 15 seconds long. All files must be in the same spoken language. Multi-language custom text-to-speech voices are not supported, with the exception of the Chinese-English bi-lingual. Each audio file must have a unique numeric filename with the filename extension .wav.
-
-Follow these guidelines when preparing audio.
-
-| Property | Value |
-| -------- | ----- |
-| File format | RIFF (.wav), grouped into a .zip file |
-| Sampling rate	| At least 16,000 Hz |
-| Sample format | PCM, 16-bit |
-| File name | Numeric, with .wav extension. No duplicate file names allowed. |
-| Audio length | Shorter than 15 seconds |
-| Archive format | .zip |
-| Maximum archive size | 200 MB |
+1. Sign in to the [Speech Studio](https://aka.ms/speechstudio/customvoice).
+1. Select **Custom Voice** > Your project name > **Prepare training data** > **Upload data**. 
+1. In the **Upload data** wizard, choose a [data type](how-to-custom-voice-training-data.md) and then select **Next**.
+1. Select local files from your computer or enter the Azure Blob storage URL to upload data.
+1. Under **Specify the target training set**, select an existing training set or create a new one. If you created a new training set, make sure it's selected in the drop-down list before you continue.
+1. Select **Next**.
+1. Enter a name and description for your data and then select **Next**.
+1. Review the upload details, and select **Submit**.
 
 > [!NOTE]
-> .wav files with a sampling rate lower than 16,000 Hz will be rejected. If a .zip file contains .wav files with different sample rates, only those equal to or higher than 16,000 Hz will be imported. The portal currently imports .zip archives up to 200 MB. However, multiple archives can be uploaded.
+> Duplicate IDs are not accepted. Utterances with the same ID will be removed.
+> 
+> Duplicate audio names are removed from the training. Make sure the data you select don't contain the same audio names within the .zip file or across multiple .zip files. If utterance IDs (either in audio or script files) are duplicates, they're rejected.
 
-### Transcripts
+Data files are automatically validated when you select **Submit**. Data validation includes series of checks on the audio files to verify their file format, size, and sampling rate. If there are any errors, fix them and submit again. 
 
-The transcription file is a plain text file. Use these guidelines to prepare your transcriptions.
+After you upload the data, you can check the details in the training set detail view. On the **Overview** tab, you can further check the pronunciation scores and the noise level for each of your data. The pronunciation score ranges from 0-100. A score below 70 normally indicates a speech error or script mismatch. A heavy accent can reduce your pronunciation score and affect the generated digital voice.
 
-| Property | Value |
-| -------- | ----- |
-| File format | Plain text (.txt) |
-| Encoding format | ANSI/ASCII, UTF-8, UTF-8-BOM, UTF-16-LE, or UTF-16-BE. For zh-CN, ANSI/ASCII and UTF-8 encodings are not supported. |
-| # of utterances per line | **One** - Each line of the transcription file should contain the name of one of the audio files, followed by the corresponding transcription. The file name and transcription should be separated by a tab (\t). |
-| Maximum file size | 50 MB |
+## Resolve data issues online
 
-Below is an example of how the transcripts are organized utterance by utterance in one .txt file:
+After upload, you can check the data details of the training set. Before continuing to [train your voice model](how-to-custom-voice-create-voice.md), you should try to resolve any data issues.
 
-```
-0000000001[tab]	This is the waistline, and it's falling.
-0000000002[tab]	We have trouble scoring.
-0000000003[tab]	It was Janet Maslin.
-```
-It’s important that the transcripts are 100% accurate transcriptions of the corresponding audio. Errors in the transcripts will introduce quality loss during the training.
+You can resolve data issues per utterance in Speech Studio. 
 
-> [!TIP]
-> When building production text-to-speech voices, select utterances (or write scripts) that take into account both phonetic coverage and efficiency. Having trouble getting the results you want? [Contact the Custom Voice](mailto:speechsupport@microsoft.com) team to find out more about having us consult.
+1. On the **Data details** page, select individual utterances you want to edit, then click **Edit**.
 
-## Long audio + transcript (beta)
+   :::image type="content" source="media/custom-voice/cnv-edit-trainingset.png" alt-text="Screenshot of selecting edit button on the Data details page.":::
 
-In some cases, you may not have segmented audio available. We provide a service (beta) through the custom voice portal to help you segment long audio files and create transcriptions. Keep in mind, this service will be charged toward your speech-to-text subscription usage.
+1. Edit window will be displayed.
 
-> [!NOTE]
-> The long-audio segmentation service will leverage the batch transcription feature of speech-to-text, which only supports standard subscription (S0) users. During the processing of the segmentation, your audio files and the transcripts will also be sent to the Custom Speech service to refine the recognition model so the accuracy can be improved for your data. No data will be retained during this process. After the segmentation is done, only the utterances segmented and their mapping transcripts will be stored for your downloading and training.
+   :::image type="content" source="media/custom-voice/cnv-edit-trainingset-editscript.png" alt-text="Screenshot of displaying Edit transcript and recording file window.":::
 
-### Audio files
+1. Update transcript or recording file according to issue description on the edit window.
 
-Follow these guidelines when preparing audio for segmentation.
+   You can edit transcript in the text box, then click **Done**
 
-| Property | Value |
-| -------- | ----- |
-| File format | RIFF (.wav) with a sampling rate of at least 16 khz-16-bit in PCM or .mp3 with a bit rate of at least 256 KBps, grouped into a .zip file |
-| File name	| ASCII characters only. Unicode characters in the name will fail (for example, the Chinese characters, or symbols like "—"). No duplicate names allowed. |
-| Audio length | Longer than 20 seconds |
-| Archive format | .zip |
-| Maximum archive size | 200 MB |
+   :::image type="content" source="media/custom-voice/cnv-edit-trainingset-scriptedit-done.png" alt-text="Screenshot of selecting Done button on the Edit transcript and recording file window.":::
 
-All audio files should be grouped into a zip file. It’s OK to put .wav files and .mp3 files into one audio zip, but no subfolder is allowed in the zip file. For example, you can upload a zip file containing an audio file named ‘kingstory.wav’, 45-second-long, and another one named ‘queenstory.mp3’, 200-second-long, without any subfolders. All .mp3 files will be transformed into the .wav format after processing.
+   If you need to update recording file, select **Update recording file**, then upload the fixed recording file (.wav).
+ 
+   :::image type="content" source="media/custom-voice/cnv-edit-trainingset-upload-recording.png" alt-text="Screenshot that shows how to upload recording file on the Edit transcript and recording file window.":::
 
-### Transcripts
+1. After the data in a training set are updated, you need to check the data quality by clicking **Analyze data** before using this training set for training. 
 
-Transcripts must be prepared to the specifications listed in this table. Each audio file must be matched with a transcript.
+   You can't select this training set for training model before the analysis is complete. 
 
-| Property | Value |
-| -------- | ----- |
-| File format | Plain text (.txt), grouped into a .zip |
-| File name | Use the same name as the matching audio file |
-| Encoding format | UTF-8-BOM only |
-| # of utterances per line | No limit |
-| Maximum file size | 50 MB |
+   :::image type="content" source="media/custom-voice/cnv-edit-trainingset-analyze.png" alt-text="Screenshot of selecting Analyze data on Data details page.":::
 
-All transcripts files in this data type should be grouped into a zip file. No subfolder is allowed in the zip file. For example, you have uploaded a zip file containing an audio file named ‘kingstory.wav’, 45 seconds long, and another one named ‘queenstory.mp3’, 200 seconds long. You will need to upload another zip file containing two transcripts, one named ‘kingstory.txt’, the other one ‘queenstory.txt’. Within each plain text file, you will provide the full correct transcription for the matching audio.
+   You can also delete utterances with issues by selecting them and clicking **Delete**.
 
-After your dataset is successfully uploaded, we will help you segment the audio file into utterances based on the transcript provided. You can check the segmented utterances and the matching transcripts by downloading the dataset. Unique IDs will be assigned to the segmented utterances automatically. It’s important that you make sure the transcripts you provide are 100% accurate. Errors in the transcripts can reduce the accuracy during the audio segmentation and further introduce quality loss in the training phase that comes later.
+### Typical data issues
 
-## Audio only (beta)
+The issues are divided into three types. Refer to the following tables to check the respective types of errors. 
 
-If you don't have transcriptions for your audio recordings, use the **Audio only** option to upload your data. Our system can help you segment and transcribe your audio files. Keep in mind, this service will count toward your speech-to-text subscription usage.
+**Auto-rejected**
 
-Follow these guidelines when preparing audio.
+Data with these errors won't be used for training. Imported data with errors will be ignored, so you don't need to delete them. You can resubmit the corrected data for training.  
 
-> [!NOTE]
-> The long-audio segmentation service will leverage the batch transcription feature of speech-to-text, which only supports standard subscription (S0) users.
+| Category | Name | Description |
+| --------- | ----------- | --------------------------- |
+| Script | Invalid separator| You must separate the utterance ID and the script content with a Tab character.|
+| Script | Invalid script ID| The script line ID must be numeric.|
+| Script | Duplicated script|Each line of the script content must be unique. The line is duplicated with {}.|
+| Script | Script too long| The script must be less than 1,000 characters.|
+| Script | No matching audio| The ID of each utterance (each line of the script file) must match the audio ID.|
+| Script | No valid script| No valid script is found in this dataset. Fix the script lines that appear in the detailed issue list.|
+| Audio | No matching script| No audio files match the script ID. The name of the .wav files must match with the IDs in the script file.|
+| Audio | Invalid audio format| The audio format of the .wav files is invalid. Check the .wav file format by using an audio tool like [SoX](http://sox.sourceforge.net/).|
+| Audio | Low sampling rate| The sampling rate of the .wav files can't be lower than 16 KHz.|
+| Audio | Too long audio| Audio duration is longer than 30 seconds. Split the long audio into multiple files. It's a good idea to make utterances shorter than 15 seconds.|
+| Audio | No valid audio| No valid audio is found in this dataset. Check your audio data and upload again.|
+| Mismatch | Low scored utterance| Sentence-level pronunciation score is lower than 70. Review the script and the audio content to make sure they match.|
 
-| Property | Value |
-| -------- | ----- |
-| File format | RIFF (.wav) with a sampling rate of at least 16 khz-16-bit in PCM or .mp3 with a bit rate of at least 256 KBps, grouped into a .zip file |
-| File name | ASCII characters only. Unicode characters in the name will fail (for example, the Chinese characters, or symbols like "—"). No duplicate name allowed. |
-| Audio length | Longer than 20 seconds |
-| Archive format | .zip |
-| Maximum archive size | 200 MB |
+**Auto-fixed**
 
-All audio files should be grouped into a zip file. No subfolder is allowed in the zip file. Once your dataset is successfully uploaded, we will help you segment the audio file into utterances based on our speech batch transcription service. Unique IDs will be assigned to the segmented utterances automatically. Matching transcripts will be generated through speech recognition. All .mp3 files will be transformed into the .wav format after processing. You can check the segmented utterances and the matching transcripts by downloading the dataset.
+The following errors are fixed automatically, but you should review and confirm the fixes are made correctly.
+
+| Category | Name | Description |
+| --------- | ----------- | --------------------------- |
+| Mismatch |Silence auto fixed |The start silence is detected to be shorter than 100 ms, and has been extended to 100 ms automatically. Download the normalized dataset and review it. |
+| Mismatch |Silence auto fixed | The end silence is detected to be shorter than 100 ms, and has been extended to 100 ms automatically. Download the normalized dataset and review it.|
+
+**Manual check required**
+
+Unresolved errors listed in the next table affect the quality of training, but data with these errors won't be excluded during training. For higher-quality training, it's a good idea to fix these errors manually. 
+
+| Category | Name | Description |
+| --------- | ----------- | --------------------------- |
+| Script | Non-normalized text|This script contains digits. Expand them to normalized words, and match with the audio. For example, normalize *123* to *one hundred and twenty-three*.|
+| Script | Non-normalized text|This script contains symbols. Normalize the symbols to match the audio. For example, normalize *50%* to *fifty percent*.|
+| Script | Not enough question utterances| At least 10 percent of the total utterances should be question sentences. This helps the voice model properly express a questioning tone.|
+| Script | Not enough exclamation utterances| At least 10 percent of the total utterances should be exclamation sentences. This helps the voice model properly express an excited tone.|
+| Script | No valid end punctuation| Add one of the following at the end of the line: full stop (half-width '.' or full-width '。'), exclamation point (half-width '!' or full-width '！' ), or question mark ( half-width '?' or full-width '？').|
+| Audio| Low sampling rate for neural voice | It's recommended that the sampling rate of your .wav files should be 24 KHz or higher for creating neural voices. If it's lower, it will be automatically raised to 24 KHz.|
+| Volume |Overall volume too low|Volume shouldn't be lower than -18 dB (10 percent of max volume). Control the volume average level within proper range during the sample recording or data preparation.|
+| Volume | Volume overflow| Overflowing volume is detected at {}s. Adjust the recording equipment to avoid the volume overflow at its peak value.|
+| Volume | Start silence issue | The first 100 ms of silence isn't clean. Reduce the recording noise floor level, and leave the first 100 ms at the start silent.|
+| Volume| End silence issue| The last 100 ms of silence isn't clean. Reduce the recording noise floor level, and leave the last 100 ms at the end silent.|
+| Mismatch | Low scored words|Review the script and the audio content to make sure they match, and control the noise floor level. Reduce the length of long silence, or split the audio into multiple utterances if it's too long.|
+| Mismatch | Start silence issue |Extra audio was heard before the first word. Review the script and the audio content to make sure they match, control the noise floor level, and make the first 100 ms silent.|
+| Mismatch | End silence issue| Extra audio was heard after the last word. Review the script and the audio content to make sure they match, control the noise floor level, and make the last 100 ms silent.|
+| Mismatch | Low signal-noise ratio | Audio SNR level is lower than 20 dB. At least 35 dB is recommended.|
+| Mismatch | No score available |Failed to recognize speech content in this audio. Check the audio and the script content to make sure the audio is valid, and matches the script.|
 
 ## Next steps
 
-- [Create a Custom Voice](how-to-custom-voice-create-voice.md)
-- [Guide: Record your voice samples](record-custom-voice-samples.md)
+- [Train your voice model](how-to-custom-voice-create-voice.md)
+- [Deploy and use your voice model](how-to-deploy-and-use-endpoint.md)
+- [How to record voice samples](record-custom-voice-samples.md)

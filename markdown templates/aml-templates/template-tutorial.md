@@ -1,5 +1,5 @@
 ---
-title: Verb action tutorial for Azure Machine Learning service  in 59 chars or less. Include the name Azure Machine Learning. Include the word 'tutorial'. Test title here https://moz.com/learn/seo/title-tag 
+title: Verb action tutorial for Azure Machine Learning  in 59 chars or less. Include the name Azure Machine Learning. Include the word 'tutorial'. Test title here https://moz.com/learn/seo/title-tag 
 description: This tutorial …blah blah blah. This string describes the article in 115 to 145 characters. Include the word 'tutorial' in your description. Use SEO kind of action verbs here. such as - Learn how to do this and that using customer words. This info is displayed on the search page inline with the article date stamp. If your intro para describes your article's intent, you can use it here edited for length.
 services: machine-learning
 ms.service: machine-learning
@@ -17,7 +17,7 @@ AUTHORS: A single sentence intro about AML. Intro paragraph to explain the inten
 
 In this tutorial you will do X...
 
-AUTHORS: Quick read tutorial guidance: https://review.docs.microsoft.com/help/contribute/contribute-how-to-mvc-tutorial?branch=master  And, don't forget to run Acrolinx to find issues before you commit.
+AUTHORS: Quick read tutorial [here](https://review.learn.microsoft.com/help/contribute/contribute-how-to-mvc-tutorial?branch=main). Also, don't forget to run Acrolinx to find issues before you commit.
 
 In this tutorial, you use X to do Y or you learn how to:
 > [!div class="checklist"]
@@ -37,8 +37,8 @@ In this tutorial, you use X to do Y or you learn how to:
 
 To complete this tutorial, you need:
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin. 
-* An Azure Machine Learning service workspace. Learn how to get create a workspace in the [Get started](quickstart-get-started.md#create-a-workspace) quickstart.
-* A Docker engine installed and running locally. Docker's Community Edition is sufficient. Learn how to install Docker here: https://docs.docker.com/engine/installation/.
+* An Azure Machine Learning workspace. Learn how to get create a workspace in the [Get started](quickstart-get-started.md#create-a-workspace) quickstart.
+* A Docker engine installed and running locally. Docker's Community Edition is sufficient. Learn [how to install Docker](https://docs.docker.com/engine/installation/).
 
 
 ## Log in to the Azure portal
@@ -71,6 +71,6 @@ Paragraph and Steps
 Tutorials should always have a Next steps H2 that points to the next logical tutorial in a series (one link only here), or, if there are no other tutorials, to some other cool thing the customer can do with the service. Use the blue box format for tutorials and note that you can shorten the H1 in the boxes if the original one doesn’t fit.
 
 > [!div class="nextstepaction"]
-> [Azure Windows virtual machine tutorials](overview-what-is-azure-ml.md)
+> [Azure Windows virtual machine tutorials](../../articles/machine-learning/overview-what-is-azure-ml.md)
 
 Do not link to troubleshooting content or FAQs. This implies the customer is going to run into known issues. Either fix these issues beforehand or create a different path to success for users that avoid these problems.

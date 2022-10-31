@@ -1,19 +1,15 @@
 ### YamlMime:Landing
-
 title: Azure Data Lake Analytics Documentation # < 60 chars
 summary: Azure Data Lake Analytics allows you to run big data analysis jobs that scale to massive data sets.  # < 160 chars
-
 metadata:
   title: Azure Data Lake Analytics # Required; page title displayed in search results. Include the brand. < 60 chars.
   description: Azure Data Lake Analytics allows you to run big data analysis jobs that scale to massive data sets. # Required; article description that is displayed in search results. < 160 chars.
-  services: data-lake-analytics
   ms.service: data-lake-analytics #Required; service per approved list. service slug assigned to your service by ACOM.
-  ms.subservice: subservice
   ms.topic: landing-page # Required
   ms.collection: collection
   author: hrasheed-msft #Required; your GitHub user alias, with correct capitalization.
   ms.author: hrasheed #Required; microsoft alias of author; optional team alias.
-  ms.date: 09/13/2019 #Required; mm/dd/yyyy format.
+  ms.date: 10/14/2022 #Required; mm/dd/yyyy format.
 
 # linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | tutorial | video | whats-new
 
@@ -27,10 +23,12 @@ landingContent:
         links:
           - text: What is Azure Data Lake Analytics?
             url: data-lake-analytics-overview.md
+          - text: What's new in Data Lake Analytics?
+            url: data-lake-analytics-whats-new.md
       - linkListType: quickstart
         links:
-          - text: Create U-SQL jobs in the Azure portal
-            url: data-lake-analytics-get-started-portal.md
+          - text: Get started with U-SQL
+            url: data-lake-analytics-u-sql-get-started.md
           - text: Create U-SQL jobs with Azure CLI
             url: data-lake-analytics-get-started-cli.md
           - text: Create U-SQL jobs in Visual Studio Code
@@ -44,7 +42,7 @@ landingContent:
           - text: Get started with U-SQL
             url: data-lake-analytics-u-sql-get-started.md
           - text: U-SQL language reference
-            url: https://docs.microsoft.com/u-sql/
+            url: /u-sql
           - text: Get started with the U-SQL Catalog
             url: data-lake-analytics-u-sql-catalog.md
           - text: Use user-defined operators
@@ -84,7 +82,7 @@ landingContent:
           - text: Adding a user in the Azure portal
             url: data-lake-analytics-add-users.md
           - text: Manage Azure Data Lake Analytics using policies
-            url: data-lake-analytics-policies.md
+            url: data-lake-analytics-account-policies.md
 
   # Card (optional)
   - title: Continuous integration and continuous deployment
@@ -99,3 +97,25 @@ landingContent:
             url: data-lake-analytics-cicd-test.md
           - text: Use U-SQL SDK
             url: data-lake-analytics-u-sql-sdk.md
+
+  #Card (optional)
+  - title: Understand Spark for U-SQL developers
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+          - text: Understand Apache Spark for U-SQL Developers
+            url: understand-spark-for-usql-developers.md
+          - text: Understand Apache Spark data formats
+            url: understand-spark-data-formats.md
+          - text: Understand Apache Spark code concepts
+            url: understand-spark-code-concepts.md
+
+  # Card (optional)
+  - title: Troubleshoot U-SQL jobs 
+    linkLists:
+      - linkListType: how-to-guide
+        links:
+         - text: Troubleshoot U-SQL runtime failures
+           url: runtime-troubleshoot.md
+         - text: Troubleshoot a .NET upgrade
+           url: dotnet-upgrade-troubleshoot.md

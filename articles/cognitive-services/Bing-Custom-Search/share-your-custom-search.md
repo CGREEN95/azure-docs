@@ -1,7 +1,7 @@
 ---
 title: Share your custom search - Bing Custom Search
 titleSuffix: Azure Cognitive Services
-description: Describes how to share a custom search instance.
+description: Easily allow collaborative editing and testing of your instance by sharing it with members of your team.
 services: cognitive-services
 author: aahill
 manager: nitinme
@@ -14,6 +14,8 @@ ms.author: aahi
 ---
 
 # Share your Custom Search instance
+
+[!INCLUDE [Bing move notice](../Bing-Web-Search/includes/bing-move-notice.md)]
 
 You can easily allow collaborative editing and testing of your instance by sharing it with members of your team. You can share your instance with anyone using just their email address. To share an instance:
 

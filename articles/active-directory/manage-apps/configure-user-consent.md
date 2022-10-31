@@ -1,80 +1,157 @@
 ---
-title: Configure user consent to an application - Azure Active Directory | Microsoft Docs
-description: Learn how to manage the way users consent to application permissions. You can simplify the user experience by granting admin consent. These methods apply to all end users in your Azure Active Directory (Azure AD) tenant. 
+title: Configure how users consent to applications
+description: Learn how to manage how and when users can consent to applications that will have access to your organization's data.
 services: active-directory
-author: msmimart
+author: yuhko-msft
 manager: CelesteDG
-
 ms.service: active-directory
 ms.subservice: app-mgmt
 ms.workload: identity
-ms.topic: conceptual
-ms.date: 10/22/2018
-ms.author: mimart
-ms.reviewer: arvindh
-ms.collection: M365-identity-device-management
+ms.topic: how-to
+ms.date: 10/12/2022
+ms.author: yuhko
+ms.reviewer: phsignor
+ms.custom: contperf-fy21q2, contperf-fy22q2
+zone_pivot_groups: enterprise-apps-minus-aad-powershell
+
+
+#customer intent: As an admin, I want to configure how end-users consent to applications.
 ---
 
-# Configure the way end-users consent to an application in Azure Active Directory
-Learn how to configure the way users consent to application permissions. You can simplify the user experience by granting admin consent. This article gives the different ways you can configure user consent. The methods apply to all end users in your Azure Active Directory (Azure AD) tenant. 
+# Configure how users consent to applications
 
-For more information on consenting to applications, see [Azure Active Directory consent framework](../develop/consent-framework.md).
+In this article, you'll learn how to configure the way users consent to applications and how to disable all future user consent operations to applications.
+
+Before an application can access your organization's data, a user must grant the application permissions to do so. Different permissions allow different levels of access. By default, all users are allowed to consent to applications for permissions that don't require administrator consent. For example, by default, a user can consent to allow an app to access their mailbox but can't consent to allow an app unfettered access to read and write to all files in your organization.
+
+To reduce the risk of malicious applications attempting to trick users into granting them access to your organization's data, we recommend that you allow user consent only for applications that have been published by a [verified publisher](../develop/publisher-verification-overview.md).
 
 ## Prerequisites
 
-Granting admin consent requires you to sign in as global administrator, an application administrator, or a cloud application administrator.
+To configure user consent, you need:
 
-To restrict access to applications, you need to require user assignment and then assign users or groups to the application.  For more information, see [Methods for assigning users and groups](methods-for-assigning-users-and-groups.md).
+- A user account. If you don't already have one, you can [create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- A Global Administrator or Privileged Administrator role.
 
-## Grant admin consent to enterprise apps in the Azure portal
+## Configure user consent settings
 
-To grant admin consent to an enterprise app:
+:::zone pivot="portal"
 
-1. Sign in to the [Azure portal](https://portal.azure.com) as a global administrator, an application administrator, or a cloud application administrator.
-2. Click **All services** at the top of the left-hand navigation menu. The **Azure Active Directory Extension** opens.
-3. In the filter search box, type **"Azure Active Directory"** and select the **Azure Active Directory** item.
-4. From the navigation menu, click **Enterprise applications**.
-5. Select the app for consent.
-6. Select **Permissions** and then click **Grant admin consent**. You'll be prompted to sign in to administrate the application.
-7. Sign in with an account that has permissions to grant admin consent for the application. 
-8. Consent to the application permissions.
+To configure user consent settings through the Azure portal:
 
-This option only works if the application is: 
+1. Sign in to the [Azure portal](https://portal.azure.com) as a [Global Administrator](../roles/permissions-reference.md#global-administrator).
 
-- Registered in your tenant, or
-- Registered in another Azure AD tenant, and consented by at least one end user. Once an end user has consented to an application, Azure AD lists the application under **Enterprise apps** in the Azure portal.
+1. Select **Azure Active Directory** > **Enterprise applications** > **Consent and permissions** > **User consent settings**.
 
-## Grant admin consent when registering an app in the Azure portal
+1. Under **User consent for applications**, select which consent setting you want to configure for all users.
 
-To grant admin consent when registering an app: 
+1. Select **Save** to save your settings.
 
-1. Sign in to the [Azure portal](https://portal.azure.com) as a global administrator.
-2. Navigate to the **App Registrations** blade.
-3. Select the application for the consent.
-4. Select **API permissions**.
-5. Click **Grant admin consent**.
+:::image type="content" source="media/configure-user-consent/setting-for-all-users.png" alt-text="Screenshot of the 'User consent settings' pane.":::
 
+:::zone-end
 
-## Grant admin consent through a URL request
+:::zone pivot="ms-powershell"
 
-To grant admin consent through a URL request:
+To choose which app consent policy governs user consent for applications, you can use the [Microsoft Graph PowerShell](/powershell/microsoftgraph/get-started?view=graph-powershell-1.0&preserve-view=true) module. The cmdlets used here are included in the [Microsoft.Graph.Identity.SignIns](https://www.powershellgallery.com/packages/Microsoft.Graph.Identity.SignIns) module.
 
-1. Construct a request to *login.microsoftonline.com* with your app configurations and append on `&prompt=admin_consent`. 
-This URL will look like: 
-`https://login.microsoftonline.com/<tenant-id>/oauth2/authorize?client_id=<client id>&response_type=code&redirect_uri=<Your-Redirect-URI-Https-Encoded>&nonce=1234&resource=<your-resource-Https-encoded>&prompt=admin_consent`
-2. After signing in with admin credentials, the app has been granted consent for all users.
+### Connect to Microsoft Graph PowerShell
 
+Connect to Microsoft Graph PowerShell using the least-privilege permission needed. For reading the current user consent settings, use *Policy.Read.All*. For reading and changing the user consent settings, use *Policy.ReadWrite.Authorization*.
 
-## Force user consent through a URL request
+```powershell
+Connect-MgGraph -Scopes "Policy.ReadWrite.Authorization"
+```
 
-To require end users to consent to an application each time they authenticate, append `&prompt=consent` to the authentication request URL.
-This URL will look like:
-`https://login.microsoftonline.com/<tenant-id>/oauth2/authorize?client_id=<client id>&response_type=code&redirect_uri=<Your-Redirect-URI-Https-Encoded>&nonce=1234&resource=<your-resource-Https-encoded>&prompt=consent`
+### Disable user consent
 
+To disable user consent, set the consent policies that govern user consent to empty:
+
+```powershell
+Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{
+    "PermissionGrantPoliciesAssigned" = @() }
+```
+
+### Allow user consent subject to an app consent policy
+
+To allow user consent, choose which app consent policy should govern users' authorization to grant consent to apps:
+
+```powershell
+Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{
+    "PermissionGrantPoliciesAssigned" = @("managePermissionGrantsForSelf.{consent-policy-id}") }
+```
+
+Replace `{consent-policy-id}` with the ID of the policy you want to apply. You can choose a [custom app consent policy](manage-app-consent-policies.md#create-a-custom-app-consent-policy) that you've created, or you can choose from the following built-in policies:
+
+| ID | Description |
+|:---|:------------|
+| microsoft-user-default-low | **Allow user consent for apps from verified publishers, for selected permissions**<br/> Allow limited user consent only for apps from verified publishers and apps that are registered in your tenant, and only for permissions that you classify as *low impact*. (Remember to [classify permissions](configure-permission-classifications.md) to select which permissions users are allowed to consent to.) |
+| microsoft-user-default-legacy | **Allow user consent for apps**<br /> This option allows all users to consent to any permission that doesn't require admin consent, for any application |
+
+For example, to enable user consent subject to the built-in policy `microsoft-user-default-low`, run the following commands:
+
+```powershell
+Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions @{
+    "PermissionGrantPoliciesAssigned" = @("managePermissionGrantsForSelf.microsoft-user-default-low") }
+```
+
+:::zone-end
+
+:::zone pivot="ms-graph"
+
+Use the [Graph Explorer](https://developer.microsoft.com/graph/graph-explorer) to choose which app consent policy governs user consent for applications.
+
+To disable user consent, set the consent policies that govern user consent to empty:
+
+```http
+PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy
+{
+   "defaultUserRolePermissions": {
+      "permissionGrantPoliciesAssigned": []
+   }
+}
+```
+
+### Allow user consent subject to an app consent policy
+
+To allow user consent, choose which app consent policy should govern users' authorization to grant consent to apps:
+
+```http
+PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy
+
+{
+   "defaultUserRolePermissions": {
+      "permissionGrantPoliciesAssigned": ["ManagePermissionGrantsForSelf.microsoft-user-default-legacy"]
+   }
+}
+```
+
+Replace `{consent-policy-id}` with the ID of the policy you want to apply. You can choose a [custom app consent policy](manage-app-consent-policies.md#create-a-custom-app-consent-policy) that you've created, or you can choose from the following built-in policies:
+
+| ID | Description |
+|:---|:------------|
+| microsoft-user-default-low | **Allow user consent for apps from verified publishers, for selected permissions**<br/> Allow limited user consent only for apps from verified publishers and apps that are registered in your tenant, and only for permissions that you classify as *low impact*. (Remember to [classify permissions](configure-permission-classifications.md) to select which permissions users are allowed to consent to.) |
+| microsoft-user-default-legacy | **Allow user consent for apps**<br/> This option allows all users to consent to any permission that doesn't require admin consent, for any application |
+
+For example, to enable user consent subject to the built-in policy `microsoft-user-default-low`, use the following PATCH command:
+
+```http
+PATCH https://graph.microsoft.com/v1.0/policies/authorizationPolicy
+
+{
+    "defaultUserRolePermissions": {
+        "permissionGrantPoliciesAssigned": [
+            "managePermissionGrantsForSelf.microsoft-user-default-low"
+        ]
+    }
+}
+```
+
+:::zone-end
+
+> [!TIP]
+> To allow users to request an administrator's review and approval of an application that the user isn't allowed to consent to, [enable the admin consent workflow](configure-admin-consent-workflow.md). For example, you might do this when user consent has been disabled or when an application is requesting permissions that the user isn't allowed to grant.
 ## Next steps
 
-[Consent and Integrating Apps to AzureAD](../develop/quickstart-v1-integrate-apps-with-azure-ad.md)
-
-[Consent and Permissioning for AzureAD v2.0 converged Apps](../develop/active-directory-v2-scopes.md)
-
-[AzureAD StackOverflow](https://stackoverflow.com/questions/tagged/azure-active-directory)
+- [Manage app consent policies](manage-app-consent-policies.md)
+- [Configure the admin consent workflow](configure-admin-consent-workflow.md)

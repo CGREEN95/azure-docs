@@ -1,9 +1,10 @@
 ---
-title: Azure API management policy sample - Use OAuth2 for authorization between the gateway and a backend | Microsoft Docs
+title: Sample Azure API management policy - Use OAuth2 for authorization between gateway and backend
+titleSuffix: Azure API Management
 description: Azure API management policy sample - Demonstrates how to use OAuth2 for authorization between the gateway and a backend. It shows how to obtain an access token from AAD and forward it to the backend.
 services: api-management
 documentationcenter: ''
-author: vladvino
+author: dlepow
 manager: cfowler
 editor: ''
 
@@ -12,14 +13,14 @@ ms.workload: mobile
 ms.tgt_pltfrm: na
 ms.topic: article
 ms.date: 10/13/2017
-ms.author: apimpm
+ms.author: danlep
 ---
 
 # Use OAuth2 for authorization between the gateway and a backend
 
 This article shows an Azure API management policy sample that demonstrates how to use OAuth2 for authorization between the gateway and a backend. It shows how to obtain an access token from AAD and forward it to the backend. 
 
-To set or edit a policy code, follow the steps described in [Set or edit a policy](../set-edit-policies.md). To see other examples, see [policy samples](../policy-samples.md).
+To set or edit a policy code, follow the steps described in [Set or edit a policy](../set-edit-policies.md). To see other examples, see [policy samples](../policy-reference.md).
 
 The following script uses properties that appear in {{property}}. To learn about properties and how to use them in API Management policies, see [this](../api-management-howto-properties.md) topic.
  
@@ -34,5 +35,4 @@ Paste the code into the **inbound** block.
 Learn more about APIM policies:
 
 + [Transformation policies](../api-management-transformation-policies.md)
-+ [Policy samples](../policy-samples.md)
-
++ [Policy samples](../policy-reference.md)

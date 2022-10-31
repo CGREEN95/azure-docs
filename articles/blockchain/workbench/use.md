@@ -1,19 +1,15 @@
 ---
 title: Using applications in Azure Blockchain Workbench
 description: Tutorial on how to use application contracts in Azure Blockchain Workbench Preview.
-services: azure-blockchain
-keywords: 
-author: PatAltimore
-ms.author: patricka
-ms.date: 10/14/2019
+ms.date: 02/18/2022
 ms.topic: tutorial
-ms.service: azure-blockchain
 ms.reviewer: brendal
-manager: femila
-#customer intent: As a developer, I want to use a blockchain application I created in Azure Blockchain Workbench.
+#Customer intent: As a developer, I want to use a blockchain application I created in Azure Blockchain Workbench.
 ---
 
 # Tutorial: Using applications in Azure Blockchain Workbench
+
+[!INCLUDE [Retirement note](./includes/retire.md)]
 
 You can use Blockchain Workbench to create and take actions on contracts. You can also view contract details such as status and transaction history.
 

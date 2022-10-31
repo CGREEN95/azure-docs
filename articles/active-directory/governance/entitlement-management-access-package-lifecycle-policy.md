@@ -1,42 +1,39 @@
 ---
-title: Change lifecycle settings for an access package in Azure AD entitlement management (Preview) - Azure Active Directory
-description: Learn how to change lifecycle settings for an access package in Azure Active Directory entitlement management (Preview).
+title: Change lifecycle settings for an access package in Azure AD entitlement management - Azure Active Directory
+description: Learn how to change requestor information & lifecycle settings for an access package in Azure Active Directory entitlement management.
 services: active-directory
 documentationCenter: ''
-author: msaburnley
-manager: daveba
+author: owinfreyatl
+manager: amycolannino
 editor: 
 ms.service: active-directory
 ms.workload: identity
 ms.tgt_pltfrm: na
-ms.devlang: na
-ms.topic: conceptual
+ms.topic: how-to
 ms.subservice: compliance
-ms.date: 10/15/2019
-ms.author: ajburnle
+ms.date: 03/24/2022
+ms.author: owinfrey
 ms.reviewer: 
 ms.collection: M365-identity-device-management
 
 
-#Customer intent: As an administrator, I want detailed information about how I can edit an access package so that requestors have the resources they need to perform their job.
+#Customer intent: As an administrator, I want detailed information about how I can edit an access package to include requestor information to screen requestors and get requestors the resources they need to perform their job.
 
 ---
-# Change lifecycle settings for an access package in Azure AD entitlement management (Preview)
+# Change lifecycle settings for an access package in Azure AD entitlement management
 
-> [!IMPORTANT]
-> Azure Active Directory (Azure AD) entitlement management is currently in public preview.
-> This preview version is provided without a service level agreement, and it's not recommended for production workloads. Certain features might not be supported or might have constrained capabilities.
-> For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+As an access package manager, you can change the lifecycle settings for assignments in an access package at any time by editing an existing policy. If you change the expiration date for assignments on a policy, the expiration date for requests that are already in a pending approval or approved state will not change.
 
-As an access package manager, you can change the lifecycle settings for an access package at any time by editing an existing policy. If you change the expiration date for a policy, the expiration date for requests that are already in a pending approval or approved state will not change.
+This article describes how to change the lifecycle settings for an existing access package assignment policy.
 
-This article describes how to change the lifecycle settings for an existing access package.
+## Open requestor information
+To ensure users have the right access to an access package, custom questions can be configured to ask users requesting access to certain access packages. Configuration options include: localization, required/optional, and text/multiple choice answer formats. Requestors  will see the questions when they request the package and approvers see the answers to the questions to help them make their decision. Use the following steps to configure questions in an access package:
 
 ## Open lifecycle settings
 
 To change the lifecycle settings for an access package, you need to open the corresponding policy. Follow these steps to open the lifecycle settings for an access package.
 
-**Prerequisite role:** Global administrator, User administrator, Catalog owner, or Access package manager
+**Prerequisite role:** Global administrator, Identity Governance administrator, User administrator, Catalog owner, or Access package manager
 
 1. In the Azure portal, click **Azure Active Directory** and then click **Identity Governance**.
 

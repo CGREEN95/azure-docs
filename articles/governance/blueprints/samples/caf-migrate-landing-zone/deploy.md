@@ -1,12 +1,8 @@
 ---
-title: CAF Migration landing zone blueprint sample - Deploy steps
+title:  Deploy CAF Migration landing zone blueprint sample
 description: Deploy steps for the CAF Migration landing zone blueprint sample including blueprint artifact parameter details.
-author: DCtheGeek
-ms.author: dacoulte
-ms.date: 08/20/2019
+ms.date: 03/12/2021
 ms.topic: sample
-ms.service: blueprints
-ms.custom: fasttrack-new
 ---
 # Deploy the Microsoft Cloud Adoption Framework for Azure migrate landing zone blueprint sample
 
@@ -38,7 +34,7 @@ sample as a starter.
    this sample**.
 
 1. Enter the _Basics_ of the blueprint sample:
-   - **Blueprint name** Provide a name for your copy of the CAF migration landing zone blueprint
+   - **Blueprint name** Provide a name for your copy of the CAF Migration landing zone blueprint
      sample.
    - **Definition location** Use the ellipsis and select the management group to save your copy of
      the sample to.
@@ -89,15 +85,16 @@ provided to make each deployment of the copy of the blueprint sample unique.
      - **Assignment name**: The name is pre-populated for you based on the name of the blueprint.
        Change as needed or leave as is.
      - **Location**: Select a region for the managed identity to be created in.
-     - Azure Blueprint uses this managed identity to deploy all artifacts in the assigned blueprint.
+     - Azure Blueprints uses this managed identity to deploy all artifacts in the assigned blueprint.
        To learn more, see
        [managed identities for Azure resources](../../../../active-directory/managed-identities-azure-resources/overview.md).
      - **Blueprint definition version**: Pick a **Published** version of your copy of the blueprint
        sample.
-    
+
    - Lock Assignment
 
-     Select the blueprint lock setting for your environment. For more information, see [blueprints resource locking](../../concepts/resource-locking.md).
+     Select the blueprint lock setting for your environment. For more information, see
+     [blueprints resource locking](../../concepts/resource-locking.md).
 
    - Managed Identity
 
@@ -109,9 +106,9 @@ provided to make each deployment of the copy of the blueprint sample unique.
      The parameters defined in this section are used by many of the artifacts in the blueprint
      definition to provide consistency.
 
-       - **Organization**: Enter your organization name such as Contoso or Fabrikam, must be unique.
-       - **AzureRegion**: Select one Azure Region for Deployment.
-       
+     - **Organization**: Enter your organization name such as Contoso or Fabrikam, must be unique.
+     - **AzureRegion**: Select one Azure Region for Deployment.
+
    - Artifact parameters
 
      The parameters defined in this section apply to the artifact under which it's defined. These
@@ -125,8 +122,9 @@ provided to make each deployment of the copy of the blueprint sample unique.
 
 > [!WARNING]
 > The Azure Blueprints service and the built-in blueprint samples are **free of cost**. Azure
-> resources are [priced by product](https://azure.microsoft.com/pricing/). Use the [pricing calculator](https://azure.microsoft.com/pricing/calculator/)
-> to estimate the cost of running resources deployed by this blueprint sample.
+> resources are [priced by product](https://azure.microsoft.com/pricing/). Use the
+> [pricing calculator](https://azure.microsoft.com/pricing/calculator/) to estimate the cost of
+> running resources deployed by this blueprint sample.
 
 ## Artifact parameters table
 
@@ -148,7 +146,7 @@ the following articles to learn about the architecture:
 > [!div class="nextstepaction"]
 > [CAF Migration landing zone blueprint - Overview](./index.md)
 
-Addition articles about blueprints and how to use them:
+Additional articles about blueprints and how to use them:
 
 - Learn about the [blueprint lifecycle](../../concepts/lifecycle.md).
 - Understand how to use [static and dynamic parameters](../../concepts/parameters.md).

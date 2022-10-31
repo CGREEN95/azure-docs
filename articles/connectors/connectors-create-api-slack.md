@@ -1,19 +1,15 @@
 ---
-title: Connect to Slack from Azure Logic Apps | Microsoft Docs
-description: Automate tasks and workflows that monitor files and manage channels, groups, and messages in your Slack account by using Azure Logic Apps
+title: Connect to Slack from Azure Logic Apps
+description: Automate tasks and workflows that monitor files and manage channels, groups, and messages in your Slack account using Azure Logic Apps.
 services: logic-apps
-ms.service: logic-apps
 ms.suite: integration
-author: ecfan
-ms.author: estfan
-ms.reviewer: klam, LADocs
-ms.assetid: 234cad64-b13d-4494-ae78-18b17119ba24
-ms.topic: article
-tags: connectors
+ms.reviewer: estfan, azla
+ms.topic: how-to
 ms.date: 08/25/2018
+tags: connectors
 ---
 
-# Monitor and manage Slack with Azure Logic Apps
+# Connect to Slack from Azure Logic Apps
 
 With Azure Logic Apps and the Slack connector, 
 you can create automated tasks and workflows that monitor 
@@ -95,9 +91,10 @@ review the connector's [reference page](/connectors/slack/).
 
 ## Get support
 
-* For questions, visit the [Azure Logic Apps forum](https://social.msdn.microsoft.com/Forums/en-US/home?forum=azurelogicapps).
+* For questions, visit the [Microsoft Q&A question page for Azure Logic Apps](/answers/topics/azure-logic-apps.html).
 * To submit or vote on feature ideas, visit the [Logic Apps user feedback site](https://aka.ms/logicapps-wish).
 
 ## Next steps
 
 * Learn about other [Logic Apps connectors](../connectors/apis-list.md)
+

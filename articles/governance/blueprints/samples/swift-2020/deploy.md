@@ -1,11 +1,8 @@
 ---
-title: Sample - SWIFT CSP-CSCF v2020 blueprint - Deploy steps
+title: Deploy SWIFT CSP-CSCF v2020 blueprint sample
 description: Deploy steps for the SWIFT CSP-CSCF v2020 blueprint sample including blueprint artifact parameter details.
-author: DCtheGeek
-ms.author: dacoulte
-ms.date: 09/24/2019
+ms.date: 09/08/2021
 ms.topic: sample
-ms.service: blueprints
 ---
 # Deploy the SWIFT CSP-CSCF v2020 blueprint sample
 
@@ -89,7 +86,7 @@ provided to make each deployment of the copy of the blueprint sample unique.
        assignment will be created for each using the parameters entered.
      - **Assignment name**: The name is pre-populated for you based on the name of the blueprint.
        Change as needed or leave as is.
-     - **Location**: Select a region for the managed identity to be created in. Azure Blueprint uses
+     - **Location**: Select a region for the managed identity to be created in. Azure Blueprints uses
        this managed identity to deploy all artifacts in the assigned blueprint. To learn more, see
        [managed identities for Azure resources](../../../../active-directory/managed-identities-azure-resources/overview.md).
      - **Blueprint definition version**: Pick a **Published** version of your copy of the blueprint
@@ -125,23 +122,21 @@ The following table provides a list of the blueprint artifact parameters:
 
 |Artifact name|Artifact type|Parameter name|Description|
 |-|-|-|-|
-|\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|List of resource types that should have diagnostic logs enabled|List of resource types to audit if diagnostic log setting is not enabled. Acceptable values can be found at [Azure Monitor diagnostic logs schemas](../../../../azure-monitor/platform/diagnostic-logs-schema.md#supported-log-categories-per-resource-type).|
+|\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|List of resource types that should have diagnostic logs enabled|List of resource types to audit if diagnostic log setting is not enabled. Acceptable values can be found at [Azure Monitor resource logs categories](../../../../azure-monitor/essentials/resource-logs-categories.md#supported-log-categories-per-resource-type).|
 |\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|Connected workspace IDs|A semicolon-separated list of the workspace IDs that the Log Analytics agent should be connected to|
 |\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|List of users that should be included in Windows VM Administrators group|A semicolon-separated list of members that should be included in the Administrators local group. Ex: Administrator; myUser1; myUser2|
-|\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|Domain Name (FQDN)|The fully qualified domain name (FQDN) that the Windows VMs should be joined to|
-|\[Preview\]: Deploy Log Analytics Agent for Linux VM Scale Sets (VMSS)|Policy assignment|Log Analytics workspace for Linux VM Scale Sets (VMSS)|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
-|\[Preview\]: Deploy Log Analytics Agent for Linux VM Scale Sets (VMSS)|Policy assignment|Optional: List of VM images that have supported Linux OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
-|\[Preview\]: Deploy Log Analytics Agent for Linux VMs|Policy assignment|Log Analytics workspace for Linux VMs|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
-|\[Preview\]: Deploy Log Analytics Agent for Linux VMs|Policy assignment|Optional: List of VM images that have supported Linux OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
-|\[Preview\]: Deploy Log Analytics Agent for Windows VM Scale Sets (VMSS)|Policy assignment|Log Analytics workspace for Windows VM Scale Sets (VMSS)|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
-|\[Preview\]: Deploy Log Analytics Agent for Windows VM Scale Sets (VMSS)|Policy assignment|Optional: List of VM images that have supported Windows OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
-|\[Preview\]: Deploy Log Analytics Agent for Windows VMs|Policy assignment|Log Analytics workspace for Windows VMs|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
-|\[Preview\]: Deploy Log Analytics Agent for Windows VMs|Policy assignment|Optional: List of VM images that have supported Windows OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
-|Deploy Advanced Threat Protection on Storage Accounts|Policy assignment|Effect|Information about policy effects can be found at [Understand Azure Policy Effects](../../../policy/concepts/effects.md)|
-|Deploy Auditing on SQL servers|Policy assignment|The value in days of the retention period (0 indicates unlimited retention)|Retention days (optional, 180 days if unspecified)|
+|\[Preview\]: Audit SWIFT CSP-CSCF v2020 controls and deploy specific VM Extensions to support audit requirements|Policy assignment|Domain Name (FQDN) |The fully qualified domain name (FQDN) that the Windows VMs should be joined to|
+|Deploy Log Analytics Agent for Linux VMs|Policy assignment|Log Analytics workspace for Linux VMs|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
+|Deploy Log Analytics Agent for Linux VMs|Policy assignment|Optional: List of VM images that have supported Linux OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
+|Deploy Log Analytics Agent for Windows VM Scale Sets (VMSS)|Policy assignment|Log Analytics workspace for Windows VM Scale Sets (VMSS)|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
+|Deploy Log Analytics Agent for Windows VM Scale Sets (VMSS)|Policy assignment|Optional: List of VM images that have supported Windows OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
+|Deploy Log Analytics Agent for Windows VMs|Policy assignment|Log Analytics workspace for Windows VMs|If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.|
+|Deploy Log Analytics Agent for Windows VMs|Policy assignment|Optional: List of VM images that have supported Windows OS to add to scope|An empty array may be used to indicate no optional parameters: \[\]|
+|Deploy Advanced Threat Protection on Storage Accounts|Policy assignment|Effect|Information about policy effects can be found at [Understand Azure Policy Effects](../../../policy/concepts/effects.md) |
+|Deploy Auditing on SQL servers|Policy assignment|The value in days of the retention period (0 indicates unlimited retention) |Retention days (optional, 180 days if unspecified) |
 |Deploy Auditing on SQL servers|Policy assignment|Resource group name for storage account for SQL server auditing|Auditing writes database events to an audit log in your Azure Storage account (a storage account will be created in each region where a SQL Server is created that will be shared by all servers in that region). Important - for proper operation of Auditing do not delete or rename the resource group or the storage accounts.|
 |Deploy diagnostic settings for Network Security Groups|Policy assignment|Storage account prefix for network security group diagnostics|This prefix will be combined with the network security group location to form the created storage account name.|
-|Deploy diagnostic settings for Network Security Groups|Policy assignment|Resource group name for storage account for network security group diagnostics (must exist)|The resource group that the storage account will be created in. This resource group must already exist.|
+|Deploy diagnostic settings for Network Security Groups|Policy assignment|Resource group name for storage account for network security group diagnostics (must exist) |The resource group that the storage account will be created in. This resource group must already exist.|
 
 ## Next steps
 
@@ -152,7 +147,7 @@ the following articles to learn about the blueprint and control mapping:
 > [SWIFT CSP-CSCF v2020 blueprint - Overview](./index.md)
 > [SWIFT CSP-CSCF v2020 blueprint - Control mapping](./control-mapping.md)
 
-Addition articles about blueprints and how to use them:
+Additional articles about blueprints and how to use them:
 
 - Learn about the [blueprint lifecycle](../../concepts/lifecycle.md).
 - Understand how to use [static and dynamic parameters](../../concepts/parameters.md).

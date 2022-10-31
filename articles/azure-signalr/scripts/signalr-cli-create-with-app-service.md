@@ -1,13 +1,13 @@
 ---
-title: Azure CLI Script Sample - Create a SignalR Service with an App Service
-description: Azure CLI Script Sample - Create SignalR Service with an App Service
-author: sffamily
+title: Create SignalR Service with App Service using Azure CLI
+description: Use Azure CLI to create SignalR Service with App Service. Learn all CLI commands for Azure SignalR Service.
+author: vicancy
 ms.service: signalr
 ms.devlang: azurecli
 ms.topic: sample
-ms.date: 04/20/2018
-ms.author: zhshang
-ms.custom: mvc
+ms.date: 03/30/2022
+ms.author: lianwei
+ms.custom: mvc, devx-track-azurecli
 ---
 
 # Create a SignalR Service with an App Service
@@ -16,25 +16,25 @@ This sample script creates a new Azure SignalR Service resource, which is used t
 
 [!INCLUDE [quickstarts-free-trial-note](../../../includes/quickstarts-free-trial-note.md)]
 
-[!INCLUDE [cloud-shell-try-it.md](../../../includes/cloud-shell-try-it.md)]
-
-If you choose to install and use the CLI locally, this article requires that you are running the Azure CLI version 2.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install the Azure CLI]( /cli/azure/install-azure-cli). 
+[!INCLUDE [azure-cli-prepare-your-environment.md](../../../includes/azure-cli-prepare-your-environment.md)]
 
 ## Sample script
 
-This script uses the *signalr* extension for the Azure CLI. Execute the following command to install the *signalr* extension for the Azure CLI before using this sample script:
+[!INCLUDE [cli-launch-cloud-shell-sign-in.md](../../../includes/cli-launch-cloud-shell-sign-in.md)]
 
-```azurecli-interactive
-az extension add -n signalr
+### Run the script
+
+:::code language="azurecli" source="~/azure_cli_scripts/azure-signalr/create-signalr-with-app-service/create-signalr-with-app-service.sh" id="FullScript":::
+
+## Clean up resources
+
+[!INCLUDE [cli-clean-up-resources.md](../../../includes/cli-clean-up-resources.md)]
+
+```azurecli
+az group delete --name $resourceGroup
 ```
 
-[!code-azurecli-interactive[main](../../../cli_scripts/azure-signalr/create-signalr-with-app-service/create-signalr-with-app-service.sh "Create a new Azure SignalR Service and Web App")]
-
-Make a note of the actual name generated for the new resource group. It will be shown in the output. You will use that resource group name when you want to delete all group resources.
-
-[!INCLUDE [cli-script-clean-up](../../../includes/cli-script-clean-up.md)]
-
-## Script explanation
+## Sample reference
 
 Each command in the table links to command specific documentation. This script uses the following commands:
 
