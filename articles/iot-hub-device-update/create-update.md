@@ -1,148 +1,122 @@
 ---
-title: How to prepare an update to be imported into Azure Device Update for IoT Hub | Microsoft Docs
-description: How-To guide for preparing to import a new update into Azure Device Update for IoT Hub.
+title: Prepare an update to import into Azure Device Update for IoT Hub | Microsoft Docs
+description: Learn how to prepare an update for import into Azure Device Update for IoT Hub by creating an import manifest to describe the update.
 author: andrewbrownmsft
 ms.author: andbrown
-ms.date: 1/28/2022
+ms.date: 12/30/2024
 ms.topic: how-to
-ms.service: iot-hub-device-update
+ms.service: azure-iot-hub
+ms.custom: devx-track-azurecli
+ms.subservice: device-update
 ---
 
-# Prepare an update to import into Device Update for IoT Hub
+# Prepare an update to import into Device Update
 
-Learn how to obtain a new update and prepare the update for importing into Device Update for IoT Hub.
+This article describes how to get a new update and prepare it for importing into Azure Device Update for IoT Hub by creating an import manifest.
 
 ## Prerequisites
 
-* [Access to an IoT Hub with Device Update for IoT Hub enabled](create-device-update-account.md).
-* An IoT device (or simulator) [provisioned for Device Update](device-update-agent-provisioning.md) within IoT Hub.
-* [PowerShell 5](/powershell/scripting/install/installing-powershell) or later (includes Linux, macOS, and Windows installs)
-* Supported browsers:
-  * [Microsoft Edge](https://www.microsoft.com/edge)
-  * Google Chrome
+- A [Device Update account and instance configured with an IoT hub](create-device-update-account.md).
+- An IoT device or simulator [provisioned for Device Update](device-update-agent-provisioning.md) within the IoT hub.
+- The Bash environment in [Azure Cloud Shell](/azure/cloud-shell/quickstart) for running Azure CLI commands. Select **Launch Cloud Shell** to open Cloud Shell, or select the Cloud Shell icon in the top toolbar of the Azure portal.
 
-## Obtain an update for your devices
+  :::image type="icon" source="~/reusable-content/ce-skilling/azure/media/cloud-shell/launch-cloud-shell-button.png" alt-text="Button to launch the Azure Cloud Shell." border="false" link="https://shell.azure.com":::
 
-Now that you've set up Device Update and provisioned your devices, you'll need the update file(s) that you'll be deploying to those devices.
+  If you prefer, you can run the Azure CLI commands locally:
+  
+  1. [Install Azure CLI](/cli/azure/install-azure-cli). Run [az version](/cli/azure/reference-index#az-version) to see the installed Azure CLI version and dependent libraries, and run [az upgrade](/cli/azure/reference-index#az-upgrade) to install the latest version.
+  1. Sign in to Azure by running [az login](/cli/azure/reference-index#az-login).
+  1. Install the `azure-iot` extension when prompted on first use. To make sure you're using the latest version of the extension, run `az extension update --name azure-iot`.
 
-* If you’ve purchased devices from an Original Equipment Manufacturer (OEM) or solution integrator, that organization will most likely provide update files for you, without you needing to create the updates. Contact the OEM or solution integrator to find out how they make updates available.
+>[!TIP]
+>The Azure CLI commands in this article use the backslash \\ character for line continuation so that the command arguments are easier to read. This syntax works in Bash environments. If you run these commands in PowerShell, replace each backslash with a backtick \`, or remove them entirely.
 
-* If your organization already creates software for the devices you use, that same group will be the ones to create the updates for that software.
+<a name="obtain-an-update-for-your-device"></a>
+## Get the update files for your device
 
-When creating an update to be deployed using Device Update for IoT Hub, start with either the [image-based or package-based approach](understand-device-update.md#support-for-a-wide-range-of-update-artifacts) depending on your scenario.
+Get the update file or files to deploy to your device using Device Update. If you purchased devices from an original equipment manufacturer (OEM) or solution integrator, that organization probably provides updates without you having to create update files. Contact the OEM or solution integrator to find out how they make updates available. If your organization creates software for your devices, it also creates the updates for that software.
+
+To create the update, choose either the [image-based or package-based update type](understand-device-update.md#support-for-a-wide-range-of-update-artifacts), depending on your scenario.
+
+> [!TIP]
+> You can try the [image-based](device-update-raspberry-pi.md), [package-based](device-update-ubuntu-agent.md), or [proxy update](device-update-howto-proxy-updates.md) tutorials, or just view sample import manifest files from those tutorials for reference.
 
 ## Create a basic Device Update import manifest
 
-Once you have your update files, create an import manifest to describe the update. If you haven't already done so, be sure to familiarize yourself with the basic [import concepts](import-concepts.md). While it is possible to author an import manifest JSON manually using a text editor, this guide will use PowerShell as example.
+Once you have your update files and are familiar with basic [Device Update import concepts](import-concepts.md), create an import manifest to describe the update. While you can author a JSON import manifest manually using a text editor, the Azure CLI [az iot du init v5](/cli/azure/iot/du/update/init#az-iot-du-update-init-v5) command simplifies the process. For more information about the import manifest schema, see [Device Update import schema and API information](import-schema.md).
+
+The `az iot du init v5` command takes the following arguments. All are required except `--file`, which is derived from `--step` if not specified. There is positional sensitivity between `--step` and `--file`.
+
+- The `--update-provider`, `--update-name`, and `--update-version` parameters define the `updateId` object that's a unique identifier for each update.
+- The `--compat` compatibility object is a set of name-value pairs that describe the properties of a device that this update is compatible with. You can use a specific set of compatibility properties with only one provider and name combination.
+- The `--step` parameter specifies the update `handler` on the device, such as `microsoft/script:1`, `microsoft/swupdate:1`, or `microsoft/apt:1`, and its associated `properties` for this update. You can use `--step` more than once.
+- The `--file` parameter specifies the `path` to your update files. You can use `--file` one or more times.
+
+```azurecli
+az iot du update init v5 \
+    --update-provider <provider> \
+    --update-name <update name> \
+    --update-version <update version> \
+    --compat <property1>=<value> <property2>=<value> \
+    --step handler=<handler> properties=<JSON-formatted handler properties> \
+    --file path=<paths and full file names of your update files> 
+```
+
+The following `az iot du update init v5` command shows example values:
+
+```azurecli
+az iot du update init v5 \
+    --update-provider Microsoft \
+    --update-name AptUpdate \
+    --update-version 1.0.0 \
+    --compat manufacturer=Contoso model=Vacuum \
+    --step handler=microsoft/script:1 properties='{"installedCriteria": "1.0"}' \
+    --file path=/my/apt/manifest/file
+```
 
 > [!TIP]
-> Try the [image-based](device-update-raspberry-pi.md), [package-based](device-update-ubuntu-agent.md), or [proxy update](device-update-howto-proxy-updates.md) tutorials if you haven't already done so. You can also just view sample import manifest files from those tutorials for reference.
+> For handler properties, you might need to escape certain characters in your JSON. For example, use `'\'` to escape double quotes if you run the Azure CLI in PowerShell.
 
-1. [Clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) `Azure/iot-hub-device-update` [Git repository](https://github.com/Azure/iot-hub-device-update).
+The `az iot du init v5` command supports advanced scenarios, including the [related files feature](related-files.md) that allows you to define the relationship between different update files. For more examples and a complete list of optional parameters, see the [az iot du init v5](/cli/azure/iot/du/update/init#az-iot-du-update-init-v5) command reference.
 
-2. Navigate to `Tools/AduCmdlets` in your local clone from PowerShell.
-
-3. Run the following commands after replacing the following sample parameter values with your own: **Provider, Name, Version, Properties, Handler, Installed Criteria, Files**. See [Import schema and API information](import-schema.md) for details on what values you can use. _In particular, be aware that the same exact set of compatibility properties cannot be used with more than one Provider and Name combination._
-
-    ```powershell
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-
-    Import-Module ./AduUpdate.psm1
-
-    $updateId = New-AduUpdateId -Provider Contoso -Name Toaster -Version 1.0
-
-    $compat = New-AduUpdateCompatibility -Properties @{ deviceManufacturer = 'Contoso'; deviceModel = 'Toaster' }
-
-    $installStep = New-AduInstallationStep -Handler 'microsoft/swupdate:1'-HandlerProperties @{ installedCriteria = '1.0' } -Files 'path to your update file'
-
-    $update = New-AduImportManifest -UpdateId $updateId -Compatibility $compat -InstallationSteps $installStep
-
-    # Write the import manifest to a file, ideally next to the update file(s).
-    $update | Out-File "./$($updateId.provider).$($updateId.name).$($updateId.version).importmanifest.json" -Encoding utf8
-    ```
-
-Once you've created your import manifest, if you're ready to import your update, you can scroll to the Next steps link at the bottom of this page.
+Once you create your import manifest and save it as a JSON file, you can [import the update](import-update.md). If you plan to use the Azure portal for importing, be sure to name your import manifest with the format *\<manifestname\>.importmanifest.json*.
 
 ## Create an advanced Device Update import manifest for a proxy update
 
-If your update is more complex, such as a [proxy update](device-update-proxy-updates.md), you may need to create multiple import manifests. You can use the same PowerShell script from the previous section to create parent and child import manifests for complex updates. Run the following commands after replacing the sample parameter values with your own. See [Import schema and API information](import-schema.md) for details on what values you can use.
+If your update is more complex, such as a [proxy update](device-update-proxy-updates.md), you might need to create multiple import manifests. For complex updates, you can use the `az iot du update init v5` Azure CLI command to create a *parent* import manifest and some number of *child* import manifests.
 
-  ```powershell
-    Import-Module $PSScriptRoot/AduUpdate.psm1 -ErrorAction Stop
-    
-    # We will use arbitrary files as update payload files.
-    $childFile = "$env:TEMP/childFile.bin.txt"
-    $parentFile = "$env:TEMP/parentFile.bin.txt"
-    "This is a child update payload file." | Out-File $childFile -Force -Encoding utf8
-    "This is a parent update payload file." | Out-File $parentFile -Force -Encoding utf8
-    
-    # ------------------------------
-    # Create a child update
-    # ------------------------------
-    Write-Host 'Preparing child update ...'
-    
-    $microphoneUpdateId = New-AduUpdateId -Provider Contoso -Name Microphone -Version $UpdateVersion
-    $microphoneCompat = New-AduUpdateCompatibility -DeviceManufacturer Contoso -DeviceModel Microphone
-    $microphoneInstallStep = New-AduInstallationStep -Handler 'microsoft/swupdate:1' -Files $childFile
-    $microphoneUpdate = New-AduImportManifest -UpdateId $microphoneUpdateId `
-                                                 -IsDeployable $false `
-                                                 -Compatibility $microphoneCompat `
-                                                 -InstallationSteps $microphoneInstallStep `
-                                                 -ErrorAction Stop -Verbose:$VerbosePreference
-    
-    # ------------------------------
-    # Create another child update
-    # ------------------------------
-    Write-Host 'Preparing another child update ...'
-    
-    $speakerUpdateId = New-AduUpdateId -Provider Contoso -Name Speaker -Version $UpdateVersion
-    $speakerCompat = New-AduUpdateCompatibility -DeviceManufacturer Contoso -DeviceModel Speaker
-    $speakerInstallStep = New-AduInstallationStep -Handler 'microsoft/swupdate:1' -Files $childFile
-    $speakerUpdate = New-AduImportManifest -UpdateId $speakerUpdateId `
-                                              -IsDeployable $false `
-                                              -Compatibility $speakerCompat `
-                                              -InstallationSteps $speakerInstallStep `
-                                              -ErrorAction Stop -Verbose:$VerbosePreference
-    
-    # ------------------------------------------------------------
-    # Create the parent update which parents the child update above
-    # ------------------------------------------------------------
-    Write-Host 'Preparing parent update ...'
-    
-    $parentUpdateId = New-AduUpdateId -Provider Contoso -Name Toaster -Version $UpdateVersion
-    $parentCompat = New-AduUpdateCompatibility -DeviceManufacturer Contoso -DeviceModel Toaster
-    $parentSteps = @()
-    $parentSteps += New-AduInstallationStep -Handler 'microsoft/script:1' -Files $parentFile -HandlerProperties @{ 'arguments'='--pre'} -Description 'Pre-install script'
-    $parentSteps += New-AduInstallationStep -UpdateId $microphoneUpdateId -Description 'Microphone Firmware'
-    $parentSteps += New-AduInstallationStep -UpdateId $speakerUpdateId -Description 'Speaker Firmware'
-    $parentSteps += New-AduInstallationStep -Handler 'microsoft/script:1' -Files $parentFile -HandlerProperties @{ 'arguments'='--post'} -Description 'Post-install script'
-    
-    $parentUpdate = New-AduImportManifest -UpdateId $parentUpdateId `
-                                          -Compatibility $parentCompat `
-                                          -InstallationSteps $parentSteps `
-                                          -ErrorAction Stop -Verbose:$VerbosePreference
-    
-    # ------------------------------------------------------------
-    # Write all to files
-    # ------------------------------------------------------------
-    Write-Host 'Saving manifest and update files ...'
-    
-    New-Item $Path -ItemType Directory -Force | Out-Null
-    
-    $microphoneUpdate | Out-File "$Path/$($microphoneUpdateId.Provider).$($microphoneUpdateId.Name).$($microphoneUpdateId.Version).importmanifest.json" -Encoding utf8
-    $speakerUpdate | Out-File "$Path/$($speakerUpdateId.Provider).$($speakerUpdateId.Name).$($speakerUpdateId.Version).importmanifest.json" -Encoding utf8
-    $parentUpdate | Out-File "$Path/$($parentUpdateId.Provider).$($parentUpdateId.Name).$($parentUpdateId.Version).importmanifest.json" -Encoding utf8
-    
-    Copy-Item $parentFile -Destination $Path -Force
-    Copy-Item $childFile -Destination $Path -Force
-    
-    Write-Host "Import manifest JSON files saved to $Path" -ForegroundColor Green
-    
-    Remove-Item $childFile -Force -ErrorAction SilentlyContinue | Out-Null
-    Remove-Item $parentFile -Force -ErrorAction SilentlyContinue | Out-Null
-  ```
+Replace the placeholder values in the following Azure CLI commands. For details on the values you can use, see [Import schema and API information](import-schema.md). The following example shows three updates to deploy to the device, a parent update and two child updates.
 
-## Next steps
+```azurecli
+az iot du update init v5 \
+    --update-provider <child_1 update provider> \
+    --update-name <child_1 update name> \
+    --update-version <child_1 update version> \
+    --compat manufacturer=<device manufacturer> model=<device model> \
+    --step handler=<handler> \
+    --file path=<paths and full file names of your update files> 
+az iot du update init v5 \
+    --update-provider <child_2 update provider> \
+    --update-name <child_2 update name> \
+    --update-version <child_2 update version> \
+    --compat manufacturer=<device manufacturer> model=<device model> \
+    --step handler=<handler> \
+    --file path=<paths and full file names of your update files> 
+az iot du update init v5 \
+    --update-provider <parent update provider> \
+    --update-name <parent update name> \
+    --update-version <parent update version> \
+    --compat manufacturer=<device manufacturer> model=<device model> \
+    --step handler=<handler> properties=<any handler properties, JSON-formatted> \
+    --file path=<paths and full file names of your update files> \
+    --step updateId.provider=<child_1 update provider> updateId.name=<child_1 update name> updateId.version=<child_1 update version> \
+    --step updateId.provider=<child_2 update provider> updateId.name=<child_2 update name> updateId.version=<child_2 update version> 
+```
 
-* [Import an update](import-update.md)
-* [Learn about import concepts](import-concepts.md)
+## Related content
+
+- [Device Update import concepts](import-concepts.md)
+- [Device Update import schema and API information](import-schema.md)
+- [Proxy updates and multi-component updating](device-update-proxy-updates.md)
+- [Import an update](import-update.md)
+- [Use the related files feature to reference multiple update files](related-files.md)

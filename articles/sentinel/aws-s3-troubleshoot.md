@@ -1,11 +1,14 @@
 ---
 title: Troubleshoot AWS S3 connector issues - Microsoft Sentinel
 description: Troubleshoot AWS S3 connector issues in Microsoft Sentinel.
-author: limwainstein
-ms.author: lwainstein
+author: yelevin
+ms.author: yelevin
 ms.topic: troubleshooting
 ms.date: 09/08/2022
-#Customer intent: As a security operator, I want to quickly identify the cause of the problem occurring with the AWS S3 connector so I can find the steps needed to resolve the problem.
+
+
+#Customer intent: As a security engineer, I want to troubleshoot AWS S3 connector issues so that I can ensure seamless log ingestion into Microsoft Sentinel.
+
 ---
 
 # Troubleshoot AWS S3 connector issues
@@ -90,7 +93,7 @@ The SQS didn't successfully read the S3 data.
     SentinelHealth 
     | take 20
     ```
-1. If the health feature isn’t enabled, [enable it](monitor-sentinel-health.md).
+1. If the health feature isn’t enabled, [enable it](enable-monitoring.md).
 
 ## Data from the AWS S3 connector (or one of its data types) is seen in Microsoft Sentinel with a delay of more than 30 minutes  
 
@@ -144,7 +147,7 @@ There might be errors in the health logs, or the health feature might not be ena
     | take 20
     ```
 
-1. If the health feature isn’t enabled, [enable it](monitor-sentinel-health.md).
+1. If the health feature isn’t enabled, [enable it](enable-monitoring.md).
 
 ## Next steps
 

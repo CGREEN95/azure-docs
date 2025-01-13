@@ -1,17 +1,18 @@
-- name: NGINX for Azure (preview) Documentation
+items:
+- name: NGINXaaS – An Azure Native ISV Service Documentation
   href: index.yml
 - name: Overview
   items:
-  - name: What is NGINX?
-    href: nginx-overview.md
+  - name: What is NGINXaaS – An Azure Native ISV Service?
+    href: overview.md
 - name: Quickstarts
   expanded: true
   items:
-  - name: Create an NGINX deployment
-    href: nginx-create.md
+  - name: Create an NGINXaaS deployment
+    href: create.md
 - name: How to
   items:
-  - name: Manage your NGINX resource
-    href: nginx-manage.md
-  - name: Troubleshoot NGINX
-    href: nginx-troubleshoot.md
+  - name: Manage your NGINXaaS resource
+    href: manage.md
+  - name: Troubleshoot NGINXaaS
+    href: troubleshoot.md

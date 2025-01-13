@@ -5,21 +5,23 @@ author: oshezaf
 ms.topic: reference
 ms.date: 08/02/2021
 ms.author: ofshezaf
+
+
+#Customer intent: As a security analyst, I want to understand the known issues and limitations of the Advanced Security Information Model (ASIM) so that I can effectively troubleshoot and optimize my queries in Microsoft Sentinel.
+
 ---
 
 # Advanced Security Information Model (ASIM) known issues (Public preview)
-
-[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
 The following are the Advanced Security Information Model (ASIM) known issues and limitations:
 
 ## Time picker set to a custom range
 
-When using ASIM parsers in the log screen, the time picker will change automatically to "set in query", which will result in querying over all data in the relevant tables. The query results may not be the expected results and performance may be slow.
+When using filtering ASIM parsers (with the prefixes `_Im`, `im`, or `vim`) in the log screen, the time picker will change automatically to "set in query", which will result in querying over all data in the relevant tables. The query results may not be the expected results and performance may be slow.
 
 :::image type="content" source="media/normalization/asim-custom-time-picker.png" alt-text="Screenshot of custom time picker when using ASIM.":::
 
-To ensure correct and timely results, set the time range to your preferred range after it changes to "set in query".
+To ensure correct and timely results, set the time range to your preferred range after it changes to "set in query". In add-hoc queries, you may want to use non-filtering parsers (with the prefixes `_ASim` or `ASim`).
 
 ## Performance challenges
 

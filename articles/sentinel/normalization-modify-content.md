@@ -5,11 +5,13 @@ author: oshezaf
 ms.topic: conceptual
 ms.date: 11/09/2021
 ms.author: ofshezaf
+
+
+#Customer intent: As a security analyst, I want to modify custom analytics rules to use the Advanced Security Information Model (ASIM) so that I can leverage normalized data for more efficient and consistent threat detection.
+
 ---
 
 # Modify content to use the Advanced Security Information Model (ASIM) (Public preview)
-
-[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
 Normalized security content in Microsoft Sentinel includes analytics rules, hunting queries, and workbooks that work with unifying normalization parsers.
 

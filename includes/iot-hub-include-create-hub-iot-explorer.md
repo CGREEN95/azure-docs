@@ -3,9 +3,9 @@ title: include file
 description: include file
 author: timlt
 ms.author: timlt
-ms.service: iot-develop
+ms.service: azure-iot
 ms.topic: include
-ms.date: 09/17/2021
+ms.date: 1/10/2025
 ---
 
 ## Create an IoT hub
@@ -41,7 +41,7 @@ To create an IoT hub and a resource group:
     az iot hub create --resource-group MyResourceGroup --name {YourIoTHubName}
     ```
     > [!TIP]
-    > After creating an IoT hub, you'll use Azure IoT Explorer to interact with your IoT hub in the rest of this quickstart. IoT Explorer is a GUI application that lets you connect to an existing IoT Hub and add, manage, and monitor devices. To learn more, see [Install and use Azure IoT explorer](../articles/iot-fundamentals/howto-use-iot-explorer.md). Optionally, you can continue to use CLI commands.
+    > After creating an IoT hub, you'll use Azure IoT Explorer to interact with your IoT hub in the rest of this quickstart. IoT Explorer is a GUI application that lets you connect to an existing IoT Hub and add, manage, and monitor devices. To learn more, see [Install and use Azure IoT explorer](../articles/iot/howto-use-iot-explorer.md). Optionally, you can continue to use CLI commands.
 
 ### Configure IoT Explorer
 

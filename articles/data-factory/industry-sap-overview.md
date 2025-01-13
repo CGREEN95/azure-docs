@@ -2,12 +2,11 @@
 title: SAP knowledge center overview
 titleSuffix: Azure Data Factory
 description: Overview of the ADF SAP Knowledge Center and ADF SAP IP
-author: joshuha-msft
-ms.author: joowen
-ms.service: data-factory
-ms.custom: event-tier1-build-2022, ignite-2022
+author: ukchrist
+ms.author: ulrichchrist
 ms.topic: conceptual
-ms.date: 08/11/0222
+ms.date: 10/03/2024
+ms.subservice: data-movement
 ---
 
 # SAP knowledge center overview

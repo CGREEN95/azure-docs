@@ -1,12 +1,13 @@
 ---
 title: Set up diagnostics for monitoring agent updates
 description: How to set up diagnostic reports to monitor agent updates.
-author: Sefriend
+author: dknappettmsft
 ms.topic: how-to
-ms.date: 03/28/2022
-ms.author: sefriend
-manager: rkiran
+ms.date: 03/20/2023
+ms.author: daknappe
+ms.custom: docs_inherited
 ---
+
 # Set up diagnostics to monitor agent updates
 
 Diagnostic logs can tell you which agent version is installed for an update, when it was installed, and if the update was successful. If an update is unsuccessful, it might be because the session host was turned off during the update. If that happened, you should turn the session host back on.
@@ -17,7 +18,7 @@ This article describes how to use diagnostic logs in a Log Analytics workspace t
 
 To enable sending diagnostic logs to your Log Analytics workspace:
 
-1. Create a Log Analytics workspace, if you haven't already. Next, get the workspace ID and primary key by following the instructions in [Use Log Analytics for the diagnostics feature](diagnostics-log-analytics.md#before-you-get-started).
+1. Create a Log Analytics workspace, if you haven't already. Next, get the workspace ID and primary key by following the instructions in [Use Log Analytics for the diagnostics feature](diagnostics-log-analytics.md#prerequisites).
 
 2. Send diagnostics to the Log Analytics workspace you created by following the instructions in [Push diagnostics data to your workspace](diagnostics-log-analytics.md#push-diagnostics-data-to-your-workspace). 
 
@@ -36,17 +37,17 @@ To see when agent component updates are available:
 
 3. Copy and paste the following Kusto query to see if agent component updates are available for the specified session host. Make sure to change the **sessionHostName** parameter to the name of your session host.
 
-> [!NOTE]
-> If you haven't enabled the Scheduled Agent Updates feature, you won't see anything in the NewPackagesAvailable field.
+    > [!NOTE]
+    > If you haven't enabled the Scheduled Agent Updates feature, you won't see anything in the NewPackagesAvailable field.
 
-```kusto
-WVDAgentHealthStatus 
-| where TimeGenerated >= ago(30d) 
-| where SessionHostName == "sessionHostName" 
-| project TimeGenerated, AgentVersion, SessionHostName, LastUpgradeTimeStamp, UpgradeState, UpgradeErrorMsg, NewPackagesAvailable
-| sort by TimeGenerated desc
-| take 1
-```
+    ```kusto
+    WVDAgentHealthStatus 
+    | where TimeGenerated >= ago(30d) 
+    | where SessionHostName == "sessionHostName" 
+    | project TimeGenerated, AgentVersion, SessionHostName, LastUpgradeTimeStamp, UpgradeState, UpgradeErrorMsg
+    | sort by TimeGenerated desc
+    | take 1
+    ```
 
 ## Use diagnostics to see when agent updates are happening
 
@@ -58,33 +59,14 @@ To see when agent updates are happening or to make sure that the Scheduled Agent
 
 3. Copy and paste the following Kusto query to see when the agent has updated for the specified session host. Make sure to change the **sessionHostName** parameter to the name of your session host.
 
-```kusto
-WVDAgentHealthStatus 
-| where TimeGenerated >= ago(30d) 
-| where SessionHostName == "sessionHostName" 
-| project TimeGenerated, AgentVersion, SessionHostName, LastUpgradeTimeStamp, UpgradeState, UpgradeErrorMsg 
-| summarize arg_min(TimeGenerated, *) by AgentVersion 
-| sort by TimeGenerated asc 
-``` 
-
-## Use diagnostics to check for unsuccessful agent updates
-
-To check if an agent component update was unsuccessful: 
-
-1. Access the logs in your Log Analytics workspace.
-
-2. Select the **+** button to create a new query.
-
-3. Copy and paste the following Kusto query to see when the agent has updated for the specified session host. Make sure to change the **sessionHostName** parameter to the name of your session host.
-
-```kusto
-WVDAgentHealthStatus 
-| where TimeGenerated >= ago(30d) 
-| where SessionHostName == "sessionHostName"
-| where MaintenanceWindowMissed == true
-| project TimeGenerated, AgentVersion, SessionHostName, LastUpgradeTimeStamp, UpgradeState, UpgradeErrorMsg, MaintenanceWindowMissed
-| sort by TimeGenerated asc 
-``` 
+    ```kusto
+    WVDAgentHealthStatus 
+    | where TimeGenerated >= ago(30d) 
+    | where SessionHostName == "sessionHostName" 
+    | project TimeGenerated, AgentVersion, SessionHostName, LastUpgradeTimeStamp, UpgradeState, UpgradeErrorMsg 
+    | summarize arg_min(TimeGenerated, *) by AgentVersion 
+    | sort by TimeGenerated asc 
+    ```
 
 ## Next steps
 

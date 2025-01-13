@@ -4,8 +4,7 @@ description: Describes how you can deploy a GPU shared workload via IoT Edge on 
 services: databox
 author: alkohli
 
-ms.service: databox
-ms.subservice: edge
+ms.service: azure-stack-edge
 ms.topic: how-to
 ms.date: 03/12/2021
 ms.author: alkohli
@@ -217,7 +216,7 @@ For detailed instructions, see [Connect to and manage a Kubernetes cluster via k
 
 ### Deploy modules via portal
 
-Deploy IoT Edge modules via the Azure portal. You'll deploy publicly available Nvidia CUDA sample modules that run n-body simulation. For more information, see [N-body simulation](https://physics.princeton.edu//~fpretori/Nbody/intro.htm).
+Deploy IoT Edge modules via the Azure portal. You'll deploy publicly available Nvidia CUDA sample modules that run n-body simulation.
 
 1. Make sure that the IoT Edge service is running on your device.
 

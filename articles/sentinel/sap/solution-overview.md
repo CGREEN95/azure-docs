@@ -1,110 +1,91 @@
 ---
-title: Microsoft Sentinel Solution for SAP overview
-description: This article introduces Microsoft Sentinel Solution for SAP
-author: MSFTandrelom
-ms.author: andrelom
-ms.topic: how-to
-ms.date: 06/21/2022
+title: Microsoft Sentinel solution for SAP applications overview
+description: This article provides an overview of the Microsoft Sentinel solution for SAP applications and available support.
+author: batamig
+ms.author: bagol
+ms.topic: conceptual
+ms.date: 11/05/2024
+appliesto:
+    - Microsoft Sentinel in the Azure portal
+    - Microsoft Sentinel in the Microsoft Defender portal
+ms.collection: usx-security
+
+#Customer intent: As a security operations team member, I want to monitor and protect SAP systems using Microsoft Sentinel so that I can detect, analyze, and respond to threats effectively across all layers of the SAP environment.
+
 ---
 
-# Microsoft Sentinel Solution for SAP overview
+# Microsoft Sentinel solutions for SAP applications
 
-SAP systems pose a unique security challenge. SAP systems handle extremely sensitive information and are prime targets for attackers.
+SAP systems pose a unique security challenge, as they handle sensitive information, are a prime target for attackers, and traditionally provide little visibility for security operations teams.
 
-Security operations teams have traditionally had very little visibility into SAP systems. An SAP system breach could result in stolen files, exposed data, or disrupted supply chain. Once an attacker is in the system, there are few controls to detect exfiltration or other bad acts. SAP activity needs to be correlated with other data across the organization for effective threat detection.
+An SAP system breach could result in stolen files, exposed data, or a disrupted supply chain. Once an attacker is in the system, there are few controls to detect exfiltration or other bad acts. SAP activity needs to be correlated with other data across the organization for effective threat detection.
 
-To help close this gap, Microsoft Sentinel offers the Microsoft Sentinel Solution for SAP. This comprehensive solution uses components at every level of Microsoft Sentinel to offer end-to-end detection, analysis, investigation, and response to threats in your SAP environment.
+To help close this gap, Microsoft Sentinel offers Microsoft Sentinel [solutions](../sentinel-solutions-deploy.md) for SAP applications, which use components at every level of Microsoft Sentinel to offer end-to-end detection, analysis, investigation, and response to threats in your SAP environment.
 
-## What Microsoft Sentinel Solution for SAP does
+## SIEM and SOAR features and sample architecture
 
-The Microsoft Sentinel Solution for SAP continuously monitors SAP systems for threats at all layers - business logic, application, database, and OS.
+The Microsoft Sentinel solution for SAP applications continuously monitor SAP systems for threats at all layers - business logic, application, database, and OS. It allows you to:
 
-It analyzes SAP system data to detect threats such as privilege escalation, unapproved changes, and unauthorized access. It allows you to correlate SAP monitoring with other signals across your organization, and to build your own detections to monitor sensitive transactions and other business risks.
-    - Privilege escalation
-    - Unapproved changes
-    - Unauthorized access
-- Correlate SAP monitoring with other signals across your organization
-- Build your own detections to monitor sensitive transactions and other business risks
+- **Security information and event management (SIEM)**: Correlate SAP monitoring with other signals across your organization. Use out-of-the-box and custom detections to monitor sensitive transactions and other business risks, such as privilege escalation, unapproved changes, and unauthorized access.
 
-## Solution details
+- **Security orchestration, automation and response (SOAR)**: Build automated response processes that interact with your SAP systems to stop active security threats.
 
-### Log sources
+For example, the following image shows a sample environment where the Microsoft Sentinel solution for SAP applications is deployed. This sample architecture uses a multi-SID SAP landscape with a split between productive and nonproductive systems. All of the systems in this image are onboarded to Microsoft Sentinel for the SAP solution.
 
-The solution's data connector retrieves a wide variety of SAP Log Sources:
-- ABAP Security Audit Log 
-- ABAP Change Documents Log 
-- ABAP Spool Log 
-- ABAP Spool Output Log 
-- ABAP Job Log 
-- ABAP Workflow Log 
-- ABAP DB Table Data
-- SAP User Master Data
-- ABAP CR Log
-- ICM Logs
-- JAVA Webdispacher Logs 
-- Syslog
+:::image type="content" source="media/deployment-overview/sap-sentinel-multi-sid-overview.png" alt-text="Diagram of a multi-SID SAP landscape with Microsoft Sentinel." lightbox="media/deployment-overview/sap-sentinel-multi-sid-overview.png" border="false":::
 
-### Threat detection coverage
+Microsoft Sentinel also offers solutions for the following SAP environment configurations:
 
-- Suspicious privileges operations 
-  – Privileged user creation
-  - Usage of break-glass users
-  - Unlocking a user and logging into to it from the same IP
-  - Assignment of sensitive roles and admin privileges 
-  - User Unlocks and uses other users
-  - Critical Authorization Assignment 
- 
-- Attempts to bypass SAP security mechanisms –
-  - Disabling audit logging (HANA and SAP)
-  - Execution of sensitive function modules
-  - Unlocking blocked transactions
-  - Debugging production systems
-  - Sensitive Tables Direct access by RFC
-  - RFC Execution of Sanative Function
-  - System Configuration Change,  Dynamic ABAP Program.
+- (Limited preview) The [Microsoft Sentinel SAP Agentless solution](deployment-overview.md#data-connector) offers threat monitoring and detection for the SAP Audit Log only, with an agentless data connector for simpler deployment.
+- The [Microsoft Sentinel solution for SAP BTP](sap-btp-solution-overview.md) offers threat monitoring and detection for SAP Business Technology Platform (BTP).
 
-- Backdoor creation  (persistency) 
-  - Creation of new internet facing interfaces (ICF)
-  - Directly accessing sensitive tables by remote-function-call
-  - Assigning new service handlers to ICF
-  - Execution of obsolete programs
-  - User Unlocks and uses other users.
- 
-- Data exfiltration 
-  - Multiple files downloads
-  - Spool takeovers
-  - Allowing access to insecure FTP servers & connections from unauthorized hosts
-  - Dynamic RFC Destination
-  - HANA DB - User Admin Actions from DB level.
- 
-- Initial Access 
-  – Brute force
-  - Multiple logons from the same IP
-  - Privileged user logons from unexpected networks
-  - SPNego Replay Attack 
-  
-## Next steps
+## Threat detection coverage
 
-Learn more about the Microsoft Sentinel Solution for SAP:
+The Microsoft Sentinel solution for SAP applications supports threat detections such as the following, and more:
 
-- [Deploy Microsoft Sentinel Solution for SAP](deployment-overview.md)
-- [Prerequisites for deploying Microsoft Sentinel Solution for SAP](prerequisites-for-deploying-sap-continuous-threat-monitoring.md)
-- [Deploy SAP Change Requests (CRs) and configure authorization](preparing-sap.md)
-- [Deploy and configure the container hosting the SAP data connector agent](deploy-data-connector-agent-container.md)
-- [Deploy SAP security content](deploy-sap-security-content.md)
-- [Deploy the Microsoft Sentinel for SAP data connector with SNC](configure-snc.md)
-- [Enable and configure SAP auditing](configure-audit.md)
-- [Collect SAP HANA audit logs](collect-sap-hana-audit-logs.md)
+- **Suspicious privileges operations**, such as privileged user creation or usage of break-glass users
+- **Attempts to bypass SAP security mechanisms**, such as disabling audit logging, or execution of sensitive function modules
+- **Backdoor creation (persistency)**, such as creation of new internet facing interfaces (ICF) or directly accessing sensitive tables by remote-function-call
+- **Data exfiltration**, such as multiple file downloads or spool takeovers
+- **Initial Access**, such as brute force or multiple sign-ins from the same IP
 
-Troubleshooting:
+For more information, see [Built-in analytics rules](sap-solution-security-content.md#built-in-analytics-rules).
 
-- [Troubleshoot your Microsoft Sentinel Solution for SAP deployment](sap-deploy-troubleshoot.md)
-- [Configure SAP Transport Management System](configure-transport.md)
+## Investigation support
 
-Reference files:
+Investigate SAP incidents just as you would any other incidents in Microsoft Sentinel and Microsoft Defender. For more information, see:
 
-- [Microsoft Sentinel Solution for SAP data reference](sap-solution-log-reference.md)
-- [Microsoft Sentinel Solution for SAP: security content reference](sap-solution-security-content.md)
-- [Kickstart script reference](reference-kickstart.md)
-- [Update script reference](reference-update.md)
-- [Systemconfig.ini file reference](reference-systemconfig.md)
+- [Navigate and investigate incidents in Microsoft Sentinel](../investigate-incidents.md)
+- [Investigate and respond with Microsoft Defender XDR](/defender-xdr/incident-response-overview)
+
+## Certification
+
+The Microsoft Sentinel **SAP applications** solution is certified for SAP S/4HANA Cloud, Private Edition RISE with SAP, and SAP S/4 on-premises.
+
+- The integration scenarios include S/4-BC-XAL 1.0/S/4 EXTERNAL ALERT AND MONITORING 1.0 (for S/4).
+- Our certification includes S/4 and SAP Rise S/4 HANA Cloud Private Edition running in any cloud and on-premises.
+- We support hybrid deployments that can cover the entire customer estate.
+
+For more information, see the certification on the [SAP Certified Solutions Directory](https://www.sap.com/dmc/exp/2013_09_adpd/enEN/#/solutions?id=s:33db1376-91ae-4f36-a435-aafa892a88d8).
+
+## Solution pricing
+
+While the Microsoft Sentinel **SAP applications** solution is free to install, there's an extra hourly charge for activating and using the solution on production systems.
+
+- The extra hourly charge applies to connected, active  production systems only. Inactive systems aren't subject to charges. If a system's status is unknown to Microsoft Sentinel, such as because of permission issues, it's counted as a production system.
+- Microsoft Sentinel identifies a production system by looking at the configuration on the SAP system. 
+
+Microsoft Sentinel ingestion costs might vary and are influenced by the volume of SAP logs ingested. For more information, see:
+
+- [Plan costs and understand Microsoft Sentinel pricing and billing](../billing.md)
+- [Reduce costs for Microsoft Sentinel](../billing-reduce-costs.md)
+- [Manage and monitor costs for Microsoft Sentinel](../billing-monitor-costs.md)
+- [Microsoft Sentinel solution for SAP applications](https://azure.microsoft.com/pricing/offers/microsoft-sentinel-sap-promo/).
+
+## Related content
+
+For more information, see:
+
+- [Deploy Microsoft Sentinel solution for SAP applications](deployment-overview.md)
+- [Enable SAP detections and threat protection](deployment-solution-configuration.md)
+- [Microsoft Sentinel solution for SAP applications: security content reference](sap-solution-security-content.md)

@@ -1,22 +1,24 @@
 ---
 title: Overview of tokens - Azure Active Directory B2C
 description: Learn about the tokens used in Azure Active Directory B2C.
-services: active-directory-b2c
+
 author: kengaderdus
 manager: CelesteDG
 
-ms.service: active-directory
-ms.workload: identity
-ms.topic: conceptual
-ms.date: 03/30/2022
+ms.service: azure-active-directory
+
+ms.topic: concept-article
+ms.date: 01/11/2024
 ms.author: kengaderdus
-ms.subservice: B2C
+ms.subservice: b2c
 ms.custom: b2c-support
+
+
+#Customer intent: As a developer integrating Azure AD B2C into my application, I want to understand the different types of tokens used in Azure AD B2C, so that I can properly authenticate users and secure access to resources in my application.
+
 ---
 
 # Overview of tokens in Azure Active Directory B2C
-
-[!INCLUDE [active-directory-b2c-advanced-audience-warning](../../includes/active-directory-b2c-advanced-audience-warning.md)]
 
 Azure Active Directory B2C (Azure AD B2C) emits different types of security tokens as it processes each [authentication flow](application-types.md). This article describes the format, security characteristics, and contents of each type of token.
 
@@ -26,11 +28,11 @@ Azure AD B2C supports the [OAuth 2.0 and OpenID Connect protocols](protocols-ove
 
 The following tokens are used in communication with Azure AD B2C:
 
-- **ID token** - A JWT that contains claims that you can use to identify users in your application. This token is securely sent in HTTP requests for communication between two components of the same application or service. You can use the claims in an ID token as you see fit. They're commonly used to display account information or to make access control decisions in an application. ID tokens are signed, but the're not encrypted. When your application or API receives an ID token, it must validate the signature to prove that the token is authentic. Your application or API must also validate a few claims in the token to prove that it's valid. Depending on the scenario requirements, the claims validated by an application can vary, but your application must perform some common claim validations in every scenario.
+- **ID token** - A JWT that contains claims that you can use to identify users in your application. This token is securely sent in HTTP requests for communication between two components of the same application or service. You can use the claims in an ID token as you see fit. They're commonly used to display account information or to make access control decisions in an application. The ID tokens issued by Azure AD B2C are signed, but they're not encrypted. When your application or API receives an ID token, it must validate the signature to prove that the token is authentic. Your application or API must also validate a few claims in the token to prove that it's valid. Depending on the scenario requirements, the claims validated by an application can vary, but your application must perform some common claim validations in every scenario.
 
 - **Access token** -  A JWT that contains claims that you can use to identify the granted permissions to your APIs. Access tokens are signed, but they aren't encrypted. Access tokens are used to provide access to APIs and resource servers.  When your API receives an access token, it must validate the signature to prove that the token is authentic. Your API must also validate a few claims in the token to prove that it's valid. Depending on the scenario requirements, the claims validated by an application can vary, but your application must perform some common claim validations in every scenario.
 
-- **Refresh token** - Refresh tokens are used to acquire new ID tokens and access tokens in an OAuth 2.0 flow. They provide your application with long-term access to resources on behalf of users without requiring interaction with those users. Refresh tokens are opaque to your application. They're issued by Azure AD B2C and can be inspected and interpreted only by Azure AD B2C. They're long-lived, but your application shouldn't be written with the expectation that a refresh token will last for a specific period of time. Refresh tokens can be invalidated at any moment for a variety of reasons. The only way for your application to know if a refresh token is valid is to attempt to redeem it by making a token request to Azure AD B2C. When you redeem a refresh token for a new token, you receive a new refresh token in the token response. Save the new refresh token. It replaces the refresh token that you previously used in the request. This action helps guarantee that your refresh tokens remain valid for as long as possible. Single-page applications using the authorization code flow with PKCE always have a refresh token lifetime of 24 hours. [Learn more about the security implications of refresh tokens in the browser](../active-directory/develop/reference-third-party-cookies-spas.md#security-implications-of-refresh-tokens-in-the-browser). 
+- **Refresh token** - Refresh tokens are used to acquire new ID tokens and access tokens in an OAuth 2.0 flow. They provide your application with long-term access to resources on behalf of users without requiring interaction with those users. Refresh tokens are opaque to your application. They're issued by Azure AD B2C and can be inspected and interpreted only by Azure AD B2C. They're long-lived, but your application shouldn't be written with the expectation that a refresh token will last for a specific period of time. Refresh tokens can be invalidated at any moment for various reasons. The only way for your application to know if a refresh token is valid is to attempt to redeem it by making a token request to Azure AD B2C. When you redeem a refresh token for a new token, you receive a new refresh token in the token response. Save the new refresh token. It replaces the refresh token that you previously used in the request. This action helps guarantee that your refresh tokens remain valid for as long as possible. Single-page applications using the authorization code flow with PKCE always have a refresh token lifetime of 24 hours. [Learn more about the security implications of refresh tokens in the browser](../active-directory/develop/reference-third-party-cookies-spas.md#security-implications-of-refresh-tokens-in-the-browser). 
 
 ## Endpoints
 
@@ -47,14 +49,14 @@ Security tokens that your application receives from Azure AD B2C can come from t
 
 When you use Azure AD B2C, you have fine-grained control over the content of your tokens. You can configure [user flows](user-flow-overview.md) and [custom policies](custom-policy-overview.md) to send certain sets of user data in claims that are required for your application. These claims can include standard properties such as **displayName** and **emailAddress**. Your applications can use these claims to securely authenticate users and requests.
 
-The claims in ID tokens are not returned in any particular order. New claims can be introduced in ID tokens at any time. Your application shouldn't break as new claims are introduced. You can also include [custom user attributes](user-flow-custom-attributes.md) in your claims.
+The claims in ID tokens aren't returned in any particular order. New claims can be introduced in ID tokens at any time. Your application shouldn't break as new claims are introduced. You can also include [custom user attributes](user-flow-custom-attributes.md) in your claims.
 
 The following table lists the claims that you can expect in ID tokens and access tokens issued by Azure AD B2C.
 
 | Name | Claim | Example value | Description |
 | ---- | ----- | ------------- | ----------- |
-| Audience | `aud` | `90c0fe63-bcf2-44d5-8fb7-b8bbc0b29dc6` | Identifies the intended recipient of the token. For Azure AD B2C, the audience is the application ID. Your application should validate this value and reject the token if it doesn't match. Audience is synonymous with resource. |
-| Issuer | `iss` |`https://<tenant-name>.b2clogin.com/775527ff-9a37-4307-8b3d-cc311f58d925/v2.0/` | Identifies the security token service (STS) that constructs and returns the token. It also identifies the directory in which the user was authenticated. Your application should validate the issuer claim to make sure that the token came from the appropriate endpoint. |
+| Audience | `aud` | `00001111-aaaa-2222-bbbb-3333cccc4444` | Identifies the intended recipient of the token. For Azure AD B2C, the audience is the application ID. Your application should validate this value and reject the token if it doesn't match. Audience is synonymous with resource. |
+| Issuer | `iss` |`https://<tenant-name>.b2clogin.com/aaaabbbb-0000-cccc-1111-dddd2222eeee/v2.0/` | Identifies the security token service (STS) that constructs and returns the token. It also identifies the directory in which the user was authenticated. Your application should validate the issuer claim to make sure that the token came from the appropriate endpoint. |
 | Issued at | `iat` | `1438535543` | The time at which the token was issued, represented in epoch time. |
 | Expiration time | `exp` | `1438539443` | The time at which the token becomes invalid, represented in epoch time. Your application should use this claim to verify the validity of the token lifetime. |
 | Not before | `nbf` | `1438535543` | The time at which the token becomes valid, represented in epoch time. This time is usually the same as the time the token was issued. Your application should use this claim to verify the validity of the token lifetime. |
@@ -62,10 +64,10 @@ The following table lists the claims that you can expect in ID tokens and access
 | Code hash | `c_hash` | `SGCPtt01wxwfgnYZy2VJtQ` | A code hash included in an ID token only when the token is issued together with an OAuth 2.0 authorization code. A code hash can be used to validate the authenticity of an authorization code. For more information about how to perform this validation, see the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html).  |
 | Access token hash | `at_hash` | `SGCPtt01wxwfgnYZy2VJtQ` | An access token hash included in an ID token only when the token is issued together with an OAuth 2.0 access token. An access token hash can be used to validate the authenticity of an access token. For more information about how to perform this validation, see the [OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html)  |
 | Nonce | `nonce` | `12345` | A nonce is a strategy used to mitigate token replay attacks. Your application can specify a nonce in an authorization request by using the `nonce` query parameter. The value you provide in the request is emitted unmodified in the `nonce` claim of an ID token only. This claim allows your application to verify the value against the value specified on the request. Your application should perform this validation during the ID token validation process. |
-| Subject | `sub` | `884408e1-2918-4cz0-b12d-3aa027d7563b` | The principal about which the token asserts information, such as the user of an application. This value is immutable and can't be reassigned or reused. It can be used to perform authorization checks safely, such as when the token is used to access a resource. By default, the subject claim is populated with the object ID of the user in the directory. |
+| Subject | `sub` | `aaaaaaaa-0000-1111-2222-bbbbbbbbbbbb` | The principal about which the token asserts information, such as the user of an application. This value is immutable and can't be reassigned or reused. It can be used to perform authorization checks safely, such as when the token is used to access a resource. By default, the subject claim is populated with the object ID of the user in the directory. |
 | Authentication context class reference | `acr` | Not applicable | Used only with older policies. |
 | Trust framework policy | `tfp` | `b2c_1_signupsignin1` | The name of the policy that was used to acquire the ID token. |
-| Authentication time | `auth_time` | `1438535543` | The time at which a user last entered credentials, represented in epoch time. There is no discrimination between that authentication being a fresh sign-in, a single sign-on (SSO) session, or another sign-in type. The `auth_time` is the last time the application (or user) initiated an authentication attempt against Azure AD B2C. The method used to authenticate isn't differentiated. |
+| Authentication time | `auth_time` | `1438535543` | The time at which a user last entered credentials, represented in epoch time. There's no discrimination between that authentication being a fresh sign-in, a single sign-on (SSO) session, or another sign-in type. The `auth_time` is the last time the application (or user) initiated an authentication attempt against Azure AD B2C. The method used to authenticate isn't differentiated. |
 | Scope | `scp` | `Read`| The permissions granted to the resource for an access token. Multiple granted permissions are separated by a space. |
 | Authorized Party | `azp` | `975251ed-e4f5-4efd-abcb-5f1a8f566ab7` | The **application ID** of the client application that initiated the request. |
 
@@ -77,7 +79,7 @@ The following properties are used to [manage lifetimes of security tokens](confi
 
 - **Refresh token lifetime (days)** - The maximum time period before which a refresh token can be used to acquire a new access or ID token. The time period also covers acquiring a new refresh token if your application has been granted the `offline_access` scope. The default is 14 days. The minimum (inclusive) is one day. The maximum (inclusive) is 90 days.
 
-- **Refresh token sliding window lifetime (days)** - After this time period elapses the user is forced to reauthenticate, irrespective of the validity period of the most recent refresh token acquired by the application. It can only be provided if the switch is set to **Bounded**. It needs to be greater than or equal to the **Refresh token lifetime (days)** value. If the switch is set to **No expiry**, you cannot provide a specific value. The default is 90 days. The minimum (inclusive) is one day. The maximum (inclusive) is 365 days.
+- **Refresh token sliding window lifetime (days)** - After this time period elapses the user is forced to reauthenticate, irrespective of the validity period of the most recent refresh token acquired by the application. It can only be provided if the switch is set to **Bounded**. It needs to be greater than or equal to the **Refresh token lifetime (days)** value. If the switch is set to **No expiry**, you can't provide a specific value. The default is 90 days. The minimum (inclusive) is one day. The maximum (inclusive) is 365 days.
 
 The following use cases are enabled using these properties:
 
@@ -155,4 +157,3 @@ For a full list of validations your application should perform, refer to the [Op
 ## Next steps
 
 Learn more about how to [use access tokens](access-tokens.md).
-

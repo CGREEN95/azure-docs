@@ -1,24 +1,31 @@
 ---
-title: Get support for Datadog resource
-description: This article describes how to contact support for a Datadog resource.
+title: Get support for your Datadog resource
+description: Learn how to contact support for assistance with your Datadog resource.
+
 ms.topic: conceptual
-ms.date: 05/28/2021
-author: flang-msft
-ms.author: franlanglois
+ms.date: 12/09/2024
+ms.custom:
+  - ai-gen-docs-bap
+  - ai-gen-desc
+  - ai-seo-date:12/03/2024
 ---
 
-# Get support for Datadog resource
+# Get support for your Datadog resource
 
-This article describes how to contact support when working with a Datadog resource. Before contacting support, see [Fix common errors](troubleshoot.md).
+This article describes how to contact support when working with Datadog. Before contacting support, review [common errors](troubleshoot.md) for possible solutions. 
 
 ## Contact support
 
-To contact support about the Azure Datadog integration, select **New Support request** in the left pane. Select the link to the Datadog portal.
-
-:::image type="content" source="media/get-support/support-request.png" alt-text="Create a new Datadog support request" border="true":::
+To contact support about the Datadog, select **New Support request** in the left pane. Select the link to the Datadog portal.
 
 ## Next steps
 
-For potential solutions, see [Fix common errors](troubleshoot.md).
+- [Fix common errors](troubleshoot.md).
+- [Manage your Datadog resource](manage.md).
+- Get started with Datadog on
 
-To learn about making changes to your existing Datadog resource, see [Manage the Datadog resource](manage.md).
+    > [!div class="nextstepaction"]
+    > [Azure portal](https://portal.azure.com/#view/HubsExtension/BrowseResource/resourceType/Microsoft.Datadog%2Fmonitors)
+
+    > [!div class="nextstepaction"]
+    > [Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/datadog1591740804488.dd_liftr_v2?tab=Overview)

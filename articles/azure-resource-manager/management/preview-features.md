@@ -2,8 +2,8 @@
 title: Set up preview features in Azure subscription
 description: Describes how to list, register, or unregister preview features in your Azure subscription for a resource provider.
 ms.topic: how-to
-ms.date: 08/10/2022
-ms.custom: devx-track-azurecli, devx-track-azurepowershell
+ms.date: 12/12/2024
+ms.custom: devx-track-azurepowershell, devx-track-azurecli
 # Customer intent: As an Azure user, I want to use preview features in my subscription so that I can expose a resource provider's preview functionality.
 ---
 
@@ -25,24 +25,25 @@ You can list all the preview features and their registration states for an Azure
 
 # [Portal](#tab/azure-portal)
 
-The portal only shows a preview feature when the service that owns the feature has explicitly opted in to the preview features management experience.
+> [!NOTE]
+> The portal only shows a preview feature when the service that owns the feature has explicitly opted in to the preview features management experience. In case the feature you are looking for doesn't appear on the list available, we recommend using [Azure CLI](./preview-features.md?tabs=azure-cli#list-preview-features) and [Azure Powershell](./preview-features.md?tabs=azure-powershell#list-preview-features).
 
 1. Sign in to the [Azure portal](https://portal.azure.com/).
 1. In the search box, enter _subscriptions_ and select **Subscriptions**.
 
-    :::image type="content" source="./media/preview-features/search.png" alt-text="Azure portal search.":::
+    :::image type="content" source="./media/preview-features/search.png" alt-text="Screenshot of Azure portal search box with 'subscriptions' entered.":::
 
 1. Select the link for your subscription's name.
 
-    :::image type="content" source="./media/preview-features/subscriptions.png" alt-text="Select Azure subscription.":::
+    :::image type="content" source="./media/preview-features/subscriptions.png" alt-text="Screenshot of Azure portal with subscription selection highlighted.":::
 
 1. From the left menu, under **Settings** select **Preview features**.
 
-    :::image type="content" source="./media/preview-features/preview-features-menu.png" alt-text="Azure preview features menu.":::
+    :::image type="content" source="./media/preview-features/preview-features-menu.png" alt-text="Screenshot of Azure portal with Preview features menu option highlighted.":::
 
 1. You see a list of available preview features and your current registration status.
 
-    :::image type="content" source="./media/preview-features/preview-features-list.png" alt-text="Azure portal list of preview features.":::
+    :::image type="content" source="./media/preview-features/preview-features-list.png" alt-text="Screenshot of Azure portal displaying a list of preview features.":::
 
 1. From **Preview features** you can filter the list by **name**, **State**, or **Type**:
 
@@ -50,7 +51,7 @@ The portal only shows a preview feature when the service that owns the feature h
     - **State**: Select the drop-down menu and choose a state. The portal doesn't filter by **Unregistered**.
     - **Type**: Select the drop-down menu and choose a type.
 
-    :::image type="content" source="./media/preview-features/filter.png" alt-text="Azure portal filter preview features.":::
+    :::image type="content" source="./media/preview-features/filter.png" alt-text="Screenshot of Azure portal with filter options for preview features.":::
 
 # [Azure CLI](#tab/azure-cli)
 
@@ -64,7 +65,7 @@ az feature list
 
 ```json
 {
-  "id": "/subscriptions/11111111-1111-1111-1111-111111111111/providers/Microsoft.Features/providers/
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Features/providers/
     Microsoft.Compute/features/InGuestPatchVMPreview",
   "name": "Microsoft.Compute/InGuestPatchVMPreview",
   "properties": {
@@ -101,7 +102,7 @@ Name                                     RegistrationState
 Microsoft.Compute/InGuestPatchVMPreview  NotRegistered
 ```
 
-# [PowerShell](#tab/azure-powershell)
+# [Azure PowerShell](#tab/azure-powershell)
 
 To list all the subscription's preview features, use the [Get-AzProviderFeature](/powershell/module/az.resources/get-azproviderfeature) cmdlet.
 
@@ -155,7 +156,7 @@ After a preview feature is registered in your subscription, you'll see one of tw
 
 - For a preview feature that doesn't require approval, the state is **Registered**.
 - If a preview feature requires approval, the registration state is **Pending**. You must request approval from the Azure service offering the preview feature. Usually, you request access through a support ticket.
-  - To request approval, submit an [Azure support request](../../azure-portal/supportability/how-to-create-azure-support-request.md).
+  - To request approval, submit an [Azure support request](/azure/azure-portal/supportability/how-to-create-azure-support-request).
   - After the registration is approved, the preview feature's state changes to **Registered**.
 
 Some services require other methods, such as email, to get approval for pending request. Check announcements about the preview feature for information about how to get access.
@@ -169,7 +170,7 @@ Some services require other methods, such as email, to get approval for pending 
 1. Select the link for the preview feature you want to register.
 1. Select **Register**.
 
-    :::image type="content" source="./media/preview-features/register.png" alt-text="Azure portal register preview feature.":::
+    :::image type="content" source="./media/preview-features/register.png" alt-text="Screenshot of Azure portal with Register button for a preview feature.":::
 
 1. Select **OK**.
 
@@ -185,7 +186,7 @@ az feature register --name InGuestPatchVMPreview --namespace Microsoft.Compute
 
 ```json
 {
-  "id": "/subscriptions/11111111-1111-1111-1111-111111111111/providers/Microsoft.Features/providers/
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Features/providers/
     Microsoft.Compute/features/InGuestPatchVMPreview",
   "name": "Microsoft.Compute/InGuestPatchVMPreview",
   "properties": {
@@ -210,7 +211,7 @@ Microsoft.Compute/InGuestPatchVMPreview  Registered
 > [!NOTE]
 > When the register command runs, a message is displayed that after the feature is registered, to run `az provider register --namespace <provider-name>` to propagate the changes.
 
-# [PowerShell](#tab/azure-powershell)
+# [Azure PowerShell](#tab/azure-powershell)
 
 To register a preview feature, use the [Register-AzProviderFeature](/powershell/module/az.resources/register-azproviderfeature) cmdlet.
 
@@ -253,7 +254,7 @@ You can unregister preview features from **Preview features**. The **State** cha
 1. Select the link for the preview feature you want to unregister.
 1. Select **Unregister**.
 
-    :::image type="content" source="./media/preview-features/unregister.png" alt-text="Azure portal unregister preview feature.":::
+    :::image type="content" source="./media/preview-features/unregister.png" alt-text="Screenshot of Azure portal with Unregister button for a preview feature.":::
 
 1. Select **OK**.
 
@@ -267,7 +268,7 @@ az feature unregister --name InGuestPatchVMPreview --namespace Microsoft.Compute
 
 ```json
 {
-  "id": "/subscriptions/11111111-1111-1111-1111-111111111111/providers/Microsoft.Features/providers/
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Features/providers/
     Microsoft.Compute/features/InGuestPatchVMPreview",
   "name": "Microsoft.Compute/InGuestPatchVMPreview",
   "properties": {
@@ -306,7 +307,7 @@ Name                                     RegistrationState
 Microsoft.Compute/InGuestPatchVMPreview  Unregistered
 ```
 
-# [PowerShell](#tab/azure-powershell)
+# [Azure PowerShell](#tab/azure-powershell)
 
 To unregister a preview feature, use the [Unregister-AzProviderFeature](/powershell/module/az.resources/unregister-azproviderfeature) cmdlet. The `RegistrationState` state changes to **Unregistered**.
 
@@ -345,6 +346,10 @@ InGuestPatchVMPreview   Microsoft.Compute   Unregistered
 ```
 
 ---
+
+## Configuring preview features using Azure Policy
+
+Subscriptions can be remediated to register to a preview feature if not already registered using a [built-in](https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2Fe624c84f-2923-4437-9fd9-4115c6da3888) policy definition. Note that new subscriptions added to an existing tenant won't be automatically registered.
 
 ## Next steps
 

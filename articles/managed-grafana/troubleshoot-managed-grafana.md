@@ -4,8 +4,8 @@ description: Troubleshoot Azure Managed Grafana issues related to fetching data,
 author: maud-lv
 ms.author: malev
 ms.topic: troubleshooting
-ms.service: managed-grafana
-ms.date: 09/13/2022
+ms.service: azure-managed-grafana
+ms.date: 04/12/2024
 ---
 
 # Troubleshoot issues for Azure Managed Grafana
@@ -47,7 +47,7 @@ If you get an error while filling out the form to create the Managed Grafana ins
 Enter a name that:
 
 - Is unique in the entire Azure region. It can't already be used by another user.
-- Is 30 characters long or smaller
+- Is 23 characters long or smaller
 - Begins with a letter. The rest can only be alphanumeric characters or hyphens, and the name must end with an alphanumeric character.
 
 ### Solution 2: review deployment error
@@ -69,11 +69,7 @@ Enter a name that:
 
 The user has successfully created an Azure Managed Grafana instance but can't access their Managed Grafana instance, when going to the endpoint URL.
 
-### Solution 1: use an Azure AD account
-
-Managed Grafana doesn't support Microsoft accounts. Sign in with an Azure AD account.
-
-### Solution 2: check the provisioning state
+### Solution 1: check the provisioning state
 
 If you get a page with an error message such as "can't reach this page", stating that the page took too long to respond, follow the process below:
 
@@ -85,9 +81,9 @@ If you get a page with an error message such as "can't reach this page", stating
 
 1. If you saw several browser redirects and then landed on a generic browser error page as shown above, then it means there's a failure in the backend.
 
-1. If you have a firewall blocking outbound traffic, allow access to your instance, to your URL ending in grafana.azure.com, and Azure AD.
+1. If you have a firewall blocking outbound traffic, allow access to your instance, to your URL ending in grafana.azure.com, and Microsoft Entra ID.
 
-### Solution 3: fix access role issues
+### Solution 2: fix access role issues
 
 If you get an error page stating "No Roles Assigned":
 
@@ -101,6 +97,12 @@ This issue can happen if:
    1. In your Grafana workspace, select **Access control (IAM) > Add role assignment** to add this role assignment. You must have the Administrator or Owner access role for the subscription or Managed Grafana resource to make this role assignment. Ask your administrator to assist you if you don't have sufficient access.
    1. Your account is a foreign account: the Grafana instance isn't registered in your home tenant.
    1. If you recently addressed this problem and have been assigned a sufficient Grafana role, you may need to wait for some time before the cookie expires and get refreshed. This process normally takes 5 min. If in doubts, delete all cookies or start a private browser session to force a fresh new cookie with new role information.
+
+## Authorized users don't show up in Grafana Users configuration
+
+After you add a user to a Managed Grafana's built-in RBAC role, such as Grafana Viewer, you don't see that user listed in the Grafana's **Configuration** UI page right away. This behavior is *by design*. Managed Grafana's RBAC roles are stored in Microsoft Entra ID. For performance reasons, Managed Grafana doesn't automatically synchronize users assigned to the built-in roles to every instance. There is no notification for changes in RBAC assignments. Querying Microsoft Entra ID periodically to get current assignments adds much extra load to the Microsoft Entra service.
+
+There's no "fix" for this in itself. After a user signs into your Grafana instance, the user shows up in the **Users** tab under Grafana **Configuration**. You can see the corresponding role that user has been assigned to.
 
 ## Azure Managed Grafana dashboard panel doesn't display any data
 
@@ -137,36 +139,21 @@ Every Grafana instance comes pre-configured with an Azure Monitor data source. W
 
       :::image type="content" source="media/troubleshoot/troubleshoot-dashboard-resource.png" alt-text="Screenshot of the Managed Grafana workspace: Checking dashboard information.":::
 
-1. Open the Azure Monitor data source set-up page
-
-   1. In your Managed Grafana endpoint, select **Configurations** in the left menu and select **Data Sources**.
-   1. Select **Azure Monitor**
-
-1. If the data source uses Managed Identity, then:
+1. In the Managed Grafana UI, select **Configurations** > **Data Sources** from the left menu, and select **Azure Monitor**.
+1. If the data source is configured to use a managed identity:
 
    1. Select the **Load Subscriptions** button to make a quick test. If **Default Subscription** is populated with your subscription, Managed Grafana can access Azure Monitor within this subscription. If not, then there are permission issues.
 
       :::image type="content" source="media/troubleshoot/troubleshoot-load-subscriptions.png" alt-text="Screenshot of the Managed Grafana workspace: Load subscriptions.":::
 
-   1. Check if the system assigned managed identity option is turned on in the Azure portal. If not, turn it on manually:
-      1. Open your Managed Grafana instance in the Azure portal.
-      1. In the left menu, under **Settings**, select **Identity**.
-      1. Select **Status**: **On** and select **Save**
+      Check if a system-assigned or a user-assigned managed identity is enabled in your workspace by going to **Settings** > **Identity (Preview)**. Go to [Set up Azure Managed Grafana authentication and permissions](how-to-authentication-permissions.md) to learn how to enable and configure the managed identity.
 
-      :::image type="content" source="media/troubleshoot/troubleshoot-managed-identity.png" alt-text="Screenshot of the Azure platform: Turn on system-assigned managed identity." lightbox="media/troubleshoot/troubleshoot-managed-identity-expanded.png":::
-
-   1. Check if the managed identity has the Monitoring Reader role assigned to the Managed Grafana instance. If not, add it manually from the Azure portal:
-      1. Open your Managed Grafana instance in the Azure portal.
-      1. In the left-menu, under **Settings**, select **Identity**.
-      1. Select **Azure role assignments**.
-      1. There should be a **Monitoring Reader** role displayed, assigned to your Managed Grafana instance. If not, select Add role assignment and add the **Monitoring Reader** role.
-
-      :::image type="content" source="media/troubleshoot/troubleshoot-add-role-assignment.png" alt-text="Screenshot of the Azure platform: Adding role assignment.":::
-
+   1. Once you've selected your subscription, select **Save & test**. If you see *No Log Analytics workspaces found*, you may need to assign the Reader role to the managed identity in the Log Analytics workspace. Open your Log Analytics workspace, go to **Settings** > **Access control (IAM)**, **Add** > **Add role assignment**.. 
+ 
 1. If the data source uses an **App Registration** authentication:
    1. In your Grafana endpoint, go to **Configurations > Data Sources > Azure Monitor** and check if the information for **Directory (tenant) ID** and **Application (client) ID** is correct.
-   1. Check if the service principal has the Monitoring Reader role assigned to the Managed Grafana instance. If not, add it manually from the Azure portal.
-   1. If needed, reapply the Client Secret
+   1. Check if the service principal has the Monitoring Reader role assigned to the Managed Grafana instance. If not, add it from the Azure portal by opening your subscription in the Azure portal and going to **Access control (IAM)** > **Add** > **Add role assignment**.
+   1. If needed, reapply the client secret.
 
       :::image type="content" source="media/troubleshoot/troubleshoot-azure-monitor-app-registration.png" alt-text="Screenshot of the Managed Grafana workspace: Check app registration authentication details.":::
 
@@ -181,10 +168,10 @@ The Azure Data Explorer data source can't fetch data.
 
       :::image type="content" source="media/troubleshoot/troubleshoot-dashboard-data-explorer.png" alt-text="Screenshot of the Managed Grafana workspace: Checking dashboard information for Azure Data Explorer.":::
 
-1. Check the Azure Data Explorer data source and see how authentication is set up. You can currently only set up authentication for Azure Data Explorer through Azure Active Directory (Azure AD).
+1. Check the Azure Data Explorer data source and see how authentication is set up. You can currently only set up authentication for Azure Data Explorer through Microsoft Entra ID.
 1. In your Grafana endpoint, go to **Configurations > Data Sources > Azure Data Explorer**
 1. Check if the information listed for **Azure cloud**, **Cluster URL**, **Directory (tenant) ID**, **Application (client) ID**, and **Client secret** is correct. If needed, create a new key to add as a client secret.
-1. At the top of the page, you can find instructions guiding you through the process to grant necessary permissions to this Azure AD app to read the Azure Data Explorer database.
+1. At the top of the page, you can find instructions guiding you through the process to grant necessary permissions to this Microsoft Entra app to read the Azure Data Explorer database.
 1. Make sure that your Azure Data Explorer instance doesn't have a firewall that blocks access to Managed Grafana. The Azure Data Explorer database needs to be exposed to the public internet.
 
 ## Dashboard import fails
@@ -216,4 +203,4 @@ Data sources configured with a managed identity may still be able to access data
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Configure data sources](./how-to-data-source-plugins-managed-identity.md)
+> [Support](./find-help-open-support-ticket.md)

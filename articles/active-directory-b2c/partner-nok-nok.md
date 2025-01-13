@@ -1,159 +1,129 @@
 ---
-title: Tutorial to configure Azure Active Directory B2C with Nok Nok
+title: Tutorial to configure Nok Nok S3 Authentication Suite with Azure Active Directory B2C for FIDO passkey authentication
 titleSuffix: Azure AD B2C
-description: Tutorial to configure Nok Nok with Azure Active Directory B2C to enable passwordless FIDO2 authentication
-services: active-directory-b2c
+description: Configure Nok Nok S3 Authentication Suite with Azure AD B2C to enable FIDO passkey authentication.
 author: gargi-sinha
-manager: CelesteDG
+manager: martinco
 ms.reviewer: kengaderdus
-
-ms.service: active-directory
-ms.workload: identity
+ms.service: azure-active-directory
 ms.topic: how-to
-ms.date: 09/20/2021
+ms.date: 12/09/2024
 ms.author: gasinh
-ms.subservice: B2C
----
-# Tutorial: Configure Nok Nok with Azure Active Directory B2C to enable passwordless FIDO2 authentication
+ms.subservice: b2c
 
-In this sample tutorial, learn how to integrate the Nok Nok S3 authentication suite into your Azure Active Directory (AD) B2C tenant. [Nok Nok](https://noknok.com/) enables FIDO certified multifactor authentication such as FIDO UAF, FIDO U2F, WebAuthn, and FIDO2 for mobile and web applications. Using Nok Nok customers can improve their security posture while balancing user experience.
+# Customer intent: I'm a developer integrating Azure AD B2C with a third-party authentication provider. I want to learn how to configure Nok Nok S3 Authentication Suite as an identity provider (IdP) in Azure AD B2C. My goal is to implement FIDO passkey authentication for my users.
+---
+# Tutorial: Configure Nok Nok S3 Authentication Suite with Azure AD B2C for FIDO passkey authentication
+
+In this article, you learn to integrate the Nok Nok S3 Authentication Suite into your Azure Active Directory (AD) B2C tenant. The Nok Nok solution enables FIDO-certified multifactor authentication, such as FIDO Universal Authentication Framework (UAF), FIDO Universal Second Factor (U2F), WebAuthn, and FIDO2, for mobile and web applications. The Nok Nok solution strengthens your security while maintaining an optimal user experience.
+
+Learn more at [Nok Nok](https://noknok.com/).
 
 ## Prerequisites
 
-To get started, you'll need:
+To get started, you need:
 
-- An Azure subscription. If you don't have a subscription, you can get a [free account](https://azure.microsoft.com/free/).
-
-- [An Azure AD B2C tenant](tutorial-create-tenant.md) that is linked to your Azure subscription.
-
-- Get a free Nok Nok [trial tenant](https://noknok.com/products/strong-authentication-service/).
+* An Azure subscription. If you don't have one, get an [Azure free account](https://azure.microsoft.com/free/).
+* An Azure AD B2C tenant linked to the Azure subscription. Learn how to [Create an Azure AD B2C tenant](tutorial-create-tenant.md).
+* A Nok Nok Cloud evaluation tenant for FIDO registration and authentication.
 
 ## Scenario description
 
-To enable passwordless FIDO authentication to your users, enable Nok Nok as an Identity provider to your Azure AD B2C tenant. The Nok Nok integration includes the following components:
+To enable passkey authentication for your users, enable Nok Nok as an identity provider (IdP) in your Azure AD B2C tenant. The Nok Nok integration includes the following components:
 
-- **Azure AD B2C** – The authorization server, responsible for verifying the user’s credentials.
+* **Azure AD B2C** – authorization server that verifies user credentials.
+* **Web and mobile applications** – mobile or web apps to protect with Nok Nok solutions and Azure AD B2C.
+* **Nok Nok tutorial web app** – application to register the passkey on your device.
+* **Nok Nok sign-in app** – application for authenticating Azure AD B2C applications with passkey.
 
-- **Web and mobile applications** – Your mobile or web applications that you choose to protect with Nok Nok and Azure AD B2C.
+The following diagram illustrates the Nok Nok solution as an IdP for Azure AD B2C by using OpenID Connect (OIDC) for passkey authentication.
 
-- **The Nok Nok app SDK or Nok Nok Passport app** – Applications used to authenticate Azure AD B2C enabled applications. These applications are available on [Apple app store](https://apps.apple.com/us/app/nok-nok-passport/id1050437340) and [Google play store](https://play.google.com/store/apps/details?id=com.noknok.android.passport2&hl=en&gl=US).
+![Diagram of Nok Nok as IdP for Azure AD B2C using OpenID Connect (OIDC) for passkey authentication.](./media/partner-nok-nok/nok-nok-architecture-diagram.png)
 
-The following architecture diagram shows the implementation. Nok Nok is acting as an Identity provider for Azure AD B2C using Open ID Connect (OIDC) to enable passwordless authentication.
+### Scenario 1: Passkey registration
+1. The user navigates to the Nok Nok tutorial web app using the link provided by Nok Nok.
+2. The user enters their Azure AD B2C username and default tutorial app password.
+3. The user receives a prompt to register the passkey.
+4. The Nok Nok server validates the passkey credential and confirms successful passkey registration to the user.
+5. The passkey on the user's device is ready for authentication.
 
-![image shows the architecture diagram of nok nok and azure ad b2c](./media/partner-nok-nok/nok-nok-architecture-diagram.png)
+### Scenario 2: Passkey authentication
+1. The user selects the sign-in with Nok Nok Cloud button on the Azure AD B2C sign-in page.
+2. Azure AD B2C redirects the user to the Nok Nok sign-in app.
+3. The user authenticates with their passkey.
+4. The Nok Nok server validates the passkey assertion and sends an OIDC authentication response to Azure AD B2C.
+5. Based on the authentication result, Azure AD B2C either grants or denies access to the target application.
 
-| Step | Description |
-|:------|:-----------|
-| 1. | User arrives at a login page. Users select sign-in/sign-up and enter the username |
-| 2. | Azure AD B2C redirects the user to the Nok Nok OIDC authentication provider. |
-| 3a. | For mobile based authentications, Nok Nok either displays a QR code or sends a push notification request to the end user’s mobile device. |
-| 3b. | For Desktop/PC based login, Nok Nok redirects the end user to the web application login page to initiate a passwordless authentication prompt. |
-|4a. | The user scan’s the displayed QR code in their smartphone using Nok Nok app SDK or Nok Nok Passport app.|
-| 4b. | User provides username as an input on the login page of the web application and selects next. |
-| 5a. | User is prompted for authentication on smartphone. <BR> User does passwordless authentication by using the user’s preferred method, such as biometrics, device PIN, or any roaming authenticator.|
-| 5b. | User is prompted for authentication on web application. <BR> User does passwordless authentication by using the user’s preferred method, such as biometrics, device PIN, or any roaming authenticator. |
-| 6. | Nok Nok server validates FIDO assertion and upon validation, sends OIDC authentication response to Azure AD B2C.|
-| 7. | Based on the response user is granted or denied access. |
+## Get started with Nok Nok
 
-## Onboard with Nok Nok
-
-Fill out the [Nok Nok cloud form](https://noknok.com/contact/) to create your own Nok Nok tenant. Once you submit the form, you'll receive an email explaining how to access your tenant. The email will also include access to Nok Nok guides. Follow the instructions provided in the Nok Nok integration guide to complete the OIDC configuration of your Nok Nok cloud tenant.
+1. [Contact Nok Nok](https://noknok.com/contact/).
+2. Fill out the form for a Nok Nok tenant.
+3. An email arrives with tenant access information and links to documentation.
+4. Use the Nok Nok integration documentation to complete the tenant OIDC configuration.
 
 ## Integrate with Azure AD B2C
 
-### Add a new Identity provider
+Use the following instructions to add and configure an IdP, and then configure a user flow.
 
-To add a new Identity provider, follow these steps:
+### Add a new identity provider
 
-1. Sign in to the **[Azure portal](https://portal.azure.com/#home)** as the global administrator of your Azure AD B2C tenant.
-1. Make sure you're using the directory that contains your Azure AD B2C tenant. Select the **Directories + subscriptions** icon in the portal toolbar.
-1. On the **Portal settings | Directories + subscriptions** page, find your Azure AD B2C directory in the **Directory name** list, and then select **Switch**.
-1. Choose **All services** in the top-left corner of the Azure portal, search for and select **Azure AD B2C**.
-1. Navigate to **Dashboard** > **Azure Active Directory B2C** >  **Identity providers**
-1. Select **Identity providers**.
-1. Select **Add**.
+For the following instructions, use the directory with the Azure AD B2C tenant. To add a new IdP:
 
-### Configure an Identity provider 
+1. Sign in to the [Azure portal](https://portal.azure.com/#home) as at least as the B2C Identity Experience Framework (IEF) Policy Administrator of the Azure AD B2C tenant.
+2. In the portal toolbar, select **Directories + subscriptions**.
+3. On **Portal settings, Directories + subscriptions**, in the **Directory name** list, locate the Azure AD B2C directory.
+4. Select **Switch**.
+5. In the top-left corner of the Azure portal, select **All services**.
+6. Search for and select **Azure AD B2C**.
+7. Navigate to **Dashboard** > **Azure Active Directory B2C** > **Identity providers**.
+8. Select **Identity providers**.
+9. Select **Add**.
 
-To configure an Identity provider, follow these steps:
+### Configure an identity provider
 
-1. Select **Identity provider type** > **OpenID Connect (Preview)**
-1. Fill out the form to set up the Identity provider:
+To configure an IdP:
 
-   |Property | Value |
-   |:-----| :-----------|
-   | Name   | Nok Nok Authentication Provider |
-   | Metadata URL | Insert the URI of the hosted Nok Nok Authentication app, followed by the specific path such as 'https://demo.noknok.com/mytenant/oidc/.well-known/openid-configuration' |
-   | Client Secret | Use the client Secret provided by the Nok Nok platform.|
-   | Client ID | Use the client ID provided by the Nok Nok platform.|
-   | Scope | OpenID profile email |
-   | Response type | code |
-   | Response mode | form_post|
-
-1. Select **OK**.
-
-1. Select **Map this identity provider’s claims**.
-
-1. Fill out the form to map the Identity provider:
-
-   |Property | Value |
-   |:-----| :-----------|
-   | UserID    | From subscription |
-   | Display name | From subscription |
-   | Response mode | From subscription |
-
-1. Select **Save** to complete the setup for your new OIDC Identity provider.
+1. Select **Identity provider type** > **OpenID Connect (Preview)**.
+2. For **Name**, enter the Nok Nok Authentication Provider or another name.
+3. For **Metadata URL**, enter the following URL after replacing the placeholder with the tenant ID that Nok Nok provides: `https://cloud.noknok.com/<tenant_id>/webapps/nnlfed/realms/<tenant_id>/.well-known/openid-configuration`.
+4. For **Client Secret**, use the Client Secret from Nok Nok.
+5. For **Client ID**, use the Client ID provided by Nok Nok.
+6. For **Scope**, use **openid**.
+7. For **Response type**, use **code**.
+8. For **Response mode**, use **form_post**.
+9. For **User ID**, use **sub**.
+10. For **Display name**, use **sub**.
+11. Select **Save**.
 
 ### Create a user flow policy
 
-You should now see Nok Nok as a new OIDC Identity provider listed within your B2C identity providers.
+For the following instructions, Nok Nok is a new OIDC IdP in the B2C identity providers list.
 
 1. In your Azure AD B2C tenant, under **Policies**, select **User flows**.
-
-2. Select **New** user flow.
-
-3. Select **Sign up and sign in**, select a **version**, and then select **Create**.
-
-4. Enter a **Name** for your policy.
-
-5. In the Identity providers section, select your newly created Nok Nok Identity provider.
-
-6. Set up the parameters of your User flow. Insert a name and select the Identity provider you’ve created. You can also add email address. In this case, Azure won’t redirect the login procedure directly to Nok Nok instead it will show a screen where the user can choose the option they would like to use.
-
-7. Leave the **Multi-factor Authentication** field as is.
-
-8. Select **Enforce conditional access policies**
-
-9. Under **User attributes and token claims**, select **Email Address** in the Collect attribute option. You can add all the attributes that Azure AD can collect about the user alongside the claims that Azure AD B2C can return to the client application.
-
-10. Select **Create**.
-
-11. After a successful creation, select your new **User flow**.
-
-12. On the left panel, select **Application Claims**. Under options, tick the **email** checkbox and select **Save**.
+2. Select **New**.
+3. Select **Sign up and sign in**.
+4. Select a **Version**.
+5. Select **Create**.
+6. Enter a policy **Name**.
+7. In **Identity providers**, select the created Nok Nok IdP.
+8. Check **Email signup** under **Local accounts** to display an intermediate Azure AD B2C signin/signup page with a button that redirects the user to the Nok Nok sign-in app.
+9. Leave the **Multi-factor Authentication** field.
+10. Select **Create** to save.
 
 ## Test the user flow
 
-1. Open the Azure AD B2C tenant and under Policies select Identity Experience Framework.
+1. Open the Azure AD B2C tenant. Under **Policies**, select **Identity Experience Framework**.
+2. Select the created **SignUpSignIn**.
+3. Select **Run user flow**.
+4. For **Application**, select the registered app. The example is JSON Web Token (JWT).
+5. For **Reply URL**, select the redirect URL of the application that you selected at the previous step.
+6. Select **Run user flow**.
+7. Perform sign-in using the Azure AD B2C username and the passkey that you previously registered for the same user.
+8. Verify that you received the token after authentication.
 
-2. Select your previously created SignUpSignIn.
-
-3. Select Run user flow and select the settings:
-
-   a. Application: select the registered app (sample is JWT)
-
-   b. Reply URL: select the redirect URL
-
-   c. Select Run user flow.
-
-4. Go through sign-up flow and create an account
-
-5. Nok Nok will be called during the flow, after user attribute is created. If the flow is incomplete, check that user isn't saved in the directory.
+If the flow is incomplete, confirm the user is or isn't saved in the directory.
 
 ## Next steps
 
-For additional information, review the following articles:
-
-- [Custom policies in Azure AD B2C](./custom-policy-overview.md)
-
-- [Get started with custom policies in Azure AD B2C](tutorial-create-user-flows.md?pivots=b2c-custom-policy)
+* [Azure AD B2C custom policy overview](./custom-policy-overview.md)
+* [Tutorial: Create user flows and custom policies in Azure Active Directory B2C](tutorial-create-user-flows.md?pivots=b2c-custom-policy)

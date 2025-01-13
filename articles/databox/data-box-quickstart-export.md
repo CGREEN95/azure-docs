@@ -2,12 +2,11 @@
 title: "Quickstart: Export data for Microsoft Azure Data Box"
 description: Learn how to quickly export your Azure Data Box data in Azure portal
 services: databox
-author: alkohli
-ms.service: databox
-ms.subservice: pod
+author: stevenmatthew
+ms.service: azure-databox
 ms.topic: quickstart
 ms.date: 07/17/2020
-ms.author: alkohli
+ms.author: shaas
 ms.custom: mode-other
 #Customer intent: As an IT admin, I need to quickly deploy Data Box so as to import data into Azure.
 ---
@@ -40,7 +39,7 @@ Before you begin:
 
 ## Sign in to Azure
 
-Sign in to the Azure portal at [https://portal.azure.com](https://portal.azure.com).
+Sign in to the [Azure portal](https://portal.azure.com).
 
 ## Order
 

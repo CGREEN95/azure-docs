@@ -1,19 +1,19 @@
 ---
 title: 'Quickstart: Get started analyzing with Data Explorer pools (Preview)'
-description: In this quickstart, you'll learn to analyze data with Data Explorer.
+description: In this quickstart, you learn to analyze data with Data Explorer.
 ms.topic: quickstart
-ms.date: 09/30/2021
+ms.date: 12/20/2024
 author: shsagir
 ms.author: shsagir
 ms.reviewer: shsagir
-ms.service: synapse-analytics
+ms.service: azure-synapse-analytics
 ms.subservice: data-explorer
 ms.custom: mode-other
 ---
 
 # Quickstart: Analyze with Data Explorer (Preview)
 
-In this article, you'll learn the basic steps to load and analyze data with Data Explorer for Azure Synapse.
+In this article, you learn the basic steps to load and analyze data with Data Explorer for Azure Synapse.
 
 ## Create a Data Explorer pool
 
@@ -47,8 +47,8 @@ In this article, you'll learn the basic steps to load and analyze data with Data
 
 ## Ingest sample data and analyze with a simple query
 
-1. In Synapse Studio, on the left-side pane, select **Develop**.
-1. Under **KQL scripts**, Select **&plus;** (Add new resource) > **KQL script**. On the right-side pane, you can name your script.
+1. Once your pool is deployed, in the Synapse Studio, on the left-side pane, select **Develop**.
+1. Select **&plus;** (Add new resource) > **KQL script**. On the right-side pane, you can name your script.
 1. In the **Connect to** menu, select *contosodataexplorer*.
 1. In the **Use database** menu, select *TestDatabase*.
 1. Paste in the following command, and select **Run** to create a StormEvents table.
@@ -63,7 +63,7 @@ In this article, you'll learn the basic steps to load and analyze data with Data
 1. Paste in the following command, and select **Run** to ingest data into StormEvents table.
 
     ```Kusto
-    .ingest into table StormEvents 'https://kustosamplefiles.blob.core.windows.net/samplefiles/StormEvents.csv?sv=2019-12-12&ss=b&srt=o&sp=r&se=2022-09-05T02:23:52Z&st=2020-09-04T18:23:52Z&spr=https&sig=VrOfQMT1gUrHltJ8uhjYcCequEcfhjyyMX%2FSc3xsCy4%3D' with (ignoreFirstRecord=true)
+    .ingest into table StormEvents 'https://kustosamples.blob.core.windows.net/samplefiles/StormEvents.csv' with (ignoreFirstRecord=true)
     ```
 
 1. After ingestion completes, paste in the following query, select the query in the window, and select **Run**.
@@ -78,7 +78,7 @@ In this article, you'll learn the basic steps to load and analyze data with Data
 
     :::image type="content" source="data-explorer/media/get-started-analyze-data-explorer/sample-query-results.png" alt-text="Results for query run on sample data":::
 
-## Next steps
+## Related content
 
 - [Tutorial: Use KQL queries](/azure/data-explorer/kusto/query/tutorial?context=/azure/synapse-analytics/context/context&pivots=synapse)
 - [Monitor Data Explorer pools](data-explorer/data-explorer-monitor-pools.md)

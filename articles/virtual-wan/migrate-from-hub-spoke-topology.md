@@ -2,9 +2,9 @@
 title: 'Architecture: Migrate to Azure Virtual WAN'
 description: Learn how to migrate from an existing customer-managed hub-and-spoke topology, to a design that leverages Microsoft-managed Virtual WAN hubs.
 author: cherylmc
-ms.service: virtual-wan
-ms.topic: conceptual
-ms.date: 06/14/2022
+ms.service: azure-virtual-wan
+ms.topic: concept-article
+ms.date: 10/25/2024
 ms.author: cherylmc
 
 ---
@@ -24,7 +24,7 @@ This article shows how to migrate an existing customer-managed hub-and-spoke env
 
 ## Scenario
 
-Contoso is a global financial organization with offices in both Europe and Asia. They are planning to move their existing applications from an on-premises data center in to Azure and have built out a foundation design based on the customer-managed hub-and-spoke architecture, including regional hub virtual networks for hybrid connectivity. As part of the move to cloud-based technologies, the network team has been tasked with ensuring that their connectivity is optimized for the business moving forward.
+Contoso is a global financial organization with offices in both Europe and Asia. They're planning to move their existing applications from an on-premises data center in to Azure and have built out a foundation design based on the customer-managed hub-and-spoke architecture, including regional hub virtual networks for hybrid connectivity. As part of the move to cloud-based technologies, the network team has been tasked with ensuring that their connectivity is optimized for the business moving forward.
 
 The following figure shows a high-level view of the existing global network including connectivity to multiple Azure regions.
 
@@ -279,4 +279,5 @@ The traffic is routed as follows:
 
 ## Next steps
 
-Learn more about [Azure Virtual WAN](virtual-wan-about.md).
+* Learn more about [Azure Virtual WAN](virtual-wan-about.md).
+* [Configure Virtual WAN for Azure NetApp Files](../azure-netapp-files/configure-virtual-wan.md)

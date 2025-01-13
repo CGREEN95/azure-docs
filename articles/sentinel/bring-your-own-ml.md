@@ -5,12 +5,14 @@ author: yelevin
 ms.topic: conceptual
 ms.date: 11/09/2021
 ms.author: yelevin
-ms.custom: ignite-fall-2021, devx-track-azurecli
+ms.custom: devx-track-azurecli
+
+
+#Customer intent: As a security engineer, I want to build and integrate custom machine learning models into my security operations platform so that we can detect and respond to threats specific to our organization's environment.
+
 ---
 
 # Bring your own Machine Learning (ML) into Microsoft Sentinel
-
-[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
 [!INCLUDE [reference-to-feature-availability](includes/reference-to-feature-availability.md)]
 
@@ -42,7 +44,6 @@ With the BYO-ML platform, you can get a jump start on building your own ML model
 - The libraries support data movements. Training and scoring notebooks demonstrate the end-to-end experience and serve as a template for you to adapt to your environment.
 
 ### Use cases
- 
 The BYO-ML platform and package significantly reduce the time and effort you'll need to build your own ML detections, and they unleash the capability to address specific security problems in Microsoft Sentinel. The platform supports the following use cases:
 
 **Train an ML algorithm to get a customized model:** You can take an existing ML algorithm (shared by Microsoft or by the user community) and easily train it on your own data to get a customized ML model that better fits your data and environment.
@@ -101,6 +102,7 @@ You must be assigned the **Contributor** role in your Log Analytics workspace, y
 
 Here is a sample set of commands to setup automatic exporting:
 
+
 ```azurecli
 
 az –version
@@ -115,10 +117,10 @@ az monitor log-analytics cluster list
 az account set --subscription "SUBSCRIPTION_NAME"
  
 # Export to Storage - all tables
-az monitor log-analytics workspace data-export create --resource-group "RG_NAME" --workspace-name "WS_NAME" -n LAExportCLIStr --destination “DESTINATION_NAME" --enable "true" --tables SecurityEvent
+az monitor log-analytics workspace data-export create --resource-group "RG_NAME" --workspace-name "WS_NAME" -n LAExportCLIStr --destination "DESTINATION_NAME" --enable "true" --tables SecurityEvent
  
 # Export to EventHub - all tables
-az monitor log-analytics workspace data-export create --resource-group "RG_NAME" --workspace-name "WS_NAME" -n LAExportCLIEH --destination “DESTINATION_NAME" --enable "true" --tables SecurityEvent Heartbeat"]
+az monitor log-analytics workspace data-export create --resource-group "RG_NAME" --workspace-name "WS_NAME" -n LAExportCLIEH --destination "DESTINATION_NAME" --enable "true" --tables ["SecurityEvent","Heartbeat"]
 
 # List export settings
 az monitor log-analytics workspace data-export list --resource-group "RG_NAME" --workspace-name "WS_NAME"

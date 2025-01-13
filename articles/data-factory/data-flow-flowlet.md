@@ -2,13 +2,12 @@
 title: Flowlet transformation in mapping data flow
 titleSuffix: Azure Data Factory & Azure Synapse
 description: Learn how to run a flowlet transformation inside of a mapping data flow in Azure Data Factory and Synapse Analytics pipelines.
-author: joshuha-msft
-ms.author: joowen
-ms.service: data-factory
+author: kromerm
+ms.author: makromer
 ms.subservice: data-flows
 ms.custom: synapse
 ms.topic: conceptual
-ms.date: 08/04/2022
+ms.date: 05/15/2024
 ---
 
 # Flowlet transformation in mapping data flow
@@ -17,12 +16,12 @@ ms.date: 08/04/2022
 
 [!INCLUDE[data-flow-preamble](includes/data-flow-preamble.md)]
 
-Use the flowlet transformation to run a previously create mapping data flow flowlet. For an overview of flowlets see [Flowlets in mapping data flow | Microsoft Docs](concepts-data-flow-flowlet.md)
+Use the flowlet transformation to run a previously created mapping data flow flowlet. For an overview of flowlets see [Flowlets in mapping data flow | Microsoft Docs](concepts-data-flow-flowlet.md)
 
 > [!NOTE] 
 > The flowlet transformation in Azure Data Factory and Synapse Analytics pipelines is currently in public preview
 
-> [!VIDEO https://www.microsoft.com/en-us/videoplayer/embed/RWQK3m]
+> [!VIDEO https://learn-video.azurefd.net/vod/player?id=18076f34-9a6b-41bb-a2a8-88b2f279307f]
 
 ## Configuration
 
@@ -56,4 +55,3 @@ If the selected flowlet has input columns, you can map columns from the input st
 source1 derive(Test = "test") ~> DerivedColumn1
 DerivedColumn1 output() ~> output1 
 ```    
-

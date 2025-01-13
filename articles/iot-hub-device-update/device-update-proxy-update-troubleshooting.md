@@ -1,11 +1,12 @@
 ---
-title: Troubleshooting for importing proxy updates to Device Update for Azure IoT Hub | Microsoft Docs
+title: Troubleshooting for importing proxy updates to Device Update for Azure IoT Hub
 description: This document provides troubleshooting steps for error messages that may occur when importing proxy update to Device Update for IoT Hub.
 author: andrewbrownmsft
 ms.author: andbrown
 ms.date: 1/5/2022
-ms.topic: reference
-ms.service: iot-hub-device-update
+ms.topic: troubleshooting
+ms.service: azure-iot-hub
+ms.subservice: device-update
 ---
 
 # Device Update for IoT troubleshooting guide for importing proxy updates

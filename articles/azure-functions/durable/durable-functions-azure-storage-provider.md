@@ -22,7 +22,7 @@ A [task hub](durable-functions-task-hubs.md) durably persists all instance state
 
 The Azure Storage provider represents the task hub in storage using the following components:
 
-* Two Azure Tables store the instance states.
+* Between two and three Azure Tables. Two tables are used to represent histories and instance states. If the Table Partition Manager is enabled, then a third table is introduced to store partition information.
 * One Azure Queue stores the activity messages.
 * One or more Azure Queues store the instance messages. Each of these so-called *control queues* represents a [partition](durable-functions-perf-and-scale.md#partition-count) that is assigned a subset of all instance messages, based on the hash of the instance ID.
 * A few extra blob containers used for lease blobs and/or large messages.
@@ -50,6 +50,13 @@ This table is used to satisfy [instance query requests from code](durable-functi
 
 > [!TIP]
 > The partitioning of the *Instances* table allows it to store millions of orchestration instances without any noticeable impact on runtime performance or scale. However, the number of instances can have a significant impact on [multi-instance query](durable-functions-instance-management.md#query-all-instances) performance. To control the amount of data stored in these tables, consider periodically [purging old instance data](durable-functions-instance-management.md#purge-instance-history).
+
+### Partitions table
+
+> [!Note]
+> This table is shown in the task hub only when `Table Partition Manager` is enabled. To apply it, configure `useTablePartitionManagement` setting in your app's [host.json](durable-functions-bindings.md?tabs=2x-durable-functions#host-json).
+
+The **Partitions** table stores the status of partitions for the Durable Functions app and is used to distribute partitions across your app's workers. There is one row per partition.
 
 ### Queues
 
@@ -236,7 +243,7 @@ As an example, if `durableTask/extendedSessionIdleTimeoutInSeconds` is set to 30
 The specific effects of extended sessions on orchestrator and entity functions are described in the next sections.
 
 > [!NOTE]
-> Extended sessions are currently only supported in .NET languages, like C# or F#. Setting `extendedSessionsEnabled` to `true` for other platforms can lead to runtime issues, such as silently failing to execute activity and orchestration-triggered functions.
+> Extended sessions are currently only supported in .NET languages, like C# (in-process model only) or F#. Setting `extendedSessionsEnabled` to `true` for other platforms can lead to runtime issues, such as silently failing to execute activity and orchestration-triggered functions.
 
 ### Orchestrator function replay
 
@@ -258,7 +265,7 @@ In all other situations, there is typically no observable performance improvemen
 
 The following table shows the expected *maximum* throughput numbers for the scenarios described in the [Performance Targets](durable-functions-perf-and-scale.md#performance-targets) section of the [Performance and Scale](durable-functions-perf-and-scale.md) article. 
 
-"Instance" refers to a single instance of an orchestrator function running on a single small ([A1](../../virtual-machines/sizes-previous-gen.md)) VM in Azure App Service. In all cases, it is assumed that [extended sessions](#orchestrator-function-replay) are enabled. Actual results may vary depending on the CPU or I/O work performed by the function code.
+"Instance" refers to a single instance of an orchestrator function running on a single small ([A1](/azure/virtual-machines/sizes-previous-gen)) VM in Azure App Service. In all cases, it is assumed that [extended sessions](#orchestrator-function-replay) are enabled. Actual results may vary depending on the CPU or I/O work performed by the function code.
 
 | Scenario | Maximum throughput |
 |-|-|
@@ -272,6 +279,16 @@ If you are not seeing the throughput numbers you expect and your CPU and memory 
 
 > [!TIP]
 > In some cases you can significantly increase the throughput of external events, activity fan-in, and entity operations by increasing the value of the `controlQueueBufferThreshold` setting in **host.json**. Increasing this value beyond its default causes the Durable Task Framework storage provider to use more memory to prefetch these events more aggressively, reducing delays associated with dequeueing messages from the Azure Storage control queues. For more information, see the [host.json](durable-functions-bindings.md#host-json) reference documentation.
+
+### Flex Consumption Plan 
+The [Flex Consumption plan](../flex-consumption-plan.md) is an Azure Functions hosting plan that provides many of the benefits of the Consumption plan, including a serverless billing model, while also adding useful features, such as private networking, instance memory size selection, and full support for managed identity authentication.
+
+Azure Storage is currently the only supported [storage provider](durable-functions-storage-providers.md) for Durable Functions when hosted in the Flex Consumption plan.
+
+You should follow these performance recommendations when hosting Durable Functions in the Flex Consumption plan:
+
+* Set the [always ready instance count](../flex-consumption-how-to.md#set-always-ready-instance-counts) for the `durable` group to `1`. This ensures that there is always one instance ready to handle Durable Functions related requests, thus reducing the application's cold start. 
+* Reduce the [queue polling interval](durable-functions-azure-storage-provider.md#queue-polling) to 10 seconds or less. Since this plan type is more sensitive to queue polling delays, lowering the polling interval will help increase the frequency of polling operations, thus ensuring requests are handled faster. However, more frequent polling operations will lead to a higher Azure Storage account cost. 
 
 ### High throughput processing
 

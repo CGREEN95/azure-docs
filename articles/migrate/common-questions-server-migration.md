@@ -1,39 +1,44 @@
 ---
-title: Common questions about Azure Migrate Server Migration
-description: Get answers to common questions about using Azure Migrate Server Migration to migrate machines.
+title: Common questions about the Migration and modernization tool
+description: Get answers to common questions about using Migration and modernization to migrate machines.
 author: piyushdhore-microsoft
 ms.author: piyushdhore
 ms.manager: vijain
+ms.service: azure-migrate
 ms.topic: conceptual
-ms.date: 08/28/2020
+ms.date: 10/25/2024
+ms.custom: engagement-fy25
 ---
 
-# Azure Migrate Server Migration: Common questions
+# Migration and modernization: Common questions
 
-This article answers common questions about the Azure Migrate: Server Migration tool. If you've other questions, check these resources:
+This article answers common questions about the Migration and modernization tool. If you've other questions, check these resources:
 
 - [General questions](resources-faq.md) about Azure Migrate
 - Questions about the [Azure Migrate appliance](common-questions-appliance.md)
 - Questions about [discovery, assessment, and dependency visualization](common-questions-discovery-assessment.md)
 - Get questions answered in the [Azure Migrate forum](https://aka.ms/AzureMigrateForum)
 
+> [!CAUTION]
+> This article references CentOS, a Linux distribution that is End Of Life (EOL) status. Please consider your use and planning accordingly. For more information, see the [CentOS End Of Life guidance](/azure/virtual-machines/workloads/centos/centos-end-of-life).
+
 ## General questions
 
 
-### What are the migration options in Azure Migrate: Server Migration?
+### What are the migration options in Migration and modernization?
 
-The Azure Migrate: Server Migration tool offers two options for migrating your source servers and virtual machines to Azure: agentless migration and agent-based migration.
+The Migration and modernization tool offers two options for migrating your source servers and virtual machines to Azure: agentless migration and agent-based migration.
 
-Regardless of the migration option chosen, the first step to migrate a server using Azure Migration: Server Migration is to start replication for the server. This performs an initial replication of your VM/server data to Azure. After the initial replication is completed, an ongoing replication (ongoing delta-sync) is established to migrate incremental data to Azure. Once the operation reaches the delta-sync stage, you can choose to migrate to Azure at any time.
+Regardless of the migration option chosen, the first step to migrate a server using the Migration and modernization tool is to start replication for the server. This performs an initial replication of your VM/server data to Azure. After the initial replication is completed, an ongoing replication (ongoing delta-sync) is established to migrate incremental data to Azure. Once the operation reaches the delta-sync stage, you can choose to migrate to Azure at any time.
 
 Here are some considerations to keep in mind while deciding on the migration option.
 
 **Agentless migrations** don't require any software (agents) to be deployed on the source VMs/servers being migrated. The agentless option orchestrates replication by integrating with the functionality provided by the virtualization provider.
-The Agentless replication options are available for [VMware VMs](./tutorial-migrate-vmware.md) and [Hyper-V VMs](./tutorial-migrate-hyper-v.md).
+The Agentless replication options are available for [VMware VMs](tutorial-migrate-vmware.md) and [Hyper-V VMs](./tutorial-migrate-hyper-v.md).
 
 **Agent-based migrations** require Azure Migrate software (agents) to be installed on the source VMs/machines to be migrated. The agent-based option doesn’t rely on the virtualization platform for the replication functionality. Therefore, it can be used with any server running an x86/x64 architecture and a version of an operating system supported by the agent-based replication method.
 
-Agent-based migration option can be used for [VMware VMs](./tutorial-migrate-vmware-agent.md), [Hyper-V VMs](./tutorial-migrate-physical-virtual-machines.md), [physical servers](./tutorial-migrate-physical-virtual-machines.md), [VMs running on AWS](./tutorial-migrate-aws-virtual-machines.md), VMs running on GCP, or VMs running on a different virtualization provider. The agent-based migration treats your machines as physical servers for migration.
+Agent-based migration option can be used for [VMware VMs](tutorial-migrate-vmware-agent.md), [Hyper-V VMs](./tutorial-migrate-physical-virtual-machines.md), [physical servers](./tutorial-migrate-physical-virtual-machines.md), [VMs running on AWS](./tutorial-migrate-aws-virtual-machines.md), VMs running on GCP, or VMs running on a different virtualization provider. The agent-based migration treats your machines as physical servers for migration.
 
 While the agentless migration offers another convenience and simplicity over the agent-based replication options for the supported scenarios (VMware and Hyper-V), you may want to consider using the agent-based scenario for the following use cases:
 
@@ -57,6 +62,9 @@ While you can create assessments for multiple regions in an Azure Migrate projec
 ### Can I use the same Azure Migrate project to migrate to multiple subscriptions?
 
 Yes, you can migrate to multiple subscriptions (same Azure tenant) in the same target region for an Azure Migrate project. You can select the target subscription while enabling replication for a machine or a set of machines. The target region is locked post first replication for agentless VMware migrations and during the replication appliance and Hyper-V provider installation for agent-based migrations and agentless Hyper-V migrations respectively.
+
+### Does Azure Migrate support Azure Resource Graph?
+Currently, Azure Migrate isn't integrated with Azure Resource Graph. It does support performing ARG-related queries.
 
 ### How is the data transmitted from on-premises environment to Azure? Is it encrypted before transmission?
 
@@ -95,7 +103,7 @@ The test migration button could be in a disabled state in the following scenario
 
 ### What happens if I don’t clean up my test migration?
 
-Test migration simulates the actual migration by creating a test Azure VM using replicated data. The server will be deployed with a point in time copy of the replicated data to the target Resource Group (selected while enabling replication) with a “-test” suffix. Test migrations are intended for validating server functionality so that post migration issues are minimized. If the test migration isn't cleaned up post testing, the test virtual machine will continue to run in Azure, and will incur charges. To clean up post a test migration, go to the replicating machines view in the Server Migration tool, and use the 'cleanup test migration' action on the machine.
+Test migration simulates the actual migration by creating a test Azure VM using replicated data. The server will be deployed with a point in time copy of the replicated data to the target Resource Group (selected while enabling replication) with a “-test” suffix. Test migrations are intended for validating server functionality so that post migration issues are minimized. If the test migration isn't cleaned up post testing, the test virtual machine will continue to run in Azure, and will incur charges. To clean up post a test migration, go to the replicating machines view in the Migration and modernization tool, and use the 'cleanup test migration' action on the machine.
 
 
 ### How do I know if my VM was successfully migrated?
@@ -105,39 +113,43 @@ Alternatively, you can review the ‘Job status’ for the operation to check if
 
 ### What happens if I don’t stop replication after migration?
 
-When you stop replication, the Azure Migrate: Server Migration tool cleans up the managed disks in the subscription that was created for replication. 
+When you stop replication, the Migration and modernization tool cleans up the managed disks in the subscription that was created for replication. 
 
 ### What happens if I don’t complete migration after migration?
 
-When you complete migration, the Azure Migrate: Server Migration tool cleans up the managed disks in the subscription that were created for replication. If you don't select **Complete migration** after a migration, you will continue to incur charges for these disks. Complete migration won't affect the disks attached to machines that have already been migrated.
+When you complete migration, the Migration and modernization tool cleans up the managed disks in the subscription that were created for replication. If you don't select **Complete migration** after a migration, you will continue to incur charges for these disks. Complete migration won't affect the disks attached to machines that have already been migrated.
 
 ### How can I migrate UEFI-based machines to Azure as Azure generation 1 VMs?
-Azure Migrate: Server Migration tool migrates UEFI-based machines to Azure as Azure generation 2 VMs. If you want to migrate them to Azure generation 1 VMs, convert the boot-type to BIOS before starting replication, and then use the Azure Migrate: Server Migration tool to migrate to Azure.
+Migration and modernization tool migrates UEFI-based machines to Azure as Azure generation 2 VMs. If you want to migrate them to Azure generation 1 VMs, convert the boot-type to BIOS before starting replication, and then use the Migration and modernization tool to migrate to Azure.
 
 ### Does Azure Migrate convert UEFI-based machines to BIOS-based machines and migrate them to Azure as Azure generation 1 VMs?
-Azure Migrate: Server Migration tool migrates all the UEFI-based machines to Azure as Azure generation 2 VMs. We no longer support the conversion of UEFI-based VMs to BIOS-based VMs. All the BIOS-based machines are migrated to Azure as Azure generation 1 VMs only.
+Migration and modernization tool migrates all the UEFI-based machines to Azure as Azure generation 2 VMs. We no longer support the conversion of UEFI-based VMs to BIOS-based VMs. All the BIOS-based machines are migrated to Azure as Azure generation 1 VMs only.
 
 ### Which operating systems are supported for migration of UEFI-based machines to Azure?
 
+> [!Note]
+> If a major version of an operating system is supported in agentless migration, all minor versions and kernels are automatically supported.
+
 | **Operating systems supported for UEFI-based machines** | **Agentless VMware to Azure**                                                                                                             | **Agentless Hyper-V to Azure** | **Agent-based VMware, physical and other clouds to Azure** |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------------------- |
-| Windows Server 2019, 2016, 2012 R2, 2012                | Y                                                                                                                                         | Y                              | Y                                                          |
+| Windows Server 2025, 2022, 2019, 2016, 2012 R2, 2012                | Y                                                                                                                                         | Y                              | Y                                                          |
+| Windows 11 Pro, Windows 11 Enterprise                   | Y                                                                                                                                         | Y                              | Y                                                          |
 | Windows 10 Pro, Windows 10 Enterprise                   | Y                                                                                                                                         | Y                              | Y                                                          |
-| SUSE Linux Enterprise Server 15 SP1                     | Y                                                                                                                                         | Y                              | Y                                                          |
+| SUSE Linux Enterprise Server 15 SP1, SP2, SP3, SP4, SP5, SP6                    | Y                                                                                                                                         | Y                              | Y                                                          |
 | SUSE Linux Enterprise Server 12 SP4                     | Y                                                                                                                                         | Y                              | Y                                                          |
-| Ubuntu Server 16.04, 18.04, 19.04, 19.10                | Y                                                                                                                                         | Y                              | Y                                                          |
-| RHEL 8.1, 8.0, 7.8, 7.7, 7.6, 7.5, 7.4, 7.0, 6.x        | Y      | Y                              | Y                                                          |
-| Cent OS 8.1, 8.0, 7.7, 7.6, 7.5, 7.4, 6.x               | Y | Y                              | Y                                                          |
-| Oracle Linux 7.7, 7.7-CI                                |  Y                                                                                                                                        | Y                              | Y                                                          |
+| Ubuntu Server 22.04 LTS, 20.04 LTS, 18.04 LTS, 16.04 LTS               | Y                                                                                                                                         | Y                              | Y                                                          |
+| RHEL 9.x, 8.1, 8.0, 7.8, 7.7, 7.6, 7.5, 7.4, 7.0, 6.x        | Y      | Y                              | Y                                                          |
+| CentOS Stream               | Y | Y                              | Y                                                          |
+| Oracle Linux 9, 8, 7.7-CI, 7.7, 6                             |  Y                                                                                                                                        | Y                              | Y                                                          |
 
 ### Can I migrate Active Directory domain-controllers using Azure Migrate?
 
-The Server Migration tool is application agnostic and works for most applications. When you migrate a server using the Server Migration tool, all the applications installed on the server are migrated along with it. However, for some applications, alternate migration methods other than server migration may be better suited for the migration.  For Active Directory, if hybrid environments where the on-premises site is connected to your Azure environment, you can extend your Directory into Azure by adding extra domain controllers in Azure and setting up Active Directory replication. If you're migrating into an isolated environment in Azure requiring its own domain controllers (or testing applications in a sandbox environment), you can migrate servers using the server migration tool.
+The Migration and modernization tool is application agnostic and works for most applications. When you migrate a server using the Migration and modernization tool, all the applications installed on the server are migrated along with it. However, for some applications, alternate migration methods other than Migration and modernization may be better suited for the migration.  For Active Directory, if hybrid environments where the on-premises site is connected to your Azure environment, you can extend your Directory into Azure by adding extra domain controllers in Azure and setting up Active Directory replication. If you're migrating into an isolated environment in Azure requiring its own domain controllers (or testing applications in a sandbox environment), you can migrate servers using the Migration and modernization tool.
 
 
 ### Can I upgrade my OS while migrating?
 
-The Azure Migrate: Server Migration tool only supports like-for-like migrations currently. The tool doesn’t support upgrading the OS version during migration. The migrated machine will have the same OS as the source machine.
+The Migration and modernization tool now supports Windows OS upgrade during Migration. For Linux this option is currently not available. More details on [Windows OS upgrade](how-to-upgrade-windows.md).
 
 ### Do I need VMware vCenter to migrate VMware VMs?
 
@@ -145,24 +157,24 @@ To [migrate VMware VMs](server-migrate-overview.md) using VMware agent-based or 
 
 ### Can I consolidate multiple source VMs into one VM while migrating?
 
-Azure Migrate server migration capabilities support like for like migrations currently. We don't support consolidating servers or upgrading the operating system as part of the migration.
+Migration and modernization capabilities support like-for-like migrations currently. We don't support consolidating servers as part of the migration.
 
 ### Will Windows Server 2008 and 2008 R2 be supported in Azure after migration?
 
-You can migrate your on-premises Windows Server 2008 and 2008 R2 servers to Azure virtual machines and get Extended Security Updates for three years after the End of Support dates at no extra charge above the cost of running the virtual machine. You can use the Azure Migrate: Server Migration tool to migrate your Windows Server 2008 and 2008 R2 workloads.
+You can migrate your on-premises Windows Server 2008 and 2008 R2 servers to Azure virtual machines and get Extended Security Updates for three years after the End of Support dates at no extra charge above the cost of running the virtual machine. You can use the Migration and modernization tool to migrate your Windows Server 2008 and 2008 R2 workloads.
 
 ### How do I migrate Windows Server 2003 running on VMware/Hyper-V to Azure?
 
 [Windows Server 2003 extended support](/troubleshoot/azure/virtual-machines/run-win-server-2003#microsoft-windows-server-2003-end-of-support) ended on July 14, 2015.  The Azure support team continues to help in troubleshooting issues that concern running Windows Server 2003 on Azure. However, this support is limited to issues that don't require OS-level troubleshooting or patches.
 Migrating your applications to Azure instances running a newer version of Windows Server is the recommended approach to ensure that you're effectively using the flexibility and reliability of the Azure cloud.
 
-However, if you still choose to migrate your Windows Server 2003 to Azure, you can use the Azure Migrate: Server Migration tool if your Windows Server is a VM running on VMware or Hyper-V
+However, if you still choose to migrate your Windows Server 2003 to Azure, you can use the Migration and modernization tool if your Windows Server is a VM running on VMware or Hyper-V
 Review this article to [prepare your Windows Server 2003 machines for migration](./prepare-windows-server-2003-migration.md).
 
 ## Agentless VMware migration
 ### How does agentless migration work?
 
-Azure Migrate: Server Migration provides agentless replication options for the migration of VMware virtual machines and Hyper-V virtual machines running Windows or Linux. The tool also provides another agent-based replication option for Windows and Linux servers that can be used to migrate physical servers, and x86/x64 virtual machines on VMware, Hyper-V, AWS, GCP, etc. The agent-based replication option requires the installation of agent software on the server/virtual machine that’s being migrated, whereas in the agentless option no software needs to be installed on the virtual machines themselves, thus offering more convenience and simplicity over the agent-based replication option.
+The Migration and modernization tool provides agentless replication options for the migration of VMware virtual machines and Hyper-V virtual machines running Windows or Linux. The tool also provides another agent-based replication option for Windows and Linux servers that can be used to migrate physical servers, and x86/x64 virtual machines on VMware, Hyper-V, AWS, GCP, etc. The agent-based replication option requires the installation of agent software on the server/virtual machine that’s being migrated, whereas in the agentless option no software needs to be installed on the virtual machines themselves, thus offering more convenience and simplicity over the agent-based replication option.
 
 The agentless replication option works by using mechanisms provided by the virtualization provider (VMware, Hyper-V). In the case of VMware virtual machines, the agentless replication mechanism uses VMware snapshots and VMware changed block tracking technology to replicate data from virtual machine disks. This mechanism is similar to the one used by many backup products. In the case of Hyper-V virtual machines, the agentless replication mechanism uses VM snapshots and the change tracking capability of the Hyper-V replica to replicate data from virtual machine disks.
 
@@ -170,7 +182,7 @@ When replication is configured for a virtual machine, it first goes through an i
 
 When you perform the migrate operation on a replicating virtual machine, you've the option to shut down the on-premises virtual machine, and perform one final incremental replication to ensure zero data loss. On performing the migration, the replica managed disks corresponding to the virtual machine are used to create the virtual machine in Azure.
 
-To get started, refer the [VMware agentless migration](./tutorial-migrate-vmware.md) and [Hyper-V agentless migration](./tutorial-migrate-hyper-v.md) tutorials.
+To get started, refer the [VMware agentless migration](tutorial-migrate-vmware.md) and [Hyper-V agentless migration](./tutorial-migrate-hyper-v.md) tutorials.
 
 ### How do I gauge the bandwidth requirement for my migrations?
 
@@ -258,7 +270,7 @@ Agentless replication results in some performance impact on VMware vCenter Serve
 
 ### Can I use Azure Migrate to migrate my web apps to Azure App Service?
 
-You can perform at-scale agentless migration of ASP.NET web apps running on IIS web servers hosted on a Windows OS in a VMware environment. [Learn more.](./tutorial-migrate-webapps.md)
+You can perform at-scale agentless migration of ASP.NET web apps running on IIS web servers hosted on a Windows OS in a VMware environment. [Learn more.](./tutorial-modernize-asp-net-appservice-code.md)
 
 
 ## Agent-based Migration
@@ -269,7 +281,7 @@ Review the [article](./tutorial-migrate-aws-virtual-machines.md) to discover, as
 
 ### How does agent-based migration work?
 
-In addition to agentless migration options for VMware virtual machines and Hyper-V virtual machines, the Server Migration tool provides an agent-based migration option to migrate Windows and Linux servers running on physical servers, or running as x86/x64 virtual machines on VMware, Hyper-V, AWS, Google Cloud Platform, etc.
+In addition to agentless migration options for VMware virtual machines and Hyper-V virtual machines, the Migration and modernization tool provides an agent-based migration option to migrate Windows and Linux servers running on physical servers, or running as x86/x64 virtual machines on VMware, Hyper-V, AWS, Google Cloud Platform, etc.
 
 The agent-based migration method uses agent software installed on the server being migrated to replicate server data to Azure. The replication process uses an offload architecture in which the agent relays replication data to a dedicated replication server called the replication appliance or Configuration Server (or to a scale-out Process Server). [Learn more](./agent-based-migration-architecture.md) about how the agent-based migration option works.
 
@@ -296,7 +308,7 @@ For an agent-based method of replication, the Deployment Planner can help profil
 
 ### How does agentless migration work?
 
-Azure Migrate: Server Migration provides agentless replication options for the migration of VMware virtual machines and Hyper-V virtual machines running Windows or Linux. The tool also provides an additional agent-based replication option for Windows and Linux servers that can be used to migrate physical servers, as well as x86/x64 virtual machines on VMware, Hyper-V, AWS, GCP, etc. The agent-based replication option requires the installation of agent software on the server/virtual machine that’s being migrated, whereas in the agentless option no software needs to be installed on the virtual machines themselves, thus offering additional convenience and simplicity over the agent-based replication option.
+The Migration and modernization tool provides agentless replication options for the migration of VMware virtual machines and Hyper-V virtual machines running Windows or Linux. The tool also provides an additional agent-based replication option for Windows and Linux servers that can be used to migrate physical servers, as well as x86/x64 virtual machines on VMware, Hyper-V, AWS, GCP, etc. The agent-based replication option requires the installation of agent software on the server/virtual machine that’s being migrated, whereas in the agentless option no software needs to be installed on the virtual machines themselves, thus offering additional convenience and simplicity over the agent-based replication option.
 
 The agentless replication option works by using mechanisms provided by the virtualization provider (VMware, Hyper-V).  In the case of Hyper-V virtual machines, the agentless replication mechanism uses VM snapshots and the change tracking capability of the Hyper-V replica to replicate data from virtual machine disks.
 
@@ -315,5 +327,4 @@ When replication starts for a VM, an initial replication cycle occurs in which f
 You can work out the bandwidth requirement based on the volume of data needed to be moved in the wave and time within which you would like initial replication to complete (ideally you’d want initial replication to have completed at least 3-4 days prior to the actual migration window to give you sufficient time to perform a test migration prior to the actual window and to keep downtime to a minimum during the window).
 
 ## Next steps
-
-Read the [Azure Migrate overview](migrate-services-overview.md).
+Learn more about migrating [VMware VMs](tutorial-migrate-vmware.md), [Hyper-V VMs](tutorial-migrate-hyper-v.md), and [Physical servers](tutorial-migrate-physical-virtual-machines.md).

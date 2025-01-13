@@ -4,10 +4,9 @@ description: Tutorial to deploy Azure Stack Edge Pro 2 instructs you to configur
 services: databox
 author: alkohli
 
-ms.service: databox
-ms.subservice: edge
+ms.service: azure-stack-edge
 ms.topic: tutorial
-ms.date: 03/02/2022
+ms.date: 10/27/2022
 ms.author: alkohli
 # Customer intent: As an IT admin, I need to understand how to configure certificates for Azure Stack Edge Pro 2 so I can use it to establish a trust relationship between the device and the clients accessing the device. 
 ---

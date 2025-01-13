@@ -1,22 +1,38 @@
 items:
-- name: Azure Native ISV Services documentation
+- name: Azure Native Integrations documentation
   items:
-  - name: Overview of Azure Native ISV Services
+  - name: Overview
     href: overview.md
   - name: Partner services
     href: partners.md
 - name: Partner services documentation
   expanded: true
   items:
-  - name: Apache Kafka on Confluent Cloud
+  - name: Astro
+    href: ./astronomer/index.yml
+  - name: Confluent
     href: ./apache-kafka-confluent-cloud/index.yml
   - name: Datadog
     href: ./datadog/index.yml
+  - name: Dynatrace
+    href: ./dynatrace/index.yml
   - name: Elastic
     href: ./elastic/index.yml
+  - name: Informatica (Preview)
+    href: ./informatica/index.yml
   - name: Logz.io
     href: ./logzio/index.yml
-  - name: Dynatrace for Azure
-    href: ./dynatrace/index.yml
-  - name: NGINX for Azure (preview)
+  - name: Neon Serverless Postgres (Preview)
+    href: ./neon/index.yml 
+  - name: New Relic
+    href: ./new-relic/index.yml
+  - name: Palo Alto Network
+    href: ./palo-alto/index.yml
+  - name: NGINX
     href: ./nginx/index.yml
+  - name: Qumulo 
+    href: ./qumulo/index.yml
+
+
+
+

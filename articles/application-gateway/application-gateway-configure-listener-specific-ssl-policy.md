@@ -3,7 +3,7 @@ title: Configure listener-specific SSL policies on Azure Application Gateway thr
 description: Learn how to configure listener-specific SSL policies on Application Gateway through portal 
 services: application-gateway
 author: greg-lindsay
-ms.service: application-gateway
+ms.service: azure-application-gateway
 ms.topic: how-to
 ms.date: 02/18/2022
 ms.author: greglin
@@ -30,7 +30,7 @@ Before you proceed, here are some important points related to listener-specific 
 
 - We recommend using TLS 1.2 as this version will be mandated in the future.
 - You don't have to configure client authentication on an SSL profile to associate it to a listener. You can have only client authentication or listener-specific SSL policy configured, or both configured in your SSL profile.
-- Using a new Predefined or Customv2 policy enhances SSL security and performance for the entire gateway (SSL Policy and SSL Profile). Therefore, you cannot have different listeners on both old as well as new SSL (predefined or custom) policies.
+- Using a [2022 Predefined](./application-gateway-ssl-policy-overview.md#predefined-tls-policy) or Customv2 policy enhances SSL security and performance for the entire gateway (SSL Policy and SSL Profile). Therefore, you cannot have different listeners on both old as well as new SSL (predefined or custom) policies.
   
   Consider this example, you're currently using SSL Policy and SSL Profile with &#34;older&#34; policies/ciphers. To use a &#34;new&#34; Predefined or Customv2 policy for any one of them will also require you to upgrade the other configuration. You may use the new predefined policies, or customv2 policy, or combination of these across the gateway.
 

@@ -3,9 +3,9 @@ title: Overview of API support in Azure Static Web Apps
 description: Learn what API features Azure Static Web Apps supports
 services: static-web-apps
 author: craigshoemaker
-ms.service: static-web-apps
+ms.service: azure-static-web-apps
 ms.topic:  conceptual
-ms.date: 06/14/2022
+ms.date: 10/02/2024
 ms.author: cshoe
 ---
 
@@ -17,7 +17,7 @@ Key features of Azure Static Web Apps APIs include:
 
 - **Integrated security** with direct access to user [authentication and role-based authorization](user-information.md) data.
 
-- **Seamless routing** that makes the `/api` route available to the front-end web app without requiring custom CORS rules.
+- **Seamless routing** that makes the back-end `/api` route available to the front-end web app without requiring custom CORS rules.
 
 ## API options
 
@@ -42,9 +42,14 @@ The following constraints apply to all API backends:
 
 - Each static web app environment can only be configured with one type of backend API at a time.
 - The API route prefix must be `/api`.
-- Route rules for APIs only support [redirects](configuration.md#defining-routes) and [securing routes with roles](configuration.md#securing-routes-with-roles).
+- Route rules for APIs only support [redirects](configuration.md#define-routes) and [securing routes with roles](configuration.md#securing-routes-with-roles).
 - Only HTTP requests are supported for APIs. WebSocket, for example, is not supported.
 - The maximum duration of each API request 45 seconds.
+- Network isolated backends are not supported.
+
+The following constraints apply to Bring your own API backends:
+- An application must be deployed to your static web app before requests to the `/api` route can be resolved.
+- Bring your own API backends cannot be linked to a Static Web Apps pull request environment.
 
 ## Next steps
 

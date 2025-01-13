@@ -1,19 +1,20 @@
 ---
 title: Manage a Confluent Cloud
 description: This article describes management of a Confluent Cloud on the Azure portal. How to set up single sign-on, delete a Confluent organization, and get support.
+# customerIntent: As a developer I want to learn how to manage Apache Kafka & Apache Flink on Confluent Cloud, so that I can enable single sign-on, delete a Confluent organization, and get support. 
 ms.topic: conceptual
-ms.date: 06/07/2021
-author: flang-msft
-ms.author: franlanglois
+ms.custom: devx-track-azurecli
+ms.date: 1/31/2024
+
 ---
 
 # Manage the Confluent Cloud resource
 
-This article describes how to manage your instance of Apache Kafka for Confluent Cloud on Azure. It shows how to set up single sign-on (SSO) and delete a Confluent organization.
+This article describes how to manage your instance of Apache Kafka® & Apache Flink® on Confluent Cloud™ on Azure. It shows how to set up single sign-on (SSO) and delete a Confluent organization.
 
 ## Single sign-on
 
-To implement SSO for your organization, your tenant administrator can import the gallery application. This step is optional. For information importing an application, see [Quickstart: Add an application to your Azure Active Directory (Azure AD) tenant](../../active-directory/manage-apps/add-application-portal.md). When the tenant administrator imports the application, users don't need to explicitly consent to allow access for the Confluent Cloud portal.
+To implement SSO for your organization, your tenant administrator can import the gallery application. This step is optional. For information importing an application, see [Quickstart: Add an application to your Microsoft Entra tenant](../../active-directory/manage-apps/add-application-portal.md). When the tenant administrator imports the application, users don't need to explicitly consent to allow access for the Confluent Cloud portal.
 
 To enable SSO, follow these steps:
 
@@ -27,7 +28,7 @@ To enable SSO, follow these steps:
 
    :::image type="content" source="media/manage/permissions-requested.png" alt-text="Grant permissions.":::
 
-1. Choose an Azure AD account for single sign-on to the Confluent Cloud portal.
+1. Choose a Microsoft Entra account for single sign-on to the Confluent Cloud portal.
 1. After consent is provided, you're redirected to the Confluent Cloud portal.
 
 ## Set up cluster
@@ -45,9 +46,6 @@ To delete the resources in Azure:
 1. Sign in to the [Azure portal](https://portal.azure.com).
 1. Select **All Resources** and **Filter by the name** of the Confluent Cloud resource or the **Resource Type** _Confluent organization_. Or in the Azure portal, search for the resource name.
 1. In the resource's **Overview** select **Delete**.
-
-    :::image type="content" source="media/delete-resources-icon.png" alt-text="Resource delete icon.":::
-
 1. To confirm the deletion, type the resource name and select **Delete**.
 
     :::image type="content" source="media/delete-resources-prompt.png" alt-text="Prompt to confirm resource deletion.":::
@@ -56,7 +54,7 @@ To delete the resources in Azure:
 
 Start by preparing your environment for the Azure CLI:
 
-[!INCLUDE [azure-cli-prepare-your-environment-no-header.md](../../../includes/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 After you sign in, use the [az confluent organization delete](/cli/azure/confluent#az-confluent-organization-delete) command to delete the organization resource by name:
 
@@ -80,6 +78,6 @@ You're billed for prorated usage up to the time of cluster deletion. After your 
 
 ## Next steps
 
-For help with troubleshooting, see [Troubleshooting Apache Kafka for Confluent Cloud solutions](troubleshoot.md).
-
-If you need to contact support, see [Get support for Confluent Cloud resource](get-support.md).
+* For help with troubleshooting, see [Troubleshooting Apache Kafka & Apache Flink on Confluent Cloud solutions](troubleshoot.md).
+* If you need to contact support, see [Get support for Confluent Cloud resource](get-support.md).
+* To learn about managing user permissions, go to [How to manage user permissions in a Confluent organization](manage.md).

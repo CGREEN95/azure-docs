@@ -1,15 +1,15 @@
 ---
-title: Primary, foreign, and unique keys  
+title: Primary, foreign, and unique keys
 description: Table constraints support using dedicated SQL pool in Azure Synapse Analytics
 author: mstehrani
-manager: craigg 
-ms.service: synapse-analytics
-ms.topic: conceptual
-ms.subservice: sql-dw 
-ms.date: 09/05/2019
-ms.author: emtehran 
+ms.author: emtehran
 ms.reviewer: nibruno; wiassaf
-ms.custom: seo-lt-2019, azure-synapse
+ms.date: 09/05/2019
+ms.service: azure-synapse-analytics
+ms.subservice: sql-dw
+ms.topic: conceptual
+ms.custom:
+  - azure-synapse
 ---
 
 # Primary key, foreign key, and unique key using dedicated SQL pool in Azure Synapse Analytics
@@ -140,7 +140,7 @@ a1          total
 -- Drop unique constraint.
 ALTER TABLE t1 DROP CONSTRAINT unique_t1_a1
 
--- Add primary key contraint
+-- Add primary key constraint
 ALTER TABLE t1 ADD CONSTRAINT PK_t1_a1 PRIMARY KEY NONCLUSTERED (a1) NOT ENFORCED
 
 -- Re-run this query.  5 rows returned.  Correct result.

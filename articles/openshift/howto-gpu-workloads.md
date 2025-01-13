@@ -1,12 +1,12 @@
 ---
 title: Use GPU workloads with Azure Red Hat OpenShift (ARO)
 description: Discover how to utilize GPU workloads with Azure Red Hat OpenShift (ARO)
-author: johnmarc
+author: johnmarco
 ms.author: johnmarc
 ms.service: azure-redhat-openshift
 keywords: aro, gpu, openshift, red hat
 ms.topic: how-to
-ms.date: 08/30/2022
+ms.date: 11/29/2024
 ms.custom: template-how-to
 ---
 
@@ -20,7 +20,7 @@ This article shows you how to use Nvidia GPU workloads with Azure Red Hat OpenSh
 * jq, moreutils, and gettext package
 * Azure Red Hat OpenShift 4.10
 
-If you need to install an ARO cluster, see [Tutorial: Create an Azure Red Hat OpenShift 4 cluster](tutorial-create-cluster.md). ARO clusters must be version 4.10.x or higher.
+If you need to install an ARO cluster, see [Tutorial: Create an Azure Red Hat OpenShift 4 cluster](create-cluster.md). ARO clusters must be version 4.10.x or higher.
 
 > [!NOTE] 
 > As of ARO 4.10, it is no longer necessary to set up entitlements to use the Nvidia Operator. This has greatly simplified the setup of the cluster for GPU workloads.
@@ -43,9 +43,21 @@ All GPU quotas in Azure are 0 by default. You will need to sign in to the Azure 
 ARO supports the following GPU workers:
 
 * NC4as T4 v3
+* NC6s v3
 * NC8as T4 v3
+* NC12s v3
 * NC16as T4 v3
+* NC24s v3
+* NC24rs v3
 * NC64as T4 v3
+
+The following instances are also supported in additional MachineSets:
+
+* Standard_ND96asr_v4
+* NC24ads_A100_v4
+* NC48ads_A100_v4
+* NC96ads_A100_v4
+* ND96amsr_A100_v4
 
 > [!NOTE] 
 > When requesting quota, remember that Azure is per core. To request a single NC4as T4 v3 node, you will need to request quota in groups of 4. If you wish to request an NC16as T4 v3, you will need to request quota of 16.
@@ -54,7 +66,7 @@ ARO supports the following GPU workers:
 
 1. Enter **quotas** in the search box, then select **Compute**.
 
-1. In the search box, enter **NCAv3_T4**, check the box for the region your cluster is in, and then select **Request quota increase**.
+1. In the search box, enter **NCAsv3_T4**, check the box for the region your cluster is in, and then select **Request quota increase**.
 
 1. Configure quota.
 
@@ -145,13 +157,13 @@ ARO uses Kubernetes MachineSet to create machine sets. The procedure below expla
 1. Change the `.spec.selector.matchLabels.machine.openshift.io/cluster-api-machineset` field to match the `.metadata.name` field.
 
    ```bash
-   jq '.spec.selector.matchLabels."machine.openshift.io/cluster-api-machineset" = "nvidia-worker-southcentralus1"' gpu_machineset.json| sponge gpu_machineset.json
+   jq '.spec.selector.matchLabels."machine.openshift.io/cluster-api-machineset" = "nvidia-worker-<region><az>"' gpu_machineset.json| sponge gpu_machineset.json
    ```
 
 1. Change the `.spec.template.metadata.labels.machine.openshift.io/cluster-api-machineset` to match the `.metadata.name` field.
 
    ```bash
-   jq '.spec.template.metadata.labels."machine.openshift.io/cluster-api-machineset" = "nvidia-worker-southcentralus1"' gpu_machineset.json| sponge gpu_machineset.json
+   jq '.spec.template.metadata.labels."machine.openshift.io/cluster-api-machineset" = "nvidia-worker-<region><az>"' gpu_machineset.json| sponge gpu_machineset.json
    ```
 
 1. Change the `spec.template.spec.providerSpec.value.vmSize` to match the desired GPU instance type from Azure.
@@ -176,6 +188,36 @@ ARO uses Kubernetes MachineSet to create machine sets. The procedure below expla
 
 1. Verify the other data in the yaml file.
 
+#### Ensure the correct SKU is set
+
+Depending on the image used for the machine set, both values for `image.sku` and `image.version` must be set accordingly. This is to ensure if generation 1 or 2 virtual machine for Hyper-V will be used. See [here](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v) for more information.
+
+Example:
+
+If using `Standard_NC4as_T4_v3`, both versions are supported. As mentioned in [Feature support](/azure/virtual-machines/sizes/gpu-accelerated/ncast4v3-series?tabs=sizebasic#feature-support). In this case, no changes are required.
+
+If using `Standard_NC24ads_A100_v4`, only **Generation 2 VM** is [supported](/azure/virtual-machines/sizes/gpu-accelerated/nca100v4-series?tabs=sizebasic#feature-support).
+In this case, the `image.sku` value must follow the equivalent `v2` version of the image that corresponds to the cluster's original `image.sku`. For this example, the value will be `v410-v2`.
+
+This can be found using the following command:
+
+```bash
+az vm image list --architecture x64 -o table --all --offer aro4 --publisher azureopenshift
+```
+
+```
+Filtered output:
+
+SKU      VERSION
+-------  ---------------
+v410-v2  410.84.20220125
+aro_410  410.84.20220125
+```
+
+If the cluster was created with the base SKU image `aro_410`, and the same value is kept in the machine set, it will fail with the following error:
+```
+failure sending request for machine myworkernode: cannot create vm: compute.VirtualMachinesClient#CreateOrUpdate: Failure sending request: StatusCode=400 -- Original Error: Code="BadRequest" Message="The selected VM size 'Standard_NC24ads_A100_v4' cannot boot Hypervisor Generation '1'.
+```
 #### Create GPU machine set
 
 Use the following steps to create the new GPU machine. It may take 10-15 minutes to provision a new GPU machine. If this step fails, sign in to [Azure portal](https://portal.azure.com) and ensure there are no availability issues. To do so, go to **Virtual Machines** and search for the worker name you created previously to see the status of VMs.
@@ -240,6 +282,12 @@ This section explains how to create the `nvidia-gpu-operator` namespace, set up 
    ```bash
    CHANNEL=$(oc get packagemanifest gpu-operator-certified -n openshift-marketplace -o jsonpath='{.status.defaultChannel}')
    ```
+> [!NOTE] 
+> If your cluster was created without providing the pull secret, the cluster won't include samples or operators from Red Hat or from certified partners. This will result in the following error message: 
+> 
+> *Error from server (NotFound): packagemanifests.packages.operators.coreos.com "gpu-operator-certified" not found.* 
+>
+> To add your Red Hat pull secret on an Azure Red Hat OpenShift cluster, [follow this guidance](howto-add-update-pull-secret.md).
 
 1. Get latest Nvidia package using the following command:
 

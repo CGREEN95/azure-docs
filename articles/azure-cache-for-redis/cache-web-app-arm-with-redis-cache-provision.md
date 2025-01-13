@@ -2,18 +2,13 @@
 title: Provision Web App with Azure Cache for Redis
 description: Use Azure Resource Manager template to deploy web app with Azure Cache for Redis.
 services: app-service
-author: flang-msft
-
-ms.service: app-service
+ms.custom: devx-track-arm-template, ignite-2024
 ms.topic: conceptual
-ms.date: 01/06/2017
-ms.author: franlanglois 
-ms.custom: devx-track-azurepowershell
-
+ms.date: 01/05/2024
 ---
+
 # Create a Web App plus Azure Cache for Redis using a template
 
-[!INCLUDE [updated-for-az](../../includes/updated-for-az.md)]
 
 In this article, you learn how to create an Azure Resource Manager template that deploys an Azure Web App with Azure Cache for Redis. You'll learn the following deployment details:
 
@@ -44,7 +39,7 @@ To run the deployment automatically, select the following button:
 
 ## Variables for names
 This template uses variables to construct names for the resources. It uses the [uniqueString](../azure-resource-manager/templates/template-functions-string.md#uniquestring) function to construct a value based on the
-resource group id.
+resource group ID.
 
 ```json
 "variables": {
@@ -62,6 +57,8 @@ resource group id.
 Creates the Azure Cache for Redis that is used with the web app. The name of the cache is specified in the **cacheName** variable.
 
 The template creates the cache in the same location as the resource group.
+
+<!-- cawa the type should be updated to redisenterprise, correct? perhaps a new API version too? -->
 
 ```json
 {
@@ -125,6 +122,7 @@ Notice that the web app is configured with app setting properties that enable it
 
 
 ### Web app (RedisEnterprise)
+<!--cawa - should this section be renamed to AMR and the section at the top removed altogether? -->
 For RedisEnterprise, because the resource types are slightly different, the way to do **listKeys** is different:
 
 ```json

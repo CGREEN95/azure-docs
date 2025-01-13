@@ -2,16 +2,20 @@
 title: Define an ID token hint technical profile in a custom policy
 titleSuffix: Azure AD B2C
 description: Define an ID token hint technical profile in a custom policy in Azure Active Directory B2C.
-services: active-directory-b2c
+
 author: kengaderdus
 manager: CelesteDG
 
-ms.service: active-directory
-ms.workload: identity
+ms.service: azure-active-directory
+
 ms.topic: reference
-ms.date: 09/16/2021
+ms.date: 01/11/2024
 ms.author: kengaderdus
-ms.subservice: B2C
+ms.subservice: b2c
+
+
+#Customer intent: As a developer integrating Azure AD B2C with a relying party application, I want to define an ID token hint technical profile, so that I can send a JWT token with a hint about the user or the authorization request. This allows me to validate the token and extract the claims for further processing.
+
 ---
 
 # Define an ID token hint technical profile in an Azure Active Directory B2C custom policy
@@ -32,7 +36,7 @@ The id_token_hint must be a valid JWT token. The following table lists the claim
 
 | Name | Claim | Example value | Description |
 | ---- | ----- | ------------- | ----------- |
-| Audience | `aud` | `a489fc44-3cc0-4a78-92f6-e413cd853eae` | Identifies the intended recipient of the token. The audience is an arbitrary string defined by the token issuer. Azure AD B2C validates this value, and rejects the token if it doesn't match.  |
+| Audience | `aud` | `00001111-aaaa-2222-bbbb-3333cccc4444` | Identifies the intended recipient of the token. The audience is an arbitrary string defined by the token issuer. Azure AD B2C validates this value, and rejects the token if it doesn't match.  |
 | Issuer | `iss` |`https://localhost` | Identifies the security token service (token issuer). The issuer is an arbitrary URI defined by the token issuer. Azure AD B2C validates this value, and rejects the token if it doesn't match.  |
 | Expiration time | `exp` | `1600087315` | The time at which the token becomes invalid, represented in epoch time. Azure AD B2C validates this value, and rejects the token if the token is expired.|
 | Not before | `nbf` | `1599482515` | The time at which the token becomes valid, represented in epoch time. This time is usually the same as the time the token was issued. Azure AD B2C validates this value, and rejects the token if the token lifetime is not valid. |
@@ -49,7 +53,7 @@ The following token is an example of a valid ID token:
   "nbf": 1599482515,
   "exp": 1600087315,
   "iss": "https://localhost",
-  "aud": "a489fc44-3cc0-4a78-92f6-e413cd853eae"
+  "aud": "00001111-aaaa-2222-bbbb-3333cccc4444"
 }
 ```
 
@@ -105,7 +109,7 @@ When using a symmetric key, the **CryptographicKeys** element contains the follo
 
 ### Issue a token with symmetric keys
 
-#### Step 1. Create a shared key 
+#### Step 1: Create a shared key 
 
 Create a key that can be used to sign the token. For example, use the following PowerShell code to generate a key.
 
@@ -120,13 +124,12 @@ $newClientSecret
 
 This code creates a secret string like `VK62QTn0m1hMcn0DQ3RPYDAr6yIiSvYgdRwjZtU5QhI=`.
 
-#### Step 2. Add the signing key to Azure AD B2C
+#### Step 2: Add the signing key to Azure AD B2C
 
 The same key that is used by the token issuer needs to be created in your Azure AD B2C policy keys.  
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
-1. Make sure you're using the directory that contains your Azure AD B2C tenant. Select the **Directories + subscriptions** icon in the portal toolbar.
-1. On the **Portal settings | Directories + subscriptions** page, find your Azure AD B2C directory in the **Directory name** list, and then select **Switch**.
+1. If you have access to multiple tenants, select the **Settings** icon in the top menu to switch to your Azure AD B2C tenant from the **Directories + subscriptions** menu.
 1. In the Azure portal, search for and select **Azure AD B2C**.
 1. On the overview page, under **Policies**, select **Identity Experience Framework**.
 1. Select **Policy Keys** 
@@ -139,7 +142,7 @@ The same key that is used by the token issuer needs to be created in your Azure 
 1. Confirm that you've created the key `B2C_1A_IdTokenHintKey`.
 
 
-#### Step 3. Add the ID token hint technical profile
+#### Step 3: Add the ID token hint technical profile
 
 The following technical profile validates the token and extracts the claims. 
 
@@ -151,7 +154,7 @@ The following technical profile validates the token and extracts the claims.
       <DisplayName> My ID Token Hint TechnicalProfile</DisplayName>
       <Protocol Name="None" />
       <Metadata>
-        <Item Key="IdTokenAudience">a489fc44-3cc0-4a78-92f6-e413cd853eae</Item>
+        <Item Key="IdTokenAudience">00001111-aaaa-2222-bbbb-3333cccc4444</Item>
         <Item Key="issuer">https://localhost</Item>
       </Metadata>
       <CryptographicKeys>
@@ -165,18 +168,18 @@ The following technical profile validates the token and extracts the claims.
 </ClaimsProvider>
 ```
 
-#### Step 4. Prepare your policy
+#### Step 4: Prepare your policy
 
 Complete the [Configure your policy](#configure-your-policy) step.
 
-#### Step 5. Prepare the code  
+#### Step 5: Prepare the code  
 
 The [GitHub sample](https://github.com/azure-ad-b2c/id_token_hint/tree/master/dotnet_core_symmetric_key) is an ASP.NET web application and console app that generates an ID token that is signed using a symmetric key. 
 
 
 ### Issue a token with asymmetric keys
 
-With an asymmetric key, the token is signed using RSA certificates. This application hosts an Open ID Connect metadata endpoint and JSON Web Keys (JWKs) endpoint that is used by Azure AD B2C to validate the signature of the ID token.
+With an asymmetric key, the token is signed using RSA certificates. This application hosts an OpenID Connect metadata endpoint and JSON Web Keys (JWKs) endpoint that is used by Azure AD B2C to validate the signature of the ID token.
 
 The token issuer must provide following endpoints:
 
@@ -185,7 +188,7 @@ The token issuer must provide following endpoints:
 
 See the [`TokenMetadataController.cs`](https://github.com/azure-ad-b2c/id-token-builder/blob/master/source-code/B2CIdTokenBuilder/Controllers/TokenMetadataController.cs) .NET MVC controller sample.
 
-#### Step 1. Prepare a self-signed certificate
+#### Step 1: Prepare a self-signed certificate
 
 If you don't already have a certificate, you can use a self-signed certificate for this how-to guide. On Windows, you can use PowerShell's [New-SelfSignedCertificate](/powershell/module/pki/new-selfsignedcertificate) cmdlet to generate a certificate.
 
@@ -203,7 +206,7 @@ New-SelfSignedCertificate `
 ```
 
 
-#### Step 2. Add the ID token hint technical profile 
+#### Step 2: Add the ID token hint technical profile 
 
 The following technical profile validates the token and extracts the claims. Change the metadata URI to your token issuer well-known configuration endpoint.
 
@@ -228,11 +231,11 @@ The following technical profile validates the token and extracts the claims. Cha
 </ClaimsProvider>
 ```
 
-#### Step 3. Prepare your policy
+#### Step 3: Prepare your policy
 
 Complete the [Configure your policy](#configure-your-policy) step.
 
-#### Step 4. Prepare the code 
+#### Step 4: Prepare the code 
 
 This [GitHub sample](https://github.com/azure-ad-b2c/id-token-builder) ASP.NET web application generates ID tokens and hosts the metadata endpoints required to use the "id_token_hint" parameter in Azure AD B2C.
 
@@ -278,7 +281,7 @@ Depending on your business requirements, you might need to add token validations
 The GitHub samples illustrate how to create such a token issue a JWT that later sent as a `id_token_hint` query string parameter. Following is an example of an authorization request with id_token_hint parameter
  
 ```html
-https://tenant-name.b2clogin.com/tenant-name.onmicrosoft.com/B2C_1A_signup_signin/oauth2/v2.0/authorize?client_id=63ba0d17-c4ba-47fd-89e9-31b3c2734339&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login&id_token_hint=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaXNwbGF5TmFtZSI6IiBKb2huIFNtaXRoIiwidXNlcklkIjoiam9obi5zQGNvbnRvc28uY29tIiwibmJmIjoxNTk5NDgyNTE1LCJleHAiOjE2MDAwODczMTUsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiYTQ4OWZjNDQtM2NjMC00YTc4LTkyZjYtZTQxM2NkODUzZWFlIn0.nPmLXydI83PQCk5lRBYUZRu_aX58pL1khahHyQuupig
+https://tenant-name.b2clogin.com/tenant-name.onmicrosoft.com/B2C_1A_signup_signin/oauth2/v2.0/authorize?client_id=11112222-bbbb-3333-cccc-4444dddd5555&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login&id_token_hint=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaXNwbGF5TmFtZSI6IiBKb2huIFNtaXRoIiwidXNlcklkIjoiam9obi5zQGNvbnRvc28uY29tIiwibmJmIjoxNTk5NDgyNTE1LCJleHAiOjE2MDAwODczMTUsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0IiwiYXVkIjoiYTQ4OWZjNDQtM2NjMC00YTc4LTkyZjYtZTQxM2NkODUzZWFlIn0.nPmLXydI83PQCk5lRBYUZRu_aX58pL1khahHyQuupig
 ```
 
 ## Next steps

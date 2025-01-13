@@ -4,8 +4,10 @@ description: Learn how you can troubleshoot issues with your app in Azure App Se
 keywords: app service, azure app service, diagnostics, support, web app, troubleshooting, self-help
 
 ms.topic: article
-ms.date: 10/18/2019
-ms.custom: seodec18
+ms.date: 06/29/2023
+ms.author: msangapu
+author: msangapu-msft
+ms.custom: UpdateFrequency3
 
 ---
 # Azure App Service diagnostics overview
@@ -22,7 +24,7 @@ To access App Service diagnostics, navigate to your App Service web app or App S
 
 For Azure Functions, navigate to your function app, and in the top navigation, click on **Platform features**, and select **Diagnose and solve problems** from the **Resource management** section.
 
-In the App Service diagnostics homepage, you can perform a search for a symptom with your app, or choose a diagnostic category that best describes the issue with your app. Next, there is a new feature called Risk Alerts that provides an actionable report to improve your App.  Finally, this page is where you can find **Diagnostic Tools**. See [Diagnostic tools](#diagnostic-tools).
+The App Service diagnostics homepage provides many tools to diagnose app problems. For more information, see [Diagnostic tools](#diagnostic-tools) in this article.
 
 ![App Service Diagnose and solve problems homepage with diagnostic search box, Risk Alerts assessments, and Troubleshooting categories for discovering diagnostics for the selected Azure Resource.](./media/app-service-diagnostics/app-service-diagnostics-homepage-1.png)
 
@@ -99,13 +101,13 @@ After you choose to investigate the issue further by clicking on a topic, you ca
 
 ## Resiliency Score
 
-If you don't know what’s wrong with your app or don’t know where to start troubleshooting your issues, the Get Resiliency Score report is a good place to start. Once a Troubleshooting category has been selected the Get Resilience Score report link is available and clicking it produces a PDF document with actionable insights.
+To review tailored best practice recommendations, check out the Resiliency Score Report. This is available as a downloadable PDF Report. To get it, simply click on the "Get Resilience Score report" button available on the command bar of any of the Troubleshooting categories.
 
 ![App Service Diagnose and solve problems Resiliency Score report, with a gauge indicating App's resilience score and what App Developer can do to improve resilience of the App.](./media/app-service-diagnostics/app-service-diagnostics-resiliency-report-1.png)
 
 ### Investigate application code issues (only for Windows app)
 
-Because many app issues are related to issues in your application code, App Service diagnostics integrates with [Application Insights](../azure-monitor/app/app-insights-overview.md) to highlight exceptions and dependency issues to correlate with the selected downtime. Application Insights has to be enabled separately.
+Because many app issues are related to issues in your application code, App Service diagnostics integrates with [Application Insights](/azure/azure-monitor/app/app-insights-overview) to highlight exceptions and dependency issues to correlate with the selected downtime. Application Insights has to be enabled separately.
 
 ![Application Insights](./media/app-service-diagnostics/application-insights-7.png)
 

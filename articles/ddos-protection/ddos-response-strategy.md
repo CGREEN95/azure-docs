@@ -2,14 +2,10 @@
 title: Components of a DDoS response strategy
 description: Learn what how to use Azure DDoS Protection to respond to DDoS attacks.
 services: ddos-protection
-documentationcenter: na
 author: AbdullahBell
-ms.service: ddos-protection
-ms.topic: article
-ms.tgt_pltfrm: na
-ms.custom: ignite-2022
-ms.workload: infrastructure-services
-ms.date: 10/12/2022
+ms.service: azure-ddos-protection
+ms.topic: concept-article
+ms.date: 07/17/2024
 ms.author: abell
 ---
 
@@ -41,11 +37,11 @@ It’s imperative to understand the scope of your risk from a DDoS attack on an 
 
 It's essential that you understand the normal behavior of an application and prepare to act if the application isn't behaving as expected during a DDoS attack. Have monitors configured for your business-critical applications that mimic client behavior, and notify you when relevant anomalies are detected. Refer to [monitoring and diagnostics best practices](/azure/architecture/best-practices/monitoring#monitoring-and-diagnostics-scenarios) to gain insights on the health of your application.
 
-[Azure Application Insights](../azure-monitor/app/app-insights-overview.md) is an extensible application performance management (APM) service for web developers on multiple platforms. Use Application Insights to monitor your live web application. It automatically detects performance anomalies. It includes analytics tools to help you diagnose issues and to understand what users do with your app. It's designed to help you continuously improve performance and usability.
+[Azure Application Insights](/azure/azure-monitor/app/app-insights-overview) is an extensible application performance management (APM) service for web developers on multiple platforms. Use Application Insights to monitor your live web application. It automatically detects performance anomalies. It includes analytics tools to help you diagnose issues and to understand what users do with your app. It's designed to help you continuously improve performance and usability.
 
 ## Customer DDoS response team
 
-Creating a DDoS response team is a key step in responding to an attack quickly and effectively. Identify contacts in your organization who will oversee both planning and execution. This DDoS response team should thoroughly understand the Azure DDoS Protection Standard service. Make sure that the team can identify and mitigate an attack by coordinating with internal and external customers, including the Microsoft support team.
+Creating a DDoS response team is a key step in responding to an attack quickly and effectively. Identify contacts in your organization who will oversee both planning and execution. This DDoS response team should thoroughly understand the Azure DDoS Protection service. Make sure that the team can identify and mitigate an attack by coordinating with internal and external customers, including the Microsoft support team.
 
 We recommend that you use simulation exercises as a normal part of your service availability and continuity planning, and these exercises should include scale testing. See [test through simulations](test-through-simulations.md) to learn how to simulate DDoS test traffic against your Azure public endpoints.
 
@@ -55,7 +51,7 @@ Azure DDoS Protection identifies and mitigates DDoS attacks without any user int
 
 ### When to contact Microsoft support
 
-Azure DDoS Protection customers have access to the DDoS Rapid Response (DRR) team, who can help with attack investigation during an attack as well as post-attack analysis. See [DDoS Rapid Response](ddos-rapid-response.md) for more details, including when you should engage the DRR team.
+Azure DDoS Network Protection customers have access to the DDoS Rapid Response (DRR) team, who can help with attack investigation during an attack and post-attack analysis. For more information, including when you should engage the DRR team, see [DDoS Rapid Response](ddos-rapid-response.md). Azure DDoS IP Protection customers should create a request to connect with Microsoft support. To learn more, see [Create a support request](/azure/azure-portal/supportability/how-to-create-azure-support-request).
 
 ## Post-attack steps
 
@@ -71,4 +67,5 @@ If you suspect you're under a DDoS attack, escalate through your normal Azure Su
 
 ## Next steps
 
-- Learn how to [create a DDoS protection plan](manage-ddos-protection.md).
+- Learn how to [configure metric alerts through portal](alerts.md).
+- Learn how to [engage DDoS Rapid Response](ddos-rapid-response.md).

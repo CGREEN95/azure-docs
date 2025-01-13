@@ -1,10 +1,14 @@
 ---
 title: Microsoft Sentinel DNS over AMA connector reference - available fields and normalization schema
 description: This article lists available fields for filtering DNS data using the Windows DNS Events via AMA connector, and the normalization schema for Windows DNS server fields.
-author: limwainstein
-ms.author: lwainstein
+author: yelevin
+ms.author: yelevin
 ms.topic: reference
 ms.date: 09/01/2022
+
+
+#Customer intent: As a security analyst, I want to filter and normalize DNS log data collected by the Windows DNS Events via AMA connector so that I can efficiently monitor and detect potential threats in my network.
+
 ---
 
 # DNS over AMA connector reference - available fields and normalization schema
@@ -27,7 +31,7 @@ This table shows the available fields. The field names are normalized using the 
 
 ## ASIM normalized DNS schema 
 
-This table describes and translates Windows DNS server fields into the normalized field names as they appear in the [DNS normalization schema](dns-normalization-schema.md#schema-details).
+This table describes and translates Windows DNS server fields into the normalized field names as they appear in the [DNS normalization schema](normalization-schema-dns.md#schema-details).
 
 |Windows DNS field name  |Normalized field name  |Type  |Description |
 |---------|---------|---------|---------|

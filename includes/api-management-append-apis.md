@@ -1,6 +1,6 @@
 ---
 author: vladvino
-ms.service: api-management
+ms.service: azure-api-management
 ms.topic: include
 ms.date: 04/16/2021
 ms.author: vlvinogr
@@ -8,8 +8,9 @@ ms.author: vlvinogr
 ## Append other APIs
 
 You can compose an API of APIs exposed by different services, including:
-* The OpenAPI Specification
+* An OpenAPI specification
 * A SOAP API
+* A GraphQL API
 * A Web App hosted in Azure App Service
 * Azure Function App
 * Azure Logic Apps
@@ -22,11 +23,11 @@ Append a different API to your existing API using the following steps.
 
 1. Go to your Azure API Management instance in the Azure portal.
 
-    :::image type="content" source="./media/api-management-append-apis/service-page-1.png" alt-text="Go to Azure API Mgmt instance":::
+    :::image type="content" source="./media/api-management-append-apis/service-page-1.png" alt-text="Screenshot of navigating to API Management instance in the portal.":::
 
 1. Select **APIs** on the **Overview** page or from the menu on the left.
 
-    :::image type="content" source="./media/api-management-append-apis/api-select-1.png" alt-text="Select APIs":::
+    :::image type="content" source="./media/api-management-append-apis/api-select-1.png" alt-text="Screenshot of selecting APIs on Overview page in the portal.":::
 
 1. Click **...** next to the API that you want to append another API to.
 1. Select **Import** from the drop-down menu.
@@ -35,4 +36,4 @@ Append a different API to your existing API using the following steps.
 
 1. Select a service from which to import an API.
 
-    :::image type="content" source="./media/api-management-append-apis/select-to-import.png" alt-text="Select service":::
+    :::image type="content" source="./media/api-management-append-apis/select-to-import.png" alt-text="Screenshot of selecting a service in the portal.":::

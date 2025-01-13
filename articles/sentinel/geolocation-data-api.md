@@ -1,16 +1,17 @@
 ---
-title: Enrich entities with geolocation data in Microsoft Sentinel using REST API  | Microsoft Docs
+title: Enrich entities with geolocation data in Microsoft Sentinel using REST API
 description: This article describes how you can enrich entities in Microsoft Sentinel with geolocation data via REST API.
-author: batamig
+author: yelevin
 ms.topic: reference
-ms.custom: mvc, ignite-fall-2021
-ms.date: 11/09/2021
-ms.author: bagol
+ms.date: 01/09/2023
+ms.author: yelevin
+
+
+#Customer intent: As a security analyst, I want to enrich IP address data with geolocation information via a REST API so that I can enhance threat detection and response in Microsoft Sentinel.
+
 ---
 
 # Enrich entities in Microsoft Sentinel with geolocation data via REST API (Public preview)
-
-[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
 This article shows you how to enrich entities in Microsoft Sentinel with geolocation data using the REST API.
 
@@ -63,7 +64,7 @@ This command retrieves geolocation data for a given IP Address.
 |**city**     |   The city where this IP address is located      |
 |**cityCf**     | A numeric rating of confidence that the value in the 'city' field is correct, on a scale of 0-100        |
 |**continent**     | The continent where this IP address is located        |
-|**country**     |The county where this IP address is located        |
+|**country**     |The country/region where this IP address is located        |
 |**countryCf**     |   A numeric rating of confidence that the value in the 'country' field is correct on a scale of 0-100      |
 |**ipAddr**     |   The dotted-decimal or colon-separated string representation of the IP address      |
 |**ipRoutingType**     |   A description of the connection type for this IP address      |

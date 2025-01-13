@@ -3,9 +3,9 @@
  description: include file
  services: iot-hub
  author: kgremban
- ms.service: iot-hub
+ ms.service: azure-iot-hub
  ms.topic: include
- ms.date: 11/25/2020
+ ms.date: 12/30/2022
  ms.author: kgremban
  ms.custom: include file
 ---

@@ -1,12 +1,12 @@
 ---
 title: Encryption in Azure Managed Grafana
-description: Learn how data is encrypted in Azure Managed Grafana.
+description: In this guide, learn basic information about data storage and encryption within Azure Managed Grafana.
 author: maud-lv
 ms.author: malev
-ms.service: managed-grafana
-ms.topic: conceptual
-ms.date: 07/22/2022
-ms.custom: concept, ignite-2022
+ms.service: azure-managed-grafana
+ms.topic: concept-article
+ms.date: 12/22/2024
+ms.custom: concept, engagement-fy23
 ---
 
 # Encryption in Azure Managed Grafana
@@ -22,17 +22,17 @@ This article provides a short description of encryption within Azure Managed Gra
 
 ## Encryption in Azure Cosmos DB and Azure Database for PostgreSQL
 
-Managed Grafana leverages encryption offered by Azure Cosmos DB and Azure Database for PostgreSQL.
+Azure Managed Grafana leverages encryption offered by Azure Cosmos DB and Azure Database for PostgreSQL.
 
 Data stored in Azure Cosmos DB and Azure Database for PostgreSQL is encrypted at rest on storage devices and in transport over the network.
 
-For more information, go to [Encryption at rest in Azure Cosmos DB](../cosmos-db/database-encryption-at-rest.md) and [Security in Azure Database for PostgreSQL - Flexible Server](../postgresql/flexible-server/concepts-security.md).
+For more information, go to [Encryption at rest in Azure Cosmos DB](/azure/cosmos-db/database-encryption-at-rest) and [Security in Azure Database for PostgreSQL - Flexible Server](/azure/postgresql/flexible-server/concepts-security).
 
 ## Server-side encryption
 
-The encryption model used by Managed Grafana is the server-side encryption model with Service-Managed keys.
+The encryption model used by Azure Managed Grafana is the server-side encryption model with Service-Managed keys.
 
-In this model, all key management aspects such as key issuance, rotation, and backup are managed by Microsoft. The Azure resource providers create the keys, place them in secure storage, and retrieve them when needed. For more information, go to [Server-side encryption using Service-Managed key](../security/fundamentals/encryption-models.md).
+In this model, all key management aspects such as key issuance, rotation, and backup are managed by Microsoft. The Azure resource providers create the keys, place them in secure storage, and retrieve them when needed. For more information, go to [Server-side encryption using service-managed keys](../security/fundamentals/encryption-models.md#server-side-encryption-using-service-managed-keys).
 
 ## Next steps
 

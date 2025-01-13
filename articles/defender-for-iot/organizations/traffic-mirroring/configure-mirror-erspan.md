@@ -1,67 +1,27 @@
 ---
-title: Configure traffic mirroring with an encapsulated remote switched port analyzer (ERSPAN) - Microsoft Defender for IoT
-description: This article describes traffic mirroring with ERSPAN for monitoring with Microsoft Defender for IoT.
-ms.date: 09/20/2022
-ms.topic: how-to
+title: Configure ERSPAN traffic mirroring with a Cisco switch - Microsoft Defender for IoT
+description: This article describes how to configure the Cisco switch for encapsulated remote switched port analyzer (ERSPAN) traffic mirroring for Microsoft Defender for IoT.
+ms.date: 05/26/2024
+ms.topic: install-set-up-deploy
 ---
 
-# Configure traffic mirroring with an encapsulated remote switched port analyzer (ERSPAN)
+# Configure ERSPAN (legacy) traffic mirroring with a Cisco switch
 
-Use an encapsulated remote switched port analyzer (ERSPAN) to mirror input interfaces over an IP network to your OT sensor's monitoring interface, when securing remote networks with Defender for IoT.
+This article is one in a series of articles describing the [deployment path](../ot-deploy/ot-deploy-path.md) for OT monitoring with Microsoft Defender for IoT.
 
-The sensor's monitoring interface is a promiscuous interface and does not have a specifically allocated IP address. When ERSPAN support is configured, traffic payloads that are ERSPAN encapsulated with GRE tunnel encapsulation will be analyzed by the sensor.
+:::image type="content" source="../media/deployment-paths/progress-network-level-deployment.png" alt-text="Diagram of a progress bar with Network level deployment highlighted." border="false" lightbox="../media/deployment-paths/progress-network-level-deployment.png":::
 
-Use ERSPAN encapsulation when there is a need to extend monitored traffic across Layer 3 domains. ERSPAN is a Cisco proprietary feature and is available only on specific routers and switches. For more information, see the [Cisco documentation](https://learningnetwork.cisco.com/s/article/span-rspan-erspan).
+This article provides high-level guidance for configuring encapsulated remote switched port analyzer [(ERSPAN) traffic mirroring](../best-practices/traffic-mirroring-methods.md#erspan-ports) for a Cisco switch.
 
+We recommend using your receiving router as the generic routing encapsulation (GRE) tunnel destination.
 
-> [!NOTE]
-> This article provides high-level guidance for configuring traffic mirroring with ERSPAN. Specific implementation details will vary depending on your equiptment vendor.
->
+## Prerequisites
 
-## ERSPAN architecture
+Before you start, make sure that you understand your plan for network monitoring with Defender for IoT, and the SPAN ports you want to configure.
 
-ERSPAN sessions include a source session and a destination session configured on different switches. Between the source and destination switches, traffic is encapsulated in GRE, and can be routed over layer 3 networks.
+For more information, see [Traffic mirroring methods for OT monitoring](../best-practices/traffic-mirroring-methods.md).
 
-For example:
-
-:::image type="content" source="../media/traffic-mirroring/erspan.png" alt-text="Diagram of traffic mirrored from an air-gapped or industrial network to an OT network sensor using ERSPAN." border="false":::
-
-ERSPAN transports mirrored traffic over an IP network using the following process:
-
-1. A source router encapsulates the traffic and sends the packet over the network.
-1. At the destination router, the packet is de-capsulated and sent to the destination interface.
-
-ERSPAN source options include elements such as:
-
-- Ethernet ports and port channels
-- VLANs; all supported interfaces in the VLAN are ERSPAN sources
-- Fabric port channels
-- Satellite ports and host interface port channels
-
-> [!TIP]
-> When configuring ERSPAN, we recommend using your receiving router as the generic routing encapsulation (GRE) tunnel destination.
->
-
-## Configure ERSPAN on your OT network sensor
-
-Newly installed OT network sensors have ERSPAN and GRE header stripping turned off by default. To turn on support for ERSPAN, you'll need to configure your ERSPAN interfaces and then enable the RCDCAP component to restart your monitoring processes.
-
-ERSPAN support is configured in the **Select erspan monitor interfaces** screen, which appears during your first software installation on the appliance. For example:
-
-:::image type="content" source="../media/tutorial-install-components/erspan-monitor.png" alt-text="Screenshot of the select erspan monitor screen.":::
-
-To access this screen later on, sign in to your sensor via SSH as the *cyberx_host* user and run the following command:
-
-```console
-sudo dpkg-reconfigure iot-sensor
-```
-
-The installation wizard starts to run, and you can select the interfaces you want to receive ERSPAN traffic.
-
-Complete the wizard to apply your changes.
-
-For more information, see [Install OT monitoring software](../how-to-install-software.md#install-ot-monitoring-software).
-## Sample configuration on a Cisco switch
+## Configure the Cisco switch
 
 The following code shows a sample `ifconfig` output for ERSPAN configured on a Cisco switch:
 
@@ -78,9 +38,45 @@ no shut                             
 monitor erspan origin ip-address 172.1.2.1 global
 ```
 
+For more information, see [CLI command reference from OT network sensors](../cli-ot-sensor.md).
+
+[!INCLUDE [validate-traffic-mirroring](../includes/validate-traffic-mirroring.md)]
+
+## Configure legacy ERSPAN in the CLI
+
+> [!IMPORTANT]
+>
+> We don't recommend using legacy versions of the software as this might cause security issues for your system. If you're still using the legacy version the user needs to run specific CLI commands discussed in this section.
+>
+
+## Configure setup via the CLI
+
+Use this procedure to configure the following initial setup settings via CLI:
+
+- Signing into the sensor console and setting a new *admin* user password
+- Defining network details for your sensor
+- Defining the interfaces you want to monitor
+
+### CLI Legacy
+
+To configure a legacy ERSPAN tunneling interface in the CLI you need to use an adapted line of code. This code ensures that the legacy ERSPAN option is available in the CLI sensor configuration wizard.
+
+A new legacy ERPSAN can only be configured if you have an existing interface configured.
+
+**To configure the legacy ERSPAN**:
+
+1. Log in to your sensor using a CLI interface with a cyberx or admin user.
+1. Type `ERSPAN=1 python3 -m cyberx.config.configure`.
+
+    :::image type="content" source="media/configure-mirror-erspan/legacy-erspan-cli.png" alt-text="Screenshot of the CLI sensor configuration for a legacy version interface.":::
+
+1. Select **LegacyErspan** and assign an interface.
+1. Select **Save**.
+
 ## Next steps
 
-For more information, see:
+> [!div class="step-by-step"]
+> [« Onboard OT sensors to Defender for IoT](../onboard-sensors.md)
 
-- [Traffic mirroring methods for OT monitoring](../best-practices/traffic-mirroring-methods.md)
-- [Prepare your OT network for Microsoft Defender for IoT](../how-to-set-up-your-network.md)
+> [!div class="step-by-step"]
+> [Provision OT sensors for cloud management »](../ot-deploy/provision-cloud-management.md)

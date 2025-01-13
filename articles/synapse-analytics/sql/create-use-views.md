@@ -2,13 +2,12 @@
 title: Create and use views in serverless SQL pool
 description: In this section, you'll learn how to create and use views to wrap serverless SQL pool queries. Views will allow you to reuse those queries. Views are also needed if you want to use tools, such as Power BI, in conjunction with serverless SQL pool.
 author: azaricstefan
-ms.service: synapse-analytics
-ms.topic: overview
+ms.service: azure-synapse-analytics
+ms.topic: how-to
 ms.subservice: sql
-ms.date: 05/20/2020
+ms.date: 12/06/2024
 ms.author: stefanazaric
-ms.reviewer: sngun, wiassaf
-ms.custom: ignite-fall-2021, event-tier1-build-2022, ignite-2022
+ms.reviewer: whhender, wiassaf
 ---
 
 # Create and use views using serverless SQL pool in Azure Synapse Analytics
@@ -54,7 +53,7 @@ The view uses an `EXTERNAL DATA SOURCE` with a root URL of your storage, as a `D
 
 ### Delta Lake views
 
-If you are creating the views on top of Delta Lake folder, you need to specify the location to the root folder after the `BULK` option instead of specifying the file path.
+If you're creating the views on top of Delta Lake folder, you need to specify the location to the root folder after the `BULK` option instead of specifying the file path.
 
 > [!div class="mx-imgBorder"]
 >![ECDC COVID-19 Delta Lake folder](./media/shared/covid-delta-lake-studio.png)
@@ -76,7 +75,7 @@ from openrowset(
            ) as rows
 ```
 
-Review the known issues on [Synapse serverless SQL pool self-help page](resources-self-help-sql-on-demand.md#delta-lake).
+For more information, review [Synapse serverless SQL pool self-help page](resources-self-help-sql-on-demand.md#delta-lake) and [Azure Synapse Analytics known issues](../known-issues.md).
 
 ## Partitioned views
 
@@ -93,11 +92,15 @@ FROM
     ) AS nyc
 ```
 
-The partitioned views will perform folder partition elimination if you query this view with the filters on the partitioning columns. This might improve performance of your queries.
+Partitioned views can improve the performance of your queries by performing partition elimination when you query them with filters on the partitioning columns. However, not all queries support partition elimination, so it's important to follow some best practices.
+
+To ensure partition elimination, avoid using subqueries in filters, since they can interfere with the ability to eliminate partitions. Instead, pass the result of the subquery as a variable to the filter.
+
+When using JOINs in SQL queries, declare the filter predicate as NVARCHAR to reduce the complexity of the query plan and increase the probability of correct partition elimination. Partition columns are typically inferred as NVARCHAR(1024), so using the same type for the predicate avoids the need for an implicit cast, which can increase query plan complexity.
 
 ### Delta Lake partitioned views
 
-If you are creating the partitioned views on top of Delta Lake storage, you can specify just a root Delta Lake folder and don't need to explicitly expose the partitioning columns using the `FILEPATH` function:
+If you're creating the partitioned views on top of Delta Lake storage, you can specify just a root Delta Lake folder and don't need to explicitly expose the partitioning columns using the `FILEPATH` function:
 
 ```sql
 CREATE OR ALTER VIEW YellowTaxiView
@@ -117,11 +120,11 @@ The folder name in the `OPENROWSET` function (`yellow` in this example) that is 
 > [!div class="mx-imgBorder"]
 >![Yellow Taxi Delta Lake folder](./media/shared/yellow-taxi-delta-lake.png)
 
-Review the known issues on [Synapse serverless SQL pool self-help page](resources-self-help-sql-on-demand.md#delta-lake).
+For more information, review [Synapse serverless SQL pool self-help page](resources-self-help-sql-on-demand.md#delta-lake) and [Azure Synapse Analytics known issues](../known-issues.md).
 
 ## JSON views
 
-The views are the good choice if you need to do some additional processing on top of the result set that is fetched from the files. One example might be parsing JSON files where we need to apply the JSON functions to extract the values from the JSON documents:
+The views are the good choice if you need to do some extra processing on top of the result set that is fetched from the files. One example might be parsing JSON files where we need to apply the JSON functions to extract the values from the JSON documents:
 
 ```sql
 CREATE OR ALTER VIEW CovidCases
@@ -186,6 +189,8 @@ ORDER BY
     [population] DESC;
 ```
 
-## Next steps
+When you query the view, you may encounter errors or unexpected results. This probably means that the view references columns or objects that were modified or no longer exist. You need to manually adjust the view definition to align with the underlying schema changes.
+
+## Related content
 
 For information on how to query different file types, refer to the [Query single CSV file](query-single-csv-file.md), [Query Parquet files](query-parquet-files.md), and [Query JSON files](query-json-files.md) articles.

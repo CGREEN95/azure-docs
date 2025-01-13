@@ -6,7 +6,7 @@ ms.author: msangapu
 ms.topic: article
 ms.date: 10/20/2022
 ms.tool: terraform
-ms.custom: subject-terraform
+ms.custom: subject-terraform, devx-track-terraform
 ---
 
 # Create App Service app using a Terraform template
@@ -30,7 +30,7 @@ The Azure Terraform Visual Studio Code extension enables you to work with Terraf
 
 ## Review the template
 
-The template used in this quickstart is shown below. It deploys an App Service plan and an App Service app on Windows and a sample Node.js "Hello World" app from the [Azure Samples](https://github.com/Azure-Samples) repo.
+The template used in this quickstart is shown below. It deploys an App Service plan and an App Service app on Linux and a sample Node.js "Hello World" app from the [Azure Samples](https://github.com/Azure-Samples) repo.
 
 ```hcl
 # Configure the Azure provider
@@ -74,6 +74,7 @@ resource "azurerm_linux_web_app" "webapp" {
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   service_plan_id       = azurerm_service_plan.appserviceplan.id
+  depends_on            = [azurerm_service_plan.appserviceplan]
   https_only            = true
   site_config { 
     minimum_tls_version = "1.2"

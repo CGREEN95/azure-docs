@@ -1,13 +1,13 @@
 ---
 title: Create a subscription for a partner's customer
 titleSuffix: Azure Cost Management + Billing
-description: Learn how a Microsoft Partner creates a subscription for a customer in the Azure portal. 
+description: Learn how a Microsoft Partner creates a subscription for a customer in the Azure portal.
 author: bandersmsft
 ms.reviewer: amberb
 ms.service: cost-management-billing
 ms.subservice: billing
 ms.topic: conceptual
-ms.date: 05/25/2022
+ms.date: 11/14/2024
 ms.author: banders
 ---
 
@@ -17,11 +17,13 @@ This article helps a Microsoft Partner with a [Microsoft Partner Agreement](http
 
 To learn more about billing accounts and identify your billing account type, see [View billing accounts in Azure portal](view-all-accounts.md).
 
+[!INCLUDE [cost-management-billing-subscription-b2b-b2c-note](../../../includes/cost-management-billing-subscription-b2b-b2c-note.md)]
+
 ## Permission required to create Azure subscriptions
 
 You need the following permissions to create customer subscriptions:
 
-- Global Admin and Admin Agent role in the CSP partner organization.
+- Admin agent role in the CSP partner organization.
 
 For more information, see [Partner Center - Assign users roles and permissions](/partner-center/permissions-overview). The user needs to sign in to the partner tenant to create Azure subscriptions.
 
@@ -44,7 +46,7 @@ Partners with a Microsoft Partner Agreement use the following steps to create a 
 1. Select the partner's billing profile.
 1. Select the customer that you're creating the subscription for.
 1. If applicable, select a reseller.
-1. Next to **Plan**, select **Microsoft Azure Plan for DevTest** if the subscription will be used for development or testing workloads. Otherwise, select **Microsoft Azure Plan**.  
+1. Next to **Plan**, select **Microsoft Azure Plan**.  
     :::image type="content" source="./media/create-customer-subscription/create-customer-subscription-basics-tab.png" alt-text="Screenshot showing the Basics tab where you enter basic information about the customer subscription." lightbox="./media/create-customer-subscription/create-customer-subscription-basics-tab.png" :::
 1. Optionally, select the Tags tab and then enter tag pairs for **Name** and **Value**.
 1. Select **Review + create**. You should see a message stating `Validation passed`.
@@ -60,7 +62,7 @@ You can also create subscriptions programmatically. For more information, see [C
 
 If you have questions or need help, [create a support request](https://go.microsoft.com/fwlink/?linkid=2083458).
 
-## Next steps
+## Related content
 
 - [Add or change Azure subscription administrators](add-change-subscription-administrator.md)
 - [Move resources to new resource group or subscription](../../azure-resource-manager/management/move-resource-group-and-subscription.md)

@@ -1,41 +1,41 @@
 ---
-title: Create a device update account in Device Update for Azure IoT Hub | Microsoft Docs
-description: Create a device update account in Device Update for Azure IoT Hub.
-author: vimeht
-ms.author: vimeht
-ms.date: 06/23/2022
+title: Create Azure Device Update for IoT Hub resources
+description: Create an Azure Device Update for Iot Hub account and instance by using the Azure portal or Azure CLI.
+author: eshashah-msft
+ms.author: eshashah
+ms.date: 12/06/2024
 ms.topic: how-to
-ms.service: iot-hub-device-update
-ms.custom: subject-rbac-steps
+ms.service: azure-iot-hub
+ms.subservice: device-update
 ---
 
-# Device Update for IoT Hub resource management
+# Create Azure Device Update for IoT Hub resources
 
-To get started with Device Update you'll need to create a Device Update account and instance, and then set access control roles.
+To get started with Azure Device Update for IoT Hub, you create a Device Update account and instance, and then [assign access control roles and permissions](configure-access-control-device-update.md) necessary to use those resources. This article describes how to create and configure the Device Update resources by using the Azure portal or Azure CLI.
+
+A Device Update *account* is a resource in your Azure subscription. A Device Update *instance* is a logical container within the account that's associated with a specific IoT hub. You can create multiple Device Update instances within an account.
+
+A Device Update instance contains updates and deployments associated with its IoT hub. For more information, see [Device Update resources](device-update-resources.md).
 
 ## Prerequisites
 
 # [Azure portal](#tab/portal)
 
-An IoT hub. It's recommended that you use an S1 (Standard) tier or above.
+- A Standard (S1) or higher instance of [Azure IoT Hub](/azure/iot-hub/create-hub?tabs=portal).
+- If you opt to store diagnostic logs, an Azure Storage account to store diagnostics logs for your Device Update instance.
 
 # [Azure CLI](#tab/cli)
 
-* An IoT hub. It's recommended that you use an S1 (Standard) tier or above.
+- A Standard (S1) or higher instance of [Azure IoT Hub](/azure/iot-hub/create-hub?tabs=portal).
+- The Bash environment in [Azure Cloud Shell](/azure/cloud-shell/quickstart) for running Azure CLI commands. Select **Launch Cloud Shell** to open Cloud Shell now, or select the Cloud Shell icon in the top toolbar of the Azure portal.
 
-* An Azure CLI environment:
+  :::image type="icon" source="~/reusable-content/ce-skilling/azure/media/cloud-shell/launch-cloud-shell-button.png" alt-text="Button to launch the Azure Cloud Shell." border="false" link="https://shell.azure.com":::
 
-  * Use the Bash environment in [Azure Cloud Shell](../cloud-shell/quickstart.md).
-
-    [![Launch Cloud Shell in a new window](../../includes/media/cloud-shell-try-it/hdi-launch-cloud-shell.png)](https://shell.azure.com)
-
-  * Or, if you prefer to run CLI reference commands locally, [install the Azure CLI](/cli/azure/install-azure-cli)
-
-    * Sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command.
-
-    * Run [az version](/cli/azure/reference-index#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index#az-upgrade).
- 
-    * When prompted, install Azure CLI extensions on first use. The commands in this article use the **azure-iot** extension. Run `az extension update --name azure-iot` to make sure you're using the latest version of the extension.
+  If you prefer, you can run the Azure CLI commands locally:
+  
+  1. [Install Azure CLI](/cli/azure/install-azure-cli). Run [az version](/cli/azure/reference-index#az-version) to see the installed Azure CLI version and dependent libraries, and run [az upgrade](/cli/azure/reference-index#az-upgrade) to install the latest version.
+  1. Sign in to Azure by running [az login](/cli/azure/reference-index#az-login).
+  1. Install the `azure-iot` extension when prompted on first use. To make sure you're using the latest version of the extension, run `az extension update --name azure-iot`.
 
 ---
 
@@ -43,219 +43,101 @@ An IoT hub. It's recommended that you use an S1 (Standard) tier or above.
 
 # [Azure portal](#tab/portal)
 
-1. In the [Azure portal](https://portal.azure.com), select **Create a Resource** and search for "Device Update for IoT Hub"
+1. In the [Azure portal](https://portal.azure.com), search for and select **Device Update for IoT Hubs**.
+1. On the **Device Update for IoT Hubs** screen, select **Create** or **Create Device Update for IoT Hub**.
 
-   :::image type="content" source="media/create-device-update-account/device-update-marketplace.png" alt-text="Screenshot of Device Update for IoT Hub resource." lightbox="media/create-device-update-account/device-update-marketplace.png":::
+   :::image type="content" source="media/create-device-update-account/device-update-marketplace.png" alt-text="Screenshot of Device Update for IoT Hub resource.":::
 
-2. Select **Create** > **Device Update for IoT Hub**
+1. On the **Basics** tab of the **Create Device Update** screen, provide the following information:
 
-3. On the **Basics** tab, provide the following information for your Device Update account:
+   - **Subscription**: Select the name of the Azure subscription for your Device Update account.
+   - **Resource group**: Select an existing resource group or create a new one.
+   - **Name**: Provide a name for your Device Update account.
+   - **Location**: Select the Azure region for your account. For more information, see [Products available by region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/).
+   - **SKU**: Select **Standard**.
+   - **Grant Access to Account**
+     - If you have **Owner** or **User Access Administrator** permissions in your Azure subscription, you can select the **Assign Device Update Administrator role** checkbox to assign yourself the **Device Update Administrator** role for this account.
+     - If you don't have these permissions, contact your administrator after resource creation to get the necessary permissions to work with these resources. For more information, see [Configure access control roles for Device Update resources](configure-access-control-device-update.md).
+   - **Instance Name**: Provide a name for your Device Update instance.
+   - **IoT Hub Name**: Select the IoT Hub you want to link to your Device Update instance.
+   - **Grant Access to IoT Hub**: Device Update setup automatically assigns IoT Hub Data Contributor role to the Device Update service principal.
 
-   * **Subscription**: The Azure subscription to be associated with your Device Update account.
-   * **Resource group**: An existing or new resource group.
-   * **Name**: A name for your account.
-   * **Location**: The Azure region where your account will be located. For information about which regions support Device Update for IoT Hub, see [Azure Products-by-region page](https://azure.microsoft.com/global-infrastructure/services/?products=iot-hub).
+   :::image type="content" source="media/create-device-update-account/account-details.png" alt-text="Screenshot of account details for a new Device Update account.":::
 
-   > [!NOTE]
-   > Your Device Update account doesn't need to be in the same region as your IoT hubs, but for better performance it is recommended that you keep them geographically close.
+1. Optionally, select **Next: Diagnostics** or the **Diagnostics** tab to configure diagnostics logging as part of the instance creation process. Enabling Microsoft diagnostics allows Microsoft to collect, store, and analyze diagnostic log files from your devices if they encounter an update failure.
 
-   :::image type="content" source="media/create-device-update-account/account-details.png" alt-text="Screenshot of account details." lightbox="media/create-device-update-account/account-details.png":::
+   If you don't want to enable diagnostics logging now, select the **Networking** tab.
 
-4. Optionally, you can check the box to assign the Device Update administrator role to yourself. You can also use the steps listed in the [Configure access control roles](#configure-access-control-roles-for-device-update) section to provide a combination of roles to users and applications for the right level of access.
+1. To configure diagnostics logging, on the **Diagnostics** tab, slide the toggle to **Microsoft diagnostics logging Enabled**.
 
-   You need to have Owner or User Access Administrator permissions in your subscription to manage roles.
+1. Select **Select Azure Storage Account** and then select an Azure Blob storage account to link to your Device Update instance for remote diagnostic log collection. The Storage account details update automatically.
 
-5. Select **Next: Instance**
+   :::image type="content" source="media/create-device-update-account/account-diagnostics.png" alt-text="Screenshot of diagnostic details.":::
 
-    An *instance* of Device Update is associated with a single IoT hub. Select the IoT hub that will be used with Device Update. When you link an IoT hub to a Device Update instance, a new shared access policy is automatically created give Device Update permissions to work with IoT Hub (registry write and service connect). This policy ensures that access is only limited to Device Update.
+1. Select the **Networking** tab or **Next: Networking**.
 
-6. On the **Instance** tab, provide the following information for your Device Update instance:
+1. On the **Networking** tab, you can choose the endpoints that devices use to connect to your Device Update instance. For this example, select **Public access**. Public access is acceptable for development and testing purposes, but for production scenarios, you should choose **Private access** and [configure private endpoint connections](configure-private-endpoints.md).
 
-   * **Name**: A name for your instance.
-   * **IoT Hub details**: Select an IoT hub to link to this instance.
+1. Select **Review**.
 
-   :::image type="content" source="media/create-device-update-account/instance-details.png" alt-text="Screenshot of instance details." lightbox="media/create-device-update-account/instance-details.png":::
+   :::image type="content" source="media/create-device-update-account/account-networking.png" alt-text="Screenshot of networking details.":::
 
-7. Select **Next: Review + Create**. After validation, select **Create**.
+1. On the **Review** tab, review the details, and when validation passes, select **Create**.
 
-   :::image type="content" source="media/create-device-update-account/account-review.png" alt-text="Screenshot of account review." lightbox="media/create-device-update-account/account-review.png":::
+   :::image type="content" source="media/create-device-update-account/account-review.png" alt-text="Screenshot of account review.":::
 
-8. You'll see that your deployment is in progress. The deployment status will change to "complete" in a few minutes. When it does, select **Go to resource**
-
-   :::image type="content" source="media/create-device-update-account/account-complete.png" alt-text="Screenshot of account deployment complete." lightbox="media/create-device-update-account/account-complete.png":::
-
-# [Azure CLI](#tab/cli)
-
-Use the [az iot device-update account create](/cli/azure/iot/device-update/account#az-iot-device-update-account-create) command to create a new Device Update account.
-
-Replace the following placeholders with your own information:
-
-* *\<resource_group>*: An existing resource group in your subscription.
-* *\<account_name>*: A name for your Device Update account.
-* *\<region>*: The Azure region where your account will be located. For information about which regions support Device Update for IoT Hub, see [Azure Products-by-region page](https://azure.microsoft.com/global-infrastructure/services/?products=iot-hub). If no region is provided, the resource group's location is used.
-
-   > [!NOTE]
-   > Your Device Update account doesn't need to be in the same region as your IoT hubs, but for better performance it is recommended that you keep them geographically close.
-
-```azurecli-interactive
-az iot device-update account create --resource-group <resource_group> --account <account_name> --location <region>
-```
-
-Use the [az iot device-update instance create](/cli/azure/iot/device-update/instance#az-iot-device-update-instance-create) command to create a Device Update instance.
-
-An *instance* of Device Update is associated with a single IoT hub. Select the IoT hub that will be used with Device Update. When you link an IoT hub to a Device Update instance, a new shared access policy is automatically created give Device Update permissions to work with IoT Hub (registry write and service connect). This policy ensures that access is only limited to Device Update.
-
-Replace the following placeholders with your own information:
-
-* *\<account_name>*: The name of the Device Update account that this instance will be associated with.
-* *\<instance_name>*: A name for this instance.
-* *\<iothub_id>*: The resource ID for the IoT hub that will be linked to this instance. You can retrieve your IoT hub resource ID by using the [az iot hub show](/cli/azure/iot/hub#az-iot-hub-show) command and querying for the ID value: `az iot hub show -n <iothub_name> --query id`.
-
-```azurecli-interactive
-az iot device-update instance create --account <account_name> --instance <instance_name> --iothub-ids <iothub_id>
-```
-
->[!TIP]
->As part of the instance creation process, you can also configure diagnostics logging. For more information, see [Remotely collect diagnostic logs from devices](device-update-log-collection.md).
-
----
-
-## Configure access control roles for Device Update
-
-In order for other users to have access to Device Update, they must be granted access to this resource. You can skip this step if you assigned the Device Update administrator role to yourself during account creation and don't need to provide access to other users or applications.
-
-# [Azure portal](#tab/portal)
-
-1. In your Device Update account, select **Access control (IAM)** from the navigation menu.
-
-   :::image type="content" source="media/create-device-update-account/account-access-control.png" alt-text="Screenshot of access Control within Device Update account." lightbox="media/create-device-update-account/account-access-control.png":::
-
-2. Select **Add role assignments**.
-
-3. On the **Role** tab, select a Device Update role from the available options:
-
-   * Device Update Administrator
-   * Device Update Reader
-   * Device Update Content Administrator
-   * Device Update Content Reader
-   * Device Update Deployments Administrator
-   * Device Update Deployments Reader
-
-   For more information, [Learn about Role-based access control in Device Update for IoT Hub](device-update-control-access.md).
-
-   :::image type="content" source="media/create-device-update-account/role-assignment.png" alt-text="Screenshot of access Control role assignments within Device Update account." lightbox="media/create-device-update-account/role-assignment.png":::
-
-4. Select **Next**
-5. On the **Members** tab, select the users or groups that you want to assign the role to.
-
-   :::image type="content" source="media/create-device-update-account/role-assignment-2.png" alt-text="Screenshot of access Control member selection within Device Update account." lightbox="media/create-device-update-account/role-assignment-2.png":::
-
-6. Select **Review + assign**
-7. Review the new role assignments and select **Review + assign** again
-8. You're now ready to use Device Update from within your IoT Hub
+1. The screen changes to show that your deployment is in progress. When the deployment completes, select **Go to resource**.
 
 # [Azure CLI](#tab/cli)
 
-The following roles are available for assigning access to Device Update:
+1. Run [az iot du account create](/cli/azure/iot/du/account#az-iot-du-account-create) to create a new Device Update account.
 
-* Device Update Administrator
-* Device Update Reader
-* Device Update Content Administrator
-* Device Update Content Reader
-* Device Update Deployments Administrator
-* Device Update Deployments Reader
+   ```azurecli
+   az iot du account create --resource-group <resource_group> --account <account_name> --location <region>
+   ```
 
-For more information, [Learn about Role-based access control in Device Update for IoT Hub](device-update-control-access.md).
+   In the command, replace the following placeholders with your own information:
 
-Use the [az role assignment create](/cli/azure/role/assignment#az-role-assignment-create) command to configure access control for your Device Update account.
+   - `<resource_group>`: An existing resource group in your subscription.
+   - `<account_name>`: A name for your Device Update account.
+   - `<region>`: The Azure region for your account. For more information, see [Products available by region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/). If you don't provide a region, setup uses the resource group location.
 
-Replace the following placeholders with your own information:
+     > [!NOTE]
+     > Your Device Update account doesn't need to be in the same region as your IoT hub, but for better performance it should be geographically close.
 
-* *\<role>*: The Device Update role that you're assigning.
-* *\<user_group>*: The user or group that you want to assign the role to.
-* *\<account_id>*: The resource ID for the Device Update account that the user or group will get access to. You can retrieve the resource ID by using the [az iot device-update account show](/cli/azure/iot/device-update/account#az-iot-device-update-account-show) command and querying for the ID value: `az iot device-update account show -n <account_name> --query id`.
+1. If prompted, respond `y` to install the `azure-iot` Azure CLI extension.
 
-```azurecli-interactive
-az role assignment create --role '<role>' --assignee <user_group> --scope <account_id>
-```
+1. A Device Update instance is associated with a single IoT hub. Run [az iot du instance create](/cli/azure/iot/du/instance#az-iot-du-instance-create) to create a Device Update instance and specify the IoT hub to use with the instance.
 
----
+   ```azurecli
+   az iot du instance create --account <account_name> --instance <instance_name> --iothub-ids <iothub_id>
+   ```
 
-## Configure access control roles for IoT Hub
 
-Device Update for IoT Hub communicates with IoT Hub to manage deployments and updates and to get information about devices. To enable the access, you need to give the **Azure Device Update** service principal access with the **IoT Hub Data Contributor** role.
+   In the command, replace the following placeholders with your own information:
 
-# [Azure portal](#tab/portal)
+   - `<account_name>`: The name of the Device Update account for this instance.
+   - `<instance_name>`: A name for this instance.
+   - `<iothub_id>`: The fully qualified resource ID for the IoT hub to link to this instance, such as `"/subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Devices/IotHubs/<iothub_name>"`.
 
-1. In the Azure portal, navigate to the IoT hub connected to your Device Update instance.
-1. Select **Access Control(IAM)** from the navigation menu.
-1. Select **Add** > **Add role assignment**.
-1. In the **Role** tab, select **IoT Hub Data Contributor**. Select **Next**.
-1. For **Assign access to**, select **User, group, or service principal**.
-1. Select **Select Members** and search for '**Azure Device Update**'
-1. Select **Next** > **Review + Assign**
+     To get your IoT hub resource ID, run [az iot hub show](/cli/azure/iot/hub#az-iot-hub-show) and query for the ID value.
 
-To validate that you've set permissions correctly:
+     ```azurecli
+     az iot hub show -n <iothub_name> --query id
+     ```
 
-1. In the Azure portal, navigate to the IoT hub connected to your Device Update instance.
-1. Select **Access Control(IAM)** from the navigation menu.
-1. Select **Check access**.
-1. Select **User, group, or service principal** and search for '**Azure Device Update**'
-1. After clicking on **Azure Device Update**, verify that the **IoT Hub Data Contributor** role is listed under **Role assignments**
-
-# [Azure CLI](#tab/cli)
-
-Use the [az role assignment create](/cli/azure/role/assignment#az-role-assignment-create) command to create a role assignment for the Azure Device Update service principal.
-
-Replace *\<resource_id>* with the resource ID of your IoT hub. You can retrieve the resource ID by using the [az iot hub show](/cli/azure/iot/hub#az-iot-hub-show) command and querying for the ID value: `az iot hub show -n <hub_name> --query id`.
-
-```azurecli
-az role assignment create --role "IoT Hub Data Contributor" --assignee https://api.adu.microsoft.com/ --scope <resource_id>
-```
-
----
-
-## View and query accounts or instances
-
-You can view, sort, and query all of your Device Update accounts and instances.
-
-# [Azure portal](#tab/portal)
-
-1. To view all Device Update accounts, use the Azure portal to search for the **Device Update for IoT Hubs** service.
-
-   * Use the **Grouping** dropdown menu to group account by subscription, resource group, location, and other conditions.
-   * Select **Add filter** to filter the list of accounts by resource group, location, tags, and other conditions.
-
-1. To view all instances in an account, navigate to that account in the Azure portal. Select **Instances** from the **Instance management** section of the menu
-
-   * Use the search box to filter instances.
-
-# [Azure CLI](#tab/cli)
-
-To view all Device Update accounts, use the [az iot device-update account list](/cli/azure/iot/device-update/account#az-iot-device-update-account-list) command.
-
-```azurecli-interactive
-az iot device-update account list 
-```
-
-To view all instances in an account, use the [az iot device-update instance list](/cli/azure/iot/device-update/instance#az-iot-device-update-instance-list) command.
-
-```azurecli-interactive
-az iot device-update instance list --account <account_name>
-```
-
-Both `list` commands support additional grouping and filter operations. Use the `--query` argument to find accounts or instances based on conditions like tags. For example, `--query "[?tags.env == 'test']"`. Use the `--output` argument to format the results. For example, `--output table`.
+You can also configure diagnostics logging as part of the instance creation process. You must have an Azure Blob Storage account to store the diagnostic logs. For more information, see [Remotely collect diagnostic logs from devices](device-update-log-collection.md?tabs=cli).
 
 ---
 
 ## Next steps
 
-Try updating a device using one of the following quick tutorials:
+Device Update setup automatically assigns **IoT Hub Data Contributor** role to the Device Update service principal. This role allows only this Device Update instance to connect and write to the linked IoT hub to run update deployment, device management, and diagnostic operations.
 
-* [Update a simulated IoT Edge device](device-update-simulator.md)
-* [Update a Raspberry Pi](device-update-raspberry-pi.md)
-* [Update an Ubuntu Server 18.04 x64 Package agent](device-update-ubuntu-agent.md)
+If you have **Owner** or **User Access Administrator** permissions in your Azure subscription, you can configure access control by providing users and applications the necessary level of access to the Device Update resources you created. If you don't have **Owner** or **User Access Administrator** permissions, ask your Device Update administrator to grant you the access and permissions you need to perform Device Update update, management, and diagnostic operations. For more information, see [Configure access control roles for Device Update resources](configure-access-control-device-update.md).
 
-[Learn about Device update account and instance.](device-update-resources.md)
+## Related content
 
-[Learn about Device update access control roles](device-update-control-access.md)
+- [Device Update accounts and instances](device-update-resources.md)
+- [Device Update access control roles](device-update-control-access.md)
+

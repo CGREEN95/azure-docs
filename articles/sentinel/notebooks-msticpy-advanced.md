@@ -1,16 +1,18 @@
 ---
-title: Advanced configurations for Jupyter notebooks and MSTICPy in Microsoft Sentinel | Microsoft Docs
+title: Advanced configurations for Jupyter notebooks and MSTICPy in Microsoft Sentinel
 description: Learn about advanced configurations available for Jupyter notebooks with MSTICPy when working in Microsoft Sentinel.
-author: batamig
-ms.author: bagol
+author: austinmccollum
+ms.author: austinmc
 ms.topic: how-to
-ms.date: 11/09/2021
-ms.custom: ignite-fall-2021
+ms.custom: devx-track-python
+ms.date: 01/09/2023
+
+
+#Customer intent: As a security analyst, I want to configure advanced settings for Jupyter notebooks and MSTICPy in Microsoft Sentinel so that I can efficiently hunt for security threats and automate my workflows.
+
 ---
 
 # Advanced configurations for Jupyter notebooks and MSTICPy in Microsoft Sentinel
-
-[!INCLUDE [Banner for top of topics](./includes/banner.md)]
 
 This article describes advanced configurations for working with Jupyter notebooks and MSTICPy in Microsoft Sentinel.
 
@@ -38,7 +40,7 @@ This procedure describes how to configure authentication parameters for Microsof
 1. Select the authentication methods to use:
 
     - While you can use a different set of methods from the [Azure defaults](notebook-get-started.md#specify-the-azure-cloud-and-azure-authentication-methods), this usage isn't a typical configuration.
-    - Unless you want to use the **env** (environment variable) authentication, leave the **clientId**, **tenantiId**, and **clientSecret** fields empty.
+    - Unless you want to use the **env** (environment variable) authentication, leave the **clientId**, **tenantId**, and **clientSecret** fields empty.
     - While not recommended, MSTICPy also supports using client app IDs and secrets for your authentication. In such cases, define your **clientId**, **tenantId**, and **clientSecret** fields directly in the **Data Providers** tab.
 
 1. Select **Save File** to save your changes.
@@ -174,7 +176,7 @@ Use multiple configuration files, with multiple environment variables, if you wa
 
     However, if you also have secrets stored in the file, we recommend storing the configuration file on the compute local drive. The compute internal storage is accessible only to the person who created the compute, whereas the shared storage is accessible to anyone with access to your Azure ML workspace.
 
-    For more information, see [What is an Azure Machine Learning compute instance?](../machine-learning/concept-compute-instance.md).
+    For more information, see [What is an Azure Machine Learning compute instance?](/azure/machine-learning/concept-compute-instance).
 
 1. If needed, copy your **msticpyconfig.yaml** file to your selected location.
 
@@ -304,4 +306,3 @@ For more information, see:
 |---------|---------|
 |**MSTICPy**     |      - [MSTICPy Package Configuration](https://msticpy.readthedocs.io/en/latest/getting_started/msticpyconfig.html)<br> - [MSTICPy Settings Editor](https://msticpy.readthedocs.io/en/latest/getting_started/SettingsEditor.html)<br>    - [Configuring Your Notebook Environment](https://github.com/Azure/Azure-Sentinel-Notebooks/blob/master/ConfiguringNotebookEnvironment.ipynb).<br>    - [MPSettingsEditor notebook](https://github.com/microsoft/msticpy/blob/master/docs/notebooks/MPSettingsEditor.ipynb). <br><br>**Note**: The Azure-Sentinel-Notebooks GitHub repo also contains a template *msticpyconfig.yaml* file with commented-out sections, which might help you understand the settings.      |
 |**Microsoft Sentinel and Jupyter notebooks**     |     - [Create your first Microsoft Sentinel notebook](https://techcommunity.microsoft.com/t5/microsoft-sentinel-blog/creating-your-first-microsoft-sentinel-notebook/ba-p/2977745) (Blog series)<br> - [Jupyter Notebooks: An Introduction](https://realpython.com/jupyter-notebook-introduction/)<br>    - [MSTICPy documentation](https://msticpy.readthedocs.io/)<br>    - [Microsoft Sentinel Notebooks documentation](notebooks.md)<br>    - [The Infosec Jupyterbook](https://infosecjupyterbook.com/introduction.html)<br>    - [Linux Host Explorer Notebook walkthrough](https://techcommunity.microsoft.com/t5/azure-sentinel/explorer-notebook-series-the-linux-host-explorer/ba-p/1138273)<br>    - [Why use Jupyter for Security Investigations](https://techcommunity.microsoft.com/t5/azure-sentinel/why-use-jupyter-for-security-investigations/ba-p/475729)<br>    - [Security Investigations with Microsoft Sentinel & Notebooks](https://techcommunity.microsoft.com/t5/azure-sentinel/security-investigation-with-azure-sentinel-and-jupyter-notebooks/ba-p/432921)<br>    - [Pandas Documentation](https://pandas.pydata.org/pandas-docs/stable/user_guide/index.html)<br>    - [Bokeh Documentation](https://docs.bokeh.org/en/latest/)       |
-

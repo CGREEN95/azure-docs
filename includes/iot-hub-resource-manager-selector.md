@@ -1,9 +1,9 @@
 ---
 author: kgremban
 ms.author: kgremban
-ms.service: iot-hub
+ms.service: azure-iot-hub
 ms.topic: include
-ms.date: 10/26/2018
+ms.date: 12/20/2022
 ---
 > [!div class="op_single_selector"]
 > * [Azure portal](../articles/iot-hub/iot-hub-create-through-portal.md)

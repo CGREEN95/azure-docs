@@ -2,12 +2,12 @@
 title: Azure platform integrity and security - Azure Security
 description: Technical overview of Azure platform integrity and security.
 author: yosharm
-ms.service: information-protection
-ms.subservice: aiplabels
+ms.service: security
+ms.subservice: security-fundamentals
 ms.topic: article
-ms.author: terrylan
+ms.author: mbaldwin
 manager: rkarlin
-ms.date: 06/24/2021
+ms.date: 09/29/2024
 ---
 
 # Platform integrity and security overview

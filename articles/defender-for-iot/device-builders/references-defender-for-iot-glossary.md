@@ -1,13 +1,15 @@
 ---
 title: Defender for IoT glossary for device builder
 description: The glossary provides a brief description of important Defender for IoT platform terms and concepts.
-ms.date: 11/09/2021
+ms.date: 01/01/2023
 ms.topic: article
 ---
 
 # Defender for IoT glossary for device builder
 
 This glossary provides a brief description of important terms and concepts for the Microsoft Defender for IoT platform. Select the **Learn more** links to go to related terms in the glossary. This will help you to learn and use the product tools quickly and effectively.
+
+[!INCLUDE [device-agents-note](../includes/device-agents-note.md)]
 
 <a name="glossary-a"></a>
 
@@ -30,4 +32,3 @@ This glossary provides a brief description of important terms and concepts for t
 |--|--|--|
 | **Micro Agent** | Provides depth security capabilities for IoT devices including security posture and threat detection. | |
 | **Module twin** | Module twins are JSON documents that store module state information including metadata, configurations, and conditions. | [Device twins](#d) <br /> <br />[Defender-IoT-micro-agent twin](#d) |
-
